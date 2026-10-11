@@ -49,7 +49,7 @@ Two columns on desktop: main content + 380px sidebar. */
   width: 200px;
   height: 200px;
   transform: translate(-50px, -35px);
-  border: 10px solid beige;
+  border: 10px solid var(--primary-color);
   border-radius: 50%;
   background: var(--header-text-color);
 }
