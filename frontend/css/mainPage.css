@@ -21,6 +21,11 @@ Two columns on desktop: main content + 380px sidebar. */
   padding: 20px 24px 40px;
 }
 
+/* ---- Footer ---- */
+  .footer {
+    background-color: transparent;
+  }
+
 
 /* ===== Profile card ===== */
 
