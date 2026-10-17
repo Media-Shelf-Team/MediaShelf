@@ -137,7 +137,7 @@ The `functions/adapters/` folder has one module per external API (`tmdb.js`, `ig
 ## How we work
 
 1. Pick an issue for the current sprint from the GitHub Project and move it to **In Progress**.
-2. Create a branch named `feature/MS-xx-short-name`.
+2. Create a branch named `feature/MS-xx-short-name`.        # Replace `xx` with the backlog issue number and `short-name` with a brief description of the feature.
 3. Open a PR with `Closes #<issue number>` in its description. The other teammate reviews it before merging.
 4. If you change the data model, update `firestore.rules` and its tests in the same PR.
 5. Pull `main` often to avoid large merge conflicts.
