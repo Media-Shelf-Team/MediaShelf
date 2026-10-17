@@ -147,3 +147,16 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+
+# Firebase — local secrets and config (never commit)
+.secret.local
+.runtimeconfig.json
+*-firebase-adminsdk-*.json
+serviceAccountKey.json
+
+# Emulator data exports (if you use --export-on-exit)
+emulator-data/
+
+# OS files
+.DS_Store
+Thumbs.db
