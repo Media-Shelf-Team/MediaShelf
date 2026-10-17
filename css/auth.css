@@ -81,6 +81,9 @@
 .signup__input {
     padding: 0.6rem 0.5rem;
 
+    max-width: 100%;
+    min-width: 100%;
+
     font-family: var(--font-body);
     font-size: 0.8rem;
     color: var(--header-text-color);
