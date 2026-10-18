@@ -83,22 +83,6 @@
       </p>
     </footer>
 
-    <script>
-      // Turn vertical wheel movement into horizontal scrolling for the carousel.
-      (() => {
-        const carousel = document.querySelector('.intro__carousel');
-        if (!carousel) return;
-
-        carousel.addEventListener(
-          'wheel',
-          (evt) => {
-            if (evt.deltaY === 0) return;
-            evt.preventDefault();
-            carousel.scrollLeft += evt.deltaY;
-          },
-          {passive: false},
-        );
-      })();
-    </script>
+    <script src="js/frontend/carousel.js"></script>
   </body>
 </html>
