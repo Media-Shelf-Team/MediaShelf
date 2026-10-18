@@ -3,5 +3,5 @@ package-lock.json
 functions/package-lock.json
 .agents/
 skills-lock.json
-
+coverage/
 *.log
