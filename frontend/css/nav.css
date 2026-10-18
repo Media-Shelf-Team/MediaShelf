@@ -30,6 +30,10 @@
     color: var(--secondary-color);
 }
 
+#social-page .nav__logo:hover {
+    color: var(--secondary-color);
+}
+
  .main-nav {
     display: none;
     grid-column: 1 / -1;
@@ -55,7 +59,6 @@
     background-color: var(--primary-color);
     border-radius: var(--radius-sm);
 }
-
 
   
 /* I felt so stupid, cause for like 20 mins I was messing around and everything was

@@ -1,0 +1,85 @@
+
+.scroll-container {
+  display: flex;
+  flex-wrap: nowrap;          
+  overflow-x: auto;          
+  overflow-y: hidden;   
+  margin: 30px; 
+  margin-bottom: 50px;    
+  gap: 40px;                  
+  padding: 20px;
+  background-color: var(--tertiary-color);
+  border-radius: 25px;
+  scroll-snap-type: x mandatory; 
+  -webkit-overflow-scrolling: touch; 
+}
+
+.card {
+  flex: 0 0 300px;           
+  height: 600px;
+  background-color:var(--secondary-color);
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  scroll-snap-align: start;  
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;    
+  overflow: hidden;   
+}
+
+.social-avatar{
+  margin-bottom: -19px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--primary-color);
+  width: 23%;
+  height: auto;
+}
+
+.username{
+  margin-left: 25px;
+  margin-bottom: 30px;
+  text-align: left;
+  justify-content: center;
+  padding-left: 6px;
+  color: var(--primary-color);
+  font-size: clamp(.5rem, 2vw, 1rem);
+  line-height: 1.7;
+}
+
+.cover-img {
+  border-radius: 12px;
+  margin: 5px;
+  width: 70%;
+  min-width: 20%;               
+  height: auto;             
+  object-fit: cover;   
+}
+
+.metadata {
+  text-align: center;
+  margin-top: 8px;
+  padding-left: 6px;
+  color: var(--primary-color);
+  font-size: clamp(.5rem, 2vw, 1rem);
+  line-height: 1.7;
+}
+
+.scroll-container::-webkit-scrollbar {
+  height: 8px;             
+}
+
+.scroll-container::-webkit-scrollbar-track {
+  background: #e0e0e0;
+  border-radius: 10px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
