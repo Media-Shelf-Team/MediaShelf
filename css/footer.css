@@ -1,19 +1,19 @@
 /* ===== Footer ===== */
 .footer {
-    padding: 0.5rem max(1rem, calc((100% - 1200px) / 2));
+  padding: 0.5rem max(1rem, calc((100% - 1200px) / 2));
 
-    text-align: center;
-    font-family: var(--font-body);
-    color: var(--header-text-color);
-    background-color: var(--secondary-color);
+  text-align: center;
+  font-family: var(--font-body);
+  color: var(--header-text-color);
+  background-color: var(--secondary-color);
 }
 
 .footer__copy {
-    font-size: 1rem;
+  font-size: 1rem;
 }
 
 .footer-fixed {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }

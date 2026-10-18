@@ -138,7 +138,7 @@ module.exports = {
             message: 'URLs that start with javascript: are not allowed.',
           },
         ],
-        
+
         // No inline JavaScript: every <script> must load an external file.
         'no-restricted-syntax': [
           'error',
