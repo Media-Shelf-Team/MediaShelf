@@ -38,29 +38,29 @@ Media Shelf is a web app for logging movies, TV shows, books, audiobooks, video 
 
 2. Install the Firebase CLI:
 
-	```bash
-	npm install -g firebase-tools
-	```
+   ```bash
+   npm install -g firebase-tools
+   ```
 
-	If `npm install -g` gives an EACCES permission error on Linux, do not use `sudo`. Set a user prefix, then install the CLI:
+   If `npm install -g` gives an EACCES permission error on Linux, do not use `sudo`. Set a user prefix, then install the CLI:
 
-	```bash
-	mkdir -p ~/.npm-global && npm config set prefix ~/.npm-global && echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> ~/.bashrc && source ~/.bashrc
-	npm install -g firebase-tools
-	```
+   ```bash
+   mkdir -p ~/.npm-global && npm config set prefix ~/.npm-global && echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> ~/.bashrc && source ~/.bashrc
+   npm install -g firebase-tools
+   ```
 
 3. Ask the project owner to add you as a member of the Firebase project, then sign in:
 
-	```bash
-	firebase login
-	```
+   ```bash
+   firebase login
+   ```
 
 4. Clone the repository from its GitHub page. From the repository root, install the Functions dependencies:
 
-	```bash
-	cd functions
-	npm install
-	```
+   ```bash
+   cd functions
+   npm install
+   ```
 
 5. Do NOT run `firebase init`. The repository is already connected to the Firebase project through `.firebaserc`.
 
@@ -68,28 +68,28 @@ Media Shelf is a web app for logging movies, TV shows, books, audiobooks, video 
 
 1. In a terminal at the repository root, start the emulators:
 
-	```bash
-	firebase emulators:start
-	```
+   ```bash
+   firebase emulators:start
+   ```
 
-	Open the Emulator UI at [http://localhost:4000](http://localhost:4000).
+   Open the Emulator UI at [http://localhost:4000](http://localhost:4000).
 
 2. In a second terminal at the repository root, serve the pages:
 
-	```bash
-	npx serve .
-	```
+   ```bash
+   npx serve .
+   ```
 
-	Open the URL printed by `serve`.
+   Open the URL printed by `serve`.
 
 When you open the app on `localhost` or `127.0.0.1`, `js/firebase-config.js` connects the browser SDK to the local Auth, Firestore, and Functions emulators. Sign-ups and database requests stay local and do not reach the live Firebase services. Note that Firestore requests are currently denied by the placeholder rules.
 
-| Emulator | Port |
-| --- | ---: |
+| Emulator       | Port |
+| -------------- | ---: |
 | Authentication | 9099 |
-| Functions | 5001 |
-| Firestore | 8080 |
-| Emulator UI | 4000 |
+| Functions      | 5001 |
+| Firestore      | 8080 |
+| Emulator UI    | 4000 |
 
 In the Emulator UI:
 
@@ -137,7 +137,7 @@ The `functions/adapters/` folder has one module per external API (`tmdb.js`, `ig
 ## How we work
 
 1. Pick an issue for the current sprint from the GitHub Project and move it to **In Progress**.
-2. Create a branch named `feature/MS-xx-short-name`.        # Replace `xx` with the backlog issue number and `short-name` with a brief description of the feature.
+2. Create a branch named `feature/MS-xx-short-name`. # Replace `xx` with the backlog issue number and `short-name` with a brief description of the feature.
 3. Open a PR with `Closes #<issue number>` in its description. The other teammate reviews it before merging.
 4. If you change the data model, update `firestore.rules` and its tests in the same PR.
 5. Pull `main` often to avoid large merge conflicts.
@@ -173,6 +173,6 @@ GitHub Pages publishes from `main` after the PR is merged. Give it a minute to u
 
 ## Useful links
 
-   - [GitHub Project board](https://github.com/jt4ylor10/MediaShelf)
-   - [Firebase console](https://console.firebase.google.com/u/0/project/media-shelf-d46e7/overview) (you must be added as a member)
-   - [PRD](https://github.com/jt4ylor10/MediaShelf)
+- [GitHub Project board](https://github.com/jt4ylor10/MediaShelf)
+- [Firebase console](https://console.firebase.google.com/u/0/project/media-shelf-d46e7/overview) (you must be added as a member)
+- [PRD](https://github.com/jt4ylor10/MediaShelf)
