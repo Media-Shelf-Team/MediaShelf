@@ -83,3 +83,18 @@
 .scroll-container::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+.social-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 14px;
+  color: var(--header-text-color);
+}
+
+/*For "Your Shelf" when in desktop.*/
+#social-Desktoptitle {
+  margin-left: 10px;
+  font-weight: normal;
+  font-size: clamp(1rem, 2vw, 2rem);
+}
