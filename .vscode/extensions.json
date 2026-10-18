@@ -1,0 +1,6 @@
+{
+  "recommendations": ["esbenp.prettier-vscode", "dbaeumer.vscode-eslint"]
+}
+
+// Recommends VS Code extensions for this project including Prettier for code formatting and ESLint for JavaScript linting.
+// Saves headache when pull requesting

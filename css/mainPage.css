@@ -1,4 +1,3 @@
-
 /* ==========================================================
    mainPage.css  (desktop first)
    Order: base/desktop -> shared tablet+mobile -> tablet only -> mobile only
@@ -10,7 +9,7 @@
 mobile first then desktop. So I used Claude to find a good way to
 scale the page, this popped up.
 Two columns on desktop: main content + 380px sidebar. */
-.mainPage {
+.main-page {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 380px;
   gap: 26px;
@@ -22,10 +21,9 @@ Two columns on desktop: main content + 380px sidebar. */
 }
 
 /* ---- Footer ---- */
-  .footer {
-    background-color: transparent;
-  }
-
+.footer {
+  background-color: transparent;
+}
 
 /* ===== Profile card ===== */
 
@@ -74,16 +72,15 @@ but we can allow lowercase to match their actual usernames. */
   overflow-wrap: break-word;
 }
 
-
 /* I used this clamp thing to help scale all text, it was driving me INSANE when the text was staying HUGE.*/
 .username {
-  font-size: clamp(.5rem, 2vw, 2.5rem);
+  font-size: clamp(0.5rem, 2vw, 2.5rem);
   font-weight: normal;
 }
 
 .friend-count,
 .bio {
-  font-size: clamp(.5rem, 2vw, 1rem);
+  font-size: clamp(0.5rem, 2vw, 1rem);
 }
 
 /* Edit profile + settings, stacked on the right side. */
@@ -105,7 +102,7 @@ but we can allow lowercase to match their actual usernames. */
   border: 2px solid var(--primary-color);
   border-radius: 10px;
   font-family: inherit;
-  font-size: clamp(.5rem, 2vw, 1.4rem);
+  font-size: clamp(0.5rem, 2vw, 1.4rem);
   text-transform: uppercase;
   cursor: pointer;
 }
@@ -129,7 +126,6 @@ but we can allow lowercase to match their actual usernames. */
   background: var(--primary-color);
 }
 
-
 /* ===== Recently logged ===== */
 
 /*The main class for the entire log section, helps make things not squished together.*/
@@ -151,7 +147,7 @@ but we can allow lowercase to match their actual usernames. */
 /* Size for the "recently logged" "your shelf" and "view all" labels, they scale with the page.*/
 .recent-header h2,
 .view-all {
-  font-size: clamp(.5rem, 2vw, 1.6rem);
+  font-size: clamp(0.5rem, 2vw, 1.6rem);
 }
 
 .view-all {
@@ -166,11 +162,11 @@ but we can allow lowercase to match their actual usernames. */
 /*For "Your Shelf" when in desktop.*/
 #recent-Desktoptitle {
   font-weight: normal;
-  font-size: clamp(.5rem, 2vw, 1.6rem);
+  font-size: clamp(0.5rem, 2vw, 1.6rem);
 }
 
 /*Hides "Recently logged" which is for mobile.*/
-#recent-Mobiletitle{
+#recent-Mobiletitle {
   display: none;
 }
 
@@ -190,7 +186,7 @@ but we can allow lowercase to match their actual usernames. */
   color: var(--primary-color);
   border-radius: var(--radius-sm);
   font-family: inherit;
-  font-size: clamp(.5rem, 2vw, 1.2rem);
+  font-size: clamp(0.5rem, 2vw, 1.2rem);
   text-transform: uppercase;
   cursor: pointer;
 }
@@ -220,10 +216,9 @@ Each card is its own column. Hopefully incorporating javascript won't mess this 
   margin-top: 8px;
   padding-left: 6px;
   color: var(--header-text-color);
-  font-size: clamp(.5rem, 2vw, 1rem);
+  font-size: clamp(0.5rem, 2vw, 1rem);
   line-height: 1.2;
 }
-
 
 /* ===== Right column (Friends / Friend Requests) ===== */
 
@@ -248,7 +243,7 @@ Each card is its own column. Hopefully incorporating javascript won't mess this 
 .side-card h2 {
   flex: none;
   margin-bottom: 8px;
-  font-size: clamp(.5rem, 3vw, 2rem);
+  font-size: clamp(0.5rem, 3vw, 2rem);
   font-weight: normal;
   text-transform: uppercase;
 }
@@ -294,38 +289,35 @@ through javascript to incorporate actual values.*/
 
 .user-name {
   color: var(--primary-color);
-  font-size: clamp(.5rem, 2vw, 1.3rem);
+  font-size: clamp(0.5rem, 2vw, 1.3rem);
 }
 
 .mutual {
-  font-size: clamp(.5rem, 2vw, 1.1rem);
+  font-size: clamp(0.5rem, 2vw, 1.1rem);
 }
-
 
 /* ===== Mobile-only pieces, hidden on desktop ===== */
 
 .tabs,
 .nav-toggle,
-.nav-Mobilelinks {
+.nav-mobile-links {
   display: none;
 }
-
 
 /* ==========================================================
    TABLET + MOBILE (950px and below): everything both share
    ========================================================== */
 @media screen and (max-width: 950px) {
-
   /*The layout for the entire page, mostly did this so the footer would sit at the bottom.
   Despite having the values from footer.css the footers were NOT wanting to stay down there...*/
-  .mainPage {
+  .main-page {
     grid-template-columns: 1fr;
     gap: 10px;
     min-height: 100dvh;
     align-content: start;
   }
 
-  .right-colMobile {
+  .right-col-mobile {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -351,14 +343,14 @@ through javascript to incorporate actual values.*/
   }
 
   /*This is the actual links when you toggle the menu so they're no bulleted.*/
-  .nav-Mobilelinks {
+  .nav-mobile-links {
     list-style: none;
     padding: 8px 0;
   }
 
-/*When you toggle the menu, this makes a flex box for it and let's it sit under the navbar, It also helps
+  /*When you toggle the menu, this makes a flex box for it and let's it sit under the navbar, It also helps
 the toggle from overlapping the contents of the page. */
-  .nav-toggle[aria-expanded="true"] + .nav-Mobilelinks {
+  .nav-toggle[aria-expanded="true"] + .nav-mobile-links {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -366,7 +358,7 @@ the toggle from overlapping the contents of the page. */
   }
 
   /*Styles the boxes and text.*/
-  .nav-Mobileitem {
+  .nav-mobile-item {
     display: block;
     width: 150%;
     padding: 12px;
@@ -479,20 +471,20 @@ the toggle from overlapping the contents of the page. */
   }
 
   /*Hides "your shelf, at a glance"*/
-  #recent-Desktoptitle{
+  #recent-Desktoptitle {
     display: none;
   }
 
   /*Shows "recently logged"*/
-  #recent-Mobiletitle{
+  #recent-Mobiletitle {
     display: inline;
   }
 
   .recent-footer {
-  align-self: stretch;  
-}
+    align-self: stretch;
+  }
 
-  .view-all{
+  .view-all {
     align-self: stretch;
   }
 
@@ -540,8 +532,7 @@ the toggle from overlapping the contents of the page. */
    TABLET ONLY (768px - 950px)
    ========================================================== */
 @media screen and (min-width: 768px) and (max-width: 950px) {
-
-  .mainPage {
+  .main-page {
     padding: 8px 8px 24px;
   }
 
@@ -563,13 +554,13 @@ the toggle from overlapping the contents of the page. */
     font-size: 2rem;
   }
 
-  .nav-Mobilelinks {
-    grid-column: 1 / -1;  
+  .nav-mobile-links {
+    grid-column: 1 / -1;
     width: 100%;
     text-align: center;
   }
 
-  .nav-Mobileitem:hover {
+  .nav-mobile-item:hover {
     color: var(--secondary-color);
     background-color: var(--primary-color);
   }
@@ -590,8 +581,8 @@ the toggle from overlapping the contents of the page. */
     margin-right: 20px;
   }
 
-  .recent-header{
-    align-items:center;
+  .recent-header {
+    align-items: center;
     width: 80%;
   }
 
@@ -601,13 +592,13 @@ the toggle from overlapping the contents of the page. */
   }
 
   .recent-footer {
-  align-self: center;
-  width: 80%;
-}
+    align-self: center;
+    width: 80%;
+  }
 
-.btn-add {
-  font-size: 1.1rem;
-}
+  .btn-add {
+    font-size: 1.1rem;
+  }
 
   .cover {
     width: 250px;
@@ -623,7 +614,6 @@ the toggle from overlapping the contents of the page. */
   }
 }
 
-
 /* ==========================================================
    MOBILE ONLY (768px and below)
    Note: a few values here match the desktop defaults on purpose
@@ -631,8 +621,7 @@ the toggle from overlapping the contents of the page. */
    applies, so these keep mobile winning there.
    ========================================================== */
 @media screen and (max-width: 768px) {
-
-  .mainPage {
+  .main-page {
     padding: 20px 24px 40px;
   }
 
@@ -663,17 +652,17 @@ the toggle from overlapping the contents of the page. */
     font-size: 1.5rem;
   }
 
-  .nav-Mobilelinks {
+  .nav-mobile-links {
     flex-basis: 100%;
   }
 
-  .nav-Mobileitem {
+  .nav-mobile-item {
     text-align: center;
     font-size: 1.2rem;
     text-transform: uppercase;
   }
 
-  .nav-Mobileitem.active {
+  .nav-mobile-item.active {
     text-decoration: underline;
   }
 
@@ -687,8 +676,8 @@ the toggle from overlapping the contents of the page. */
     font-size: 1.2rem;
   }
 
-   .recent-header{
-    align-items:center;
+  .recent-header {
+    align-items: center;
     width: 80%;
   }
 
@@ -715,15 +704,13 @@ the toggle from overlapping the contents of the page. */
   }
 }
 
-
 /* ==========================================================
    SMALL PHONES (480px and below)
    Everything scaled down so it stops bunching up.
    Sits last so it overrides the blocks above; 481px-768px is unchanged.
    ========================================================== */
 @media screen and (max-width: 480px) {
-
-  .mainPage {
+  .main-page {
     gap: 8px;
     padding: 12px 12px 24px;
   }
@@ -748,15 +735,15 @@ the toggle from overlapping the contents of the page. */
     font-size: 1rem;
   }
 
-  .nav-Mobilelinks {
+  .nav-mobile-links {
     padding: 4px 0;
   }
 
-  .nav-toggle[aria-expanded="true"] + .nav-Mobilelinks {
+  .nav-toggle[aria-expanded="true"] + .nav-mobile-links {
     gap: 8px;
   }
 
-  .nav-Mobileitem {
+  .nav-mobile-item {
     padding: 8px 12px;
     font-size: 0.9rem;
   }
@@ -783,7 +770,7 @@ the toggle from overlapping the contents of the page. */
   .profile-info {
     top: 46px;
     left: 84px;
-    max-width: calc(100% - 180px);   
+    max-width: calc(100% - 180px);
   }
 
   .username {
@@ -830,20 +817,20 @@ the toggle from overlapping the contents of the page. */
   }
 
   .recent-footer {
-  padding: 0 8px;
-}
+    padding: 0 8px;
+  }
 
-.btn-add {
-  padding: 6px 10px;
-  font-size: 0.75rem;
-}
+  .btn-add {
+    padding: 6px 10px;
+    font-size: 0.75rem;
+  }
 
- .view-all{
-  padding: 0 8px;
- }
+  .view-all {
+    padding: 0 8px;
+  }
 
   .media-grid {
-    width: 100%;  
+    width: 100%;
     margin-top: 16px;
     gap: 28px 14px;
     padding: 0 8px;

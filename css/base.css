@@ -1,46 +1,46 @@
 /* ===== Variables ===== */
 :root {
-    --primary-color: #e93d45;
-    --secondary-color: #f2eae1;
-    --tertiary-color: #bf373e;
-    --header-text-color: #15282f;
-    --font-color: #f2eae1;
+  --primary-color: #e93d45;
+  --secondary-color: #f2eae1;
+  --tertiary-color: #bf373e;
+  --header-text-color: #15282f;
+  --font-color: #f2eae1;
 
-    --surface-color: #fff;
-    --placeholder-color: #8a8479;
+  --surface-color: #fff;
+  --placeholder-color: #8a8479;
 
-    --font-display: 'Bungee', sans-serif;
-    --font-body: 'Bungee', sans-serif;
+  --font-display: "Bungee", sans-serif;
+  --font-body: "Bungee", sans-serif;
 
-    --radius-sm: 0.25rem;
-    --radius-md: 0.5rem;
-    --shadow-hover: 0 4px 6px rgba(0, 0, 0, 0.5);
-    --transition-fast: 0.2s ease;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --shadow-hover: 0 4px 6px rgba(0, 0, 0, 0.5);
+  --transition-fast: 0.2s ease;
 }
 
 .swapped-colors {
-    --primary-color: #f2eae1;
-    --secondary-color: #e93d45;
+  --primary-color: #f2eae1;
+  --secondary-color: #e93d45;
 }
 
 /* ===== Base ===== */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    font-family: var(--font-body);
-    color: var(--font-color);
-    background-color: var(--primary-color);
+  font-family: var(--font-body);
+  color: var(--font-color);
+  background-color: var(--primary-color);
 }
 
 button {
-    border: none;
+  border: none;
 }
 
 main {
-    margin: 20rem auto;
-    max-width: 1200px;
+  margin: 20rem auto;
+  max-width: 1200px;
 }

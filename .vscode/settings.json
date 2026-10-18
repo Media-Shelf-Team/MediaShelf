@@ -1,0 +1,13 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "prettier.requireConfig": true,
+  "eslint.workingDirectories": [".", "functions"]
+}
+
+// on every save prettier will format the file, then ESLint auto-fixes what it can. 
+// Prettier handles HTML, CSS, JS, JSON and markdown formatting.
+// ESLint handles JavaScript code quality and potential errors.
