@@ -1,0 +1,8 @@
+// VSCode settings for the MediaShelf project.
+
+// Formats code on save using Prettier.
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.requireConfig": true
+}
