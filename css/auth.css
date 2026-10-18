@@ -2,336 +2,338 @@
 
 /* ----- Layout ----- */
 .signup {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-    /* dvh excludes the mobile browser toolbar, which 100vh does not. */
-    min-height: 100dvh;
-    margin: 0;
-    max-width: none;
-    /* Keeps a tall box clear of the fixed footer. */
-    padding: 1rem 0 3.5rem;
+  /* dvh excludes the mobile browser toolbar, which 100vh does not. */
+  min-height: 100dvh;
+  margin: 0;
+  max-width: none;
+  /* Keeps a tall box clear of the fixed footer. */
+  padding: 1rem 0 3.5rem;
 }
 
 .signup__box {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.75rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
 
-    width: min(350px, 90%);
-    max-height: 90dvh;
-    padding: 1.5rem 1rem;
+  width: min(350px, 90%);
+  max-height: 90dvh;
+  padding: 1.5rem 1rem;
 
-    text-align: center;
-    color: var(--header-text-color);
-    background-color: var(--secondary-color);
-    border-radius: var(--radius-md);
+  text-align: center;
+  color: var(--header-text-color);
+  background-color: var(--secondary-color);
+  border-radius: var(--radius-md);
 }
 
 .signup__logo {
-    width: min(250px, 100%, 30dvh);
-    aspect-ratio: 1;
-    border-radius: 50%;
-    background-color: var(--primary-color);
+  width: min(250px, 100%, 30dvh);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background-color: var(--primary-color);
 }
 
 .signup__content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.75rem;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
 }
 
 /* ----- Text ----- */
 .signup__title {
-    font-family: var(--font-display);
-    font-size: 1.75rem;
+  font-family: var(--font-display);
+  font-size: 1.75rem;
 }
 
 .signup__subtitle {
-    font-size: 0.9rem;
+  font-size: 0.9rem;
 }
 
 .signup__alt {
-    font-size: 0.75rem;
+  font-size: 0.75rem;
 }
 
 .signup__alt a {
-    color: var(--primary-color);
+  color: var(--primary-color);
 }
 
 .signup__forgot {
-    align-self: flex-end;
-    font-size: 0.7rem;
-    color: var(--primary-color);
+  align-self: flex-end;
+  font-size: 0.7rem;
+  color: var(--primary-color);
 }
 
 /* ----- Form ----- */
 .signup__form {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
 }
 
 .signup__input {
-    padding: 0.6rem 0.5rem;
+  padding: 0.6rem 0.5rem;
 
-    max-width: 100%;
-    min-width: 100%;
+  max-width: 100%;
+  min-width: 100%;
 
-    font-family: var(--font-body);
-    font-size: 0.8rem;
-    color: var(--header-text-color);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--header-text-color);
 
-    background-color: var(--primary-color);
-    border: none;
-    border-radius: var(--radius-sm);
+  background-color: var(--primary-color);
+  border: none;
+  border-radius: var(--radius-sm);
 }
 
 .signup__actions {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
 }
 
 /* ----- Buttons ----- */
 .signup__menu-btn {
-    position: absolute;
-    top: 0.75rem;
-    right: 0.75rem;
-    z-index: 1;
-    padding: 0.15rem 0.6rem;
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 1;
+  padding: 0.15rem 0.6rem;
 
-    font-family: var(--font-display);
-    font-size: 0.9rem;
-    font-weight: bold;
-    color: var(--header-text-color);
-    text-decoration: none;
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: var(--header-text-color);
+  text-decoration: none;
 
-    cursor: pointer;
-    background-color: var(--primary-color);
-    border-radius: var(--radius-sm);
+  cursor: pointer;
+  background-color: var(--primary-color);
+  border-radius: var(--radius-sm);
 }
 
 .signup__submit {
-    margin-top: 0.5rem;
-    padding: 1rem;
+  margin-top: 0.5rem;
+  padding: 1rem;
 
-    font-family: var(--font-display);
-    font-size: 1.25rem;
-    color: var(--primary-color);
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--primary-color);
 
-    cursor: pointer;
-    background-color: var(--tertiary-color);
-    border-radius: var(--radius-md);
+  cursor: pointer;
+  background-color: var(--tertiary-color);
+  border-radius: var(--radius-md);
 }
 
 .signup__btn {
-    padding: 0.5rem 1.5rem;
+  padding: 0.5rem 1.5rem;
 
-    font-family: var(--font-display);
-    font-size: 0.9rem;
-    text-decoration: none;
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  text-decoration: none;
 
-    cursor: pointer;
-    border-radius: var(--radius-sm);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
 }
 
 .signup__btn--cancel {
-    color: var(--header-text-color);
-    background-color: var(--surface-color);
+  color: var(--header-text-color);
+  background-color: var(--surface-color);
 }
 
 .signup__btn--reset {
-    color: var(--secondary-color);
-    background-color: var(--primary-color);
+  color: var(--secondary-color);
+  background-color: var(--primary-color);
 }
 
 /* ----- Forgot password variant: light card on the primary-colored page ----- */
 .signup__box--forgot .signup__menu-btn {
-    color: var(--secondary-color);
-    background-color: var(--primary-color);
+  color: var(--secondary-color);
+  background-color: var(--primary-color);
 }
 
 .signup__box--forgot .signup__input {
-    background-color: var(--surface-color);
-    border: 1px solid rgba(0, 0, 0, 0.15);
+  background-color: var(--surface-color);
+  border: 1px solid rgba(0, 0, 0, 0.15);
 }
 
 /* ===== Desktop ===== */
 @media (min-width: 768px) {
-    /* Two panels: image on one side, form on the other. */
-    .signup__box {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0;
+  /* Two panels: image on one side, form on the other. */
+  .signup__box {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
 
-        width: min(90%, 1400px);
-        min-height: 70dvh;
-        max-height: none;
-        padding: 0;
-        overflow: hidden;
-    }
+    width: min(90%, 1400px);
+    min-height: 70dvh;
+    max-height: none;
+    padding: 0;
+    overflow: hidden;
+  }
 
-    /* Image panel; replace the placeholder text with an image later. */
-    .signup__logo {
-        display: grid;
-        place-items: center;
+  /* Image panel; replace the placeholder text with an image later. */
+  .signup__logo {
+    display: grid;
+    place-items: center;
 
-        width: 100%;
-        height: 100%;
-        aspect-ratio: auto;
-        border-radius: 0;
-        background-color: var(--tertiary-color);
-    }
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+    border-radius: 0;
+    background-color: var(--tertiary-color);
+  }
 
-    .signup__logo::after {
-        content: "Some cool image here...";
-        padding: 1.5rem;
-        font-size: 2rem;
-        color: var(--primary-color);
-    }
+  .signup__logo::after {
+    content: 'Some cool image here...';
+    padding: 1.5rem;
+    font-size: 2rem;
+    color: var(--primary-color);
+  }
 
-    .signup__content {
-        justify-content: center;
-        gap: 1.25rem;
-        padding: 1.5rem clamp(2rem, 6vw, 6rem);
-    }
+  .signup__content {
+    justify-content: center;
+    gap: 1.25rem;
+    padding: 1.5rem clamp(2rem, 6vw, 6rem);
+  }
 
-    .signup__title {
-        font-size: 3rem;
-    }
+  .signup__title {
+    font-size: 3rem;
+  }
 
-    /* Decorative dot before the title */
-    .signup__title::before {
-        content: "";
-        display: inline-block;
-        width: 2.5rem;
-        aspect-ratio: 1;
-        margin-right: 0.75rem;
-        vertical-align: middle;
-        border-radius: 50%;
-        background-color: var(--header-text-color);
-    }
+  /* Decorative dot before the title */
+  .signup__title::before {
+    content: '';
+    display: inline-block;
+    width: 2.5rem;
+    aspect-ratio: 1;
+    margin-right: 0.75rem;
+    vertical-align: middle;
+    border-radius: 50%;
+    background-color: var(--header-text-color);
+  }
 
-    .signup__subtitle {
-        font-size: 1.25rem;
-    }
+  .signup__subtitle {
+    font-size: 1.25rem;
+  }
 
-    .signup__alt,
-    .signup__forgot {
-        font-size: 1rem;
-    }
+  .signup__alt,
+  .signup__forgot {
+    font-size: 1rem;
+  }
 
-    .signup__form {
-        gap: 1.25rem;
-    }
+  .signup__form {
+    gap: 1.25rem;
+  }
 
-    .signup__input {
-        padding: 1rem;
-        font-size: 1.1rem;
-    }
+  .signup__input {
+    padding: 1rem;
+    font-size: 1.1rem;
+  }
 
-    .signup__menu-btn {
-        top: 1rem;
-        right: 1rem;
-        left: auto;
-        padding: 0.25rem 1rem;
-        font-size: 1.25rem;
-    }
+  .signup__menu-btn {
+    top: 1rem;
+    right: 1rem;
+    left: auto;
+    padding: 0.25rem 1rem;
+    font-size: 1.25rem;
+  }
 
-    .signup__submit {
-        padding: 1.25rem;
-        font-size: 1.75rem;
-    }
+  .signup__submit {
+    padding: 1.25rem;
+    font-size: 1.75rem;
+  }
 
-    .signup__btn {
-        padding: 0.6rem 2rem;
-        font-size: 1rem;
-    }
+  .signup__btn {
+    padding: 0.6rem 2rem;
+    font-size: 1rem;
+  }
 
-    /* Shared button animation (desktop only) */
-    .signup__menu-btn,
-    .signup__submit,
-    .signup__btn {
-        transition: transform var(--transition-fast), box-shadow var(--transition-fast);
-    }
+  /* Shared button animation (desktop only) */
+  .signup__menu-btn,
+  .signup__submit,
+  .signup__btn {
+    transition:
+      transform var(--transition-fast),
+      box-shadow var(--transition-fast);
+  }
 
-    .signup__menu-btn:hover,
-    .signup__submit:hover,
-    .signup__btn:hover {
-        transform: scale(1.05);
-        box-shadow: var(--shadow-hover);
-    }
+  .signup__menu-btn:hover,
+  .signup__submit:hover,
+  .signup__btn:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-hover);
+  }
 
-    .signup__menu-btn:active,
-    .signup__submit:active,
-    .signup__btn:active {
-        transform: scale(0.95);
-        box-shadow: none;
-    }
+  .signup__menu-btn:active,
+  .signup__submit:active,
+  .signup__btn:active {
+    transform: scale(0.95);
+    box-shadow: none;
+  }
 
-    /* Login: image panel on the right, menu on the left, no dot beside the title. */
-    .signup__box--login .signup__logo {
-        order: 1;
-    }
+  /* Login: image panel on the right, menu on the left, no dot beside the title. */
+  .signup__box--login .signup__logo {
+    order: 1;
+  }
 
-    .signup__box--login .signup__menu-btn {
-        right: auto;
-        left: 1rem;
-    }
+  .signup__box--login .signup__menu-btn {
+    right: auto;
+    left: 1rem;
+  }
 
-    .signup__box--login .signup__title::before {
-        display: none;
-    }
+  .signup__box--login .signup__title::before {
+    display: none;
+  }
 
-    /* Forgot password: single centered card with a round image slot above the text. */
-    .signup__box--forgot {
-        display: flex;
-        justify-content: center;
-        gap: 0.75rem;
+  /* Forgot password: single centered card with a round image slot above the text. */
+  .signup__box--forgot {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
 
-        width: min(90%, 560px);
-        min-height: 0;
-        padding: 2rem 1.5rem;
-        overflow: visible;
-    }
+    width: min(90%, 560px);
+    min-height: 0;
+    padding: 2rem 1.5rem;
+    overflow: visible;
+  }
 
-    .signup__box--forgot .signup__logo {
-        width: 8rem;
-        height: auto;
-        aspect-ratio: 1;
-        border-radius: 50%;
-        background-color: var(--placeholder-color);
-    }
+  .signup__box--forgot .signup__logo {
+    width: 8rem;
+    height: auto;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background-color: var(--placeholder-color);
+  }
 
-    .signup__box--forgot .signup__logo::after {
-        content: none;
-    }
+  .signup__box--forgot .signup__logo::after {
+    content: none;
+  }
 
-    .signup__box--forgot .signup__content {
-        padding: 0;
-    }
+  .signup__box--forgot .signup__content {
+    padding: 0;
+  }
 
-    .signup__box--forgot .signup__title {
-        font-size: 2rem;
-    }
+  .signup__box--forgot .signup__title {
+    font-size: 2rem;
+  }
 
-    .signup__box--forgot .signup__title::before {
-        display: none;
-    }
+  .signup__box--forgot .signup__title::before {
+    display: none;
+  }
 
-    .signup__box--forgot .signup__subtitle {
-        font-size: 1rem;
-    }
+  .signup__box--forgot .signup__subtitle {
+    font-size: 1rem;
+  }
 
-    .signup__box--forgot .signup__input {
-        padding: 0.75rem;
-        font-size: 0.9rem;
-    }
+  .signup__box--forgot .signup__input {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
 }

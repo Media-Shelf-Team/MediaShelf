@@ -1,82 +1,82 @@
 /* ===== Intro ===== */
 .intro__content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
 
-    padding: clamp(1rem, 5vw, 3rem);
-    text-align: center;
+  padding: clamp(1rem, 5vw, 3rem);
+  text-align: center;
 }
 
 .intro__info {
-    flex: 1 1 50%;
+  flex: 1 1 50%;
 }
 
 .intro__title {
-    padding: 1rem 0;
+  padding: 1rem 0;
 
-    text-align: center;
-    font-family: var(--font-display);
-    font-size: 1.5rem;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
 }
 
 .intro__text {
-    margin: 2rem 0;
-    padding: 0 1rem;
+  margin: 2rem 0;
+  padding: 0 1rem;
 
-    text-align: center;
-    font-family: var(--font-body);
-    font-size: 1rem;
-    line-height: 1.5;
-    color: var(--font-color);
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--font-color);
 }
 
 .intro__carousel {
-    display: flex;
-    gap: 1em;
-    align-content: center;
+  display: flex;
+  gap: 1em;
+  align-content: center;
 
-    width: 95%;
-    margin: auto;
-    /* Room for hover scale and shadow; overflow-x: auto forces overflow-y to clip. */
-    padding: 1rem;
+  width: 95%;
+  margin: auto;
+  /* Room for hover scale and shadow; overflow-x: auto forces overflow-y to clip. */
+  padding: 1rem;
 
-    overflow-x: auto;
-    scroll-behavior: smooth;
+  overflow-x: auto;
+  scroll-behavior: smooth;
 }
 
 .intro__carousel img {
-    max-width: 100%;
-    height: auto;
+  max-width: 100%;
+  height: auto;
 }
 
 .intro__card {
-    flex: 0 0 20em;
-    height: 20em;
-    padding: 1rem;
+  flex: 0 0 20em;
+  height: 20em;
+  padding: 1rem;
 
-    text-align: center;
-    align-content: center;
-    color: var(--header-text-color);
+  text-align: center;
+  align-content: center;
+  color: var(--header-text-color);
 
-    background-color: var(--secondary-color);
-    border-radius: var(--radius-sm);
-    transition: all var(--transition-fast);
+  background-color: var(--secondary-color);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
 }
 
 .intro__card:hover {
-    transform: scale(1.05);
-    box-shadow: var(--shadow-hover);
+  transform: scale(1.05);
+  box-shadow: var(--shadow-hover);
 }
 
 @media (min-width: 768px) {
-    .intro__content {
-        flex-direction: row;
-    }
+  .intro__content {
+    flex-direction: row;
+  }
 
-    .intro__carousel {
-        width: 90%;
-        gap: 1.5rem;
-    }
+  .intro__carousel {
+    width: 90%;
+    gap: 1.5rem;
+  }
 }

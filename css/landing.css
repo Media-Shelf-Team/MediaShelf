@@ -1,46 +1,46 @@
 /* ===== Landing buttons ===== */
 .landing-btn-container {
-    display: none;
+  display: none;
 }
 
 .landing-btn {
-    padding: 0.5rem 1rem;
+  padding: 0.5rem 1rem;
 
-    font-family: var(--font-display);
-    font-size: 1rem;
-    font-weight: bold;
-    color: var(--header-text-color);
-    text-decoration: none;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--header-text-color);
+  text-decoration: none;
 
-    cursor: pointer;
-    background-color: var(--secondary-color);
-    border-radius: var(--radius-sm);
-    transition: all var(--transition-fast);
+  cursor: pointer;
+  background-color: var(--secondary-color);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
 }
 
 .landing-btn:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-hover);
-    color: var(--primary-color);
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
+  color: var(--primary-color);
 }
 
 @media (min-width: 768px) {
-    .landing-btn-container {
-        display: flex;
-        gap: 1rem;
-        justify-content: space-around;
-        align-self: center;
+  .landing-btn-container {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-around;
+    align-self: center;
 
-        width: clamp(300px, 80%, 900px);
-        margin: -2rem auto 0;
+    width: clamp(300px, 80%, 900px);
+    margin: -2rem auto 0;
 
-        /* Stack above the hero's shadow overlay. */
-        position: relative;
-        z-index: 1;
-    }
+    /* Stack above the hero's shadow overlay. */
+    position: relative;
+    z-index: 1;
+  }
 
-    .landing-btn {
-        padding: 1rem 2rem;
-        font-size: 1.5rem;
-    }
+  .landing-btn {
+    padding: 1rem 2rem;
+    font-size: 1.5rem;
+  }
 }
