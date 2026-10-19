@@ -1,7 +1,7 @@
 const items = document.querySelectorAll('.side-item');
 const panels = document.querySelectorAll('.panel');
 
-//Function for showing the panel based on the clicked item//
+//  Function for showing the panel based on the clicked item  //
 
 function showPanel(id) {
   items.forEach((i) => i.classList.toggle('active', i.dataset.panel === id));
