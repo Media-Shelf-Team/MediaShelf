@@ -3,6 +3,7 @@ const panels = document.querySelectorAll('.panel');
 
 /**
  * Function for showing the panel based on the clicked item
+ * @param {string} id - The id of the panel to show
  */
 function showPanel(id) {
   items.forEach((i) => i.classList.toggle('active', i.dataset.panel === id));
