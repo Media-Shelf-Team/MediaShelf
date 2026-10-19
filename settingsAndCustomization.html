@@ -11,7 +11,7 @@
     <link
       href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Bungee&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Protest+Guerrilla&display=swap"
       rel="stylesheet"
-      />
+    />
 
     <link rel="stylesheet" href="css/base.css" />
     <link rel="stylesheet" href="css/nav.css" />
@@ -36,98 +36,128 @@
           MENU
         </button>
         <ul class="nav-Mobilelinks" id="nav">
-          <li><a href="mainPage.html" class="nav-Mobileitem active">My Shelf</a></li>
+          <li>
+            <a href="mainPage.html" class="nav-Mobileitem active">My Shelf</a>
+          </li>
           <li><a href="#" class="nav-Mobileitem">Social</a></li>
         </ul>
 
         <div class="nav-links">
           <ul class="nav-style">
-            <li><a href="mainPage.html" class="nav-item-active"> My Shelf</a></li>
+            <li>
+              <a href="mainPage.html" class="nav-item-active"> My Shelf</a>
+            </li>
             <li><a href="#" class="nav-item">Social</a></li>
           </ul>
         </div>
       </nav>
     </header>
 
-       <div class="layout">
-            <nav class="sidebar">
-                <button class="side-item active" data-panel="customization"> Customization </button>
-                <button class="side-item" data-panel="settings"> Settings </button>
-            </nav>
+    <div class="layout">
+      <nav class="sidebar">
+        <button class="side-item active" data-panel="customization">
+          Customization
+        </button>
+        <button class="side-item" data-panel="settings">Settings</button>
+      </nav>
 
-            <main class="content social-main">
-                <section id="customization" class="panel active">
-                    <div class="block">
-                        <h2>Change Your Avatar</h2>
-                        <div class="block avatar-block">
-                            <div class="avatar-picker">
-                                <div class="avatar-options">
-                                <button class="avatar-option selected" data-avatar="avatars/avatar1.png" aria-label="Avatar 1">
-                                    <img src="assets/img/dustyicon1.png" alt="">
-                                </button>
-                                <button class="avatar-option" data-avatar="avatars/avatar2.png" aria-label="Avatar 2">
-                                    <img src="assets/img/dustyicon2.png" alt="">
-                                </button>
-                                <button class="avatar-option" data-avatar="avatars/avatar3.png" aria-label="Avatar 3">
-                                    <img src="assets/img/dustyicon3.png" alt="">
-                                </button>
-                                <button class="avatar-option" data-avatar="avatars/avatar4.png" aria-label="Avatar 4">
-                                    <img src="assets/img/dustyicon4.png" alt="">
-                                </button>
-                                </div>
-                            </div>
-                        </div>
-                     </div>
-                    <div class="block"> 
-                        <h2>Change Your Bio</h2>
-                        <div class="block bio-block">
-                            
-                            <textarea id="bio-input" maxlength="200" placeholder="Bio..." rows="6"></textarea>
+      <main class="content social-main">
+        <section id="customization" class="panel active">
+          <div class="block">
+            <h2>Change Your Avatar</h2>
+            <div class="block avatar-block">
+              <div class="avatar-picker">
+                <div class="avatar-options">
+                  <button
+                    class="avatar-option selected"
+                    data-avatar="avatars/avatar1.png"
+                    aria-label="Avatar 1"
+                  >
+                    <img src="assets/img/dustyicon1.png" alt="" />
+                  </button>
+                  <button
+                    class="avatar-option"
+                    data-avatar="avatars/avatar2.png"
+                    aria-label="Avatar 2"
+                  >
+                    <img src="assets/img/dustyicon2.png" alt="" />
+                  </button>
+                  <button
+                    class="avatar-option"
+                    data-avatar="avatars/avatar3.png"
+                    aria-label="Avatar 3"
+                  >
+                    <img src="assets/img/dustyicon3.png" alt="" />
+                  </button>
+                  <button
+                    class="avatar-option"
+                    data-avatar="avatars/avatar4.png"
+                    aria-label="Avatar 4"
+                  >
+                    <img src="assets/img/dustyicon4.png" alt="" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="block">
+            <h2>Change Your Bio</h2>
+            <div class="block bio-block">
+              <textarea
+                id="bio-input"
+                maxlength="200"
+                placeholder="Bio..."
+                rows="6"
+              ></textarea>
 
-                            <p class="bio-count"><span id="bio-current">0</span> / 200</p>
-                        </div>
-                    </div>
-                    <div class="block"> 
-                        <h2>Change Your Banner</h2>
-                    </div>
-                    <div class="block"> 
-                        <h2>Change your Theme</h2>
-                    </div>
-                </section>
-                
-                <section id="settings" class="panel">
-                    <div class="block"> 
-                        <h2>Change Your Privacy Settings</h2>
-                        <div class="privacy-options" role="radiogroup" aria-labelledby="privacy-label">
-                            <label class="privacy-option">
-                                <input type="radio" name="privacy" value="private" checked>
-                                <span class="box"></span>
-                                <span class="text">Private</span>
-                            </label>
+              <p class="bio-count"><span id="bio-current">0</span> / 200</p>
+            </div>
+          </div>
+          <div class="block">
+            <h2>Change Your Banner</h2>
+          </div>
+          <div class="block">
+            <h2>Change your Theme</h2>
+          </div>
+        </section>
 
-                            <label class="privacy-option">
-                                <input type="radio" name="privacy" value="friends">
-                                <span class="box"></span>
-                                <span class="text">Friends only</span>
-                            </label>
+        <section id="settings" class="panel">
+          <div class="block">
+            <h2>Change Your Privacy Settings</h2>
+            <div
+              class="privacy-options"
+              role="radiogroup"
+              aria-labelledby="privacy-label"
+            >
+              <label class="privacy-option">
+                <input type="radio" name="privacy" value="private" checked />
+                <span class="box"></span>
+                <span class="text">Private</span>
+              </label>
 
-                            <label class="privacy-option">
-                                <input type="radio" name="privacy" value="public">
-                                <span class="box"></span>
-                                <span class="text">Public</span>
-                            </label>
-                        </div>
-                    </div>
-                </section>
-            </main>
-        </div>
+              <label class="privacy-option">
+                <input type="radio" name="privacy" value="friends" />
+                <span class="box"></span>
+                <span class="text">Friends only</span>
+              </label>
 
-        <footer class="social-footer">
-            <p class="footer__copy">
-                &copy; 2026 The Media Shelf Team - All rights reserved.
-            </p>
-        </footer>
-        <script src="js/frontend/nav.js"></script>
-        <script src="js/frontend/custandsettingstab.js"></script>
-    </body>
+              <label class="privacy-option">
+                <input type="radio" name="privacy" value="public" />
+                <span class="box"></span>
+                <span class="text">Public</span>
+              </label>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <footer class="social-footer">
+      <p class="footer__copy">
+        &copy; 2026 The Media Shelf Team - All rights reserved.
+      </p>
+    </footer>
+    <script src="js/frontend/nav.js"></script>
+    <script src="js/frontend/custandsettingstab.js"></script>
+  </body>
 </html>
