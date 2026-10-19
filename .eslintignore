@@ -1,0 +1,5 @@
+node_modules/
+# Linted by its own config: npm --prefix functions run lint
+functions/
+# Third-party agent skill files, not project code
+.agents/
