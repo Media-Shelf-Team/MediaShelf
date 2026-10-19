@@ -212,7 +212,7 @@ import {auth} from '../firebase-config.js';
 ```
 
 - Don't load `js/firebase-config.js` directly with its own `<script>` tag; let the page's script import it.
-- Pages that don't use Firebase (such as `index.html` and `contact.html`) load neither. Loading Firebase there would start App Check and run reCAPTCHA checks for nothing (This costs money).
+- Pages that don't use Firebase (such as `index.html` and `contact.html`) load neither. Loading Firebase there would start App Check and run reCAPTCHA checks for nothing (This counts towards our reCaptcha quota, after so many it will start charging us.).
 - Every Firebase import URL must use the same SDK version (currently `13.0.0`). When upgrading, change all of them together.
 - Always import `firebase-config.js` with the same path and no query string (such as `?v=2`). A different URL makes the browser load it twice, and Firebase fails with a "duplicate app" error.
 
