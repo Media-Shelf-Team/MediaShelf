@@ -1,155 +1,151 @@
 /* ===== Nav ===== */
 .nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
-    padding: 0.25rem 1rem;
-    background-color: var(--secondary-color);
+  padding: 0.25rem 1rem;
+  background-color: var(--secondary-color);
 }
 
 .nav__logo {
-    margin-right: auto;
+  margin-right: auto;
 
-    font-family: var(--font-display);
-    font-size: 2rem;
-    color: var(--header-text-color);
-    text-decoration: none;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  color: var(--header-text-color);
+  text-decoration: none;
 
-    transition: all var(--transition-fast);
+  transition: all var(--transition-fast);
 }
 
 .nav__logo:hover {
-    color: var(--primary-color);
-    transform: translateY(-2px) translateX(2px);
-    text-shadow: -2px 2px 4px rgba(0, 0, 0, 0.5);
+  color: var(--primary-color);
+  transform: translateY(-2px) translateX(2px);
+  text-shadow: -2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 /*So when you hover over Media Shelf, it doesn't blend in.*/
 #main-page .nav__logo:hover {
-    color: var(--secondary-color);
+  color: var(--secondary-color);
 }
 
 #social-page .nav__logo:hover {
-    color: var(--secondary-color);
+  color: var(--secondary-color);
 }
 
- .main-nav {
-    display: none;
-    grid-column: 1 / -1;
-    flex-direction: column;
-    gap: 12px;
-    padding: 6px 4px 4px;
-    font-size: 1.2rem;
-  }
+.main-nav {
+  display: none;
+  grid-column: 1 / -1;
+  flex-direction: column;
+  gap: 12px;
+  padding: 6px 4px 4px;
+  font-size: 1.2rem;
+}
 
-.nav-main.open{
-        display: flex;
-    }
+.nav-main.open {
+  display: flex;
+}
 
 .nav__menu-btn {
-    padding: 0.25rem 1rem;
+  padding: 0.25rem 1rem;
 
-    font-family: var(--font-display);
-    font-size: 1.25rem;
-    font-weight: bold;
-    color: var(--secondary-color);
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: var(--secondary-color);
 
-    cursor: pointer;
-    background-color: var(--primary-color);
-    border-radius: var(--radius-sm);
+  cursor: pointer;
+  background-color: var(--primary-color);
+  border-radius: var(--radius-sm);
 }
 
-  
 /* I felt so stupid, cause for like 20 mins I was messing around and everything was
 looking completely wrong. I didn't realize the media change below me was 
 desktop, I thought it was mobile.... I was so mad at myself*/
 @media (min-width: 768px) {
+  .nav-main {
+    margin-bottom: 30px;
+  }
 
-    .nav-main{
-        margin-bottom: 30px;
-    }
+  .nav__logo {
+    font-size: 3rem;
+  }
 
+  .nav__menu-btn {
+    display: none;
+  }
 
-    .nav__logo {
-        font-size: 3rem;
-    }
+  /* Makes the menu button disappear.*/
+  .nav_toggle {
+    display: none;
+  }
 
-
-    .nav__menu-btn{
-        display: none;
-    }
-
-    /* Makes the menu button disappear.*/
-    .nav_toggle{
-        display: none;
-    }
-
-    /* For the links on the side, just to make them sit horizontal and without
+  /* For the links on the side, just to make them sit horizontal and without
     bullet points.*/
-    .nav-style{
-        display: flex;
-        list-style-type: none;
-        gap: 50px;
-    }
+  .nav-style {
+    display: flex;
+    list-style-type: none;
+    gap: 50px;
+  }
 
-    /* For the links, mainly for the one that isn't currently on screen.*/
-    .nav-item {
+  /* For the links, mainly for the one that isn't currently on screen.*/
+  .nav-item {
     text-decoration: none;
     color: var(--header-text-color);
     text-shadow: 1px 1px 0 #0c090a;
-    font-size: clamp(.5rem, 2vw, 2.5rem); 
+    font-size: clamp(0.5rem, 2vw, 2.5rem);
     padding: 10px 10px;
     border-radius: 20px;
-    }
+  }
 
-    /*For the link that is curretnly selected.*/
-    .nav-item-active{
+  /*For the link that is curretnly selected.*/
+  .nav-item-active {
     text-decoration: underline;
     color: var(--header-text-color);
     text-shadow: 1px 1px 0 #0c090a;
-    font-size: clamp(.5rem, 2vw, 2.5rem); 
+    font-size: clamp(0.5rem, 2vw, 2.5rem);
     padding: 10px 10px;
     border-radius: 20px;
-    }
+  }
 
-    .nav-item:hover{
+  .nav-item:hover {
     color: var(--secondary-color);
     transform: translateY(-2px) translateX(2px);
     text-shadow: -2px 2px 4px rgba(0, 0, 0, 0.5);
-    }
+  }
 
-    .nav-item-active:hover{
+  .nav-item-active:hover {
     color: var(--secondary-color);
     transform: translateY(-2px) translateX(2px);
     text-shadow: -2px 2px 4px rgba(0, 0, 0, 0.5);
-    }
+  }
 
-    /* Made it so the items in nav will actually sit up top in a line.*/
-    .nav-main{
-        display: grid;
-        grid-template-columns: auto 1fr auto;
-        align-items:center;
-        gap:40px;
-        padding: 16px 20px;
-        border-bottom: 2px solid black;
-    }
-   
-    /* I used Claude for the search input, I assumed it was similar to 
+  /* Made it so the items in nav will actually sit up top in a line.*/
+  .nav-main {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 40px;
+    padding: 16px 20px;
+    border-bottom: 2px solid black;
+  }
+
+  /* I used Claude for the search input, I assumed it was similar to 
     the email, password, etc. but I used Claude to be sure.*/
-    .search input{
-        width: 100%;
-        max-width: 760px;
-        display: block;
-        margin: 0 auto;
-        padding: 15px 18px;
-        border: none;
-        border-radius: var(--radius-sm);
-        background-color: white;
-        text-transform: uppercase;
-    }
+  .search input {
+    width: 100%;
+    max-width: 760px;
+    display: block;
+    margin: 0 auto;
+    padding: 15px 18px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: white;
+    text-transform: uppercase;
+  }
 
-    .search input::placeholder {
-        color: gray;
-    }
+  .search input::placeholder {
+    color: gray;
+  }
 }

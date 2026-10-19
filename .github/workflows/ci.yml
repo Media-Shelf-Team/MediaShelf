@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  lint:
+    name: Lint (ESLint and Prettier)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: |
+            package-lock.json
+            functions/package-lock.json
+
+      # Root: frontend (js/), tests/, HTML pages, and Prettier for the
+      # whole repo (including functions/).
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Check code formatting (Prettier)
+        run: npm run format:check
+
+      - name: Lint frontend, tests and HTML (ESLint)
+        run: npm run lint
+
+      # functions/: own ESLint config and install (Firebase template +
+      # Prettier preset). Formatting is checked by the root Prettier step.
+      - name: Install functions dependencies
+        run: npm ci --prefix functions
+
+      - name: Lint Cloud Functions (ESLint)
+        run: npm run lint --prefix functions
