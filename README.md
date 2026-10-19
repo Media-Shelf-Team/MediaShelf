@@ -226,4 +226,4 @@ GitHub Pages publishes from `main` after the PR is merged. Give it a minute to u
 
 - [GitHub Repository](https://github.com/jt4ylor10/MediaShelf)
 - [Firebase console](https://console.firebase.google.com/u/0/project/media-shelf-d46e7/overview) (you must be added as a member)
-- [PRD](https://docs.google.com/document/d/1s3bFq2-J2kpy2RE69nFFDAYcTe66KL1F/) 
+- [PRD](https://docs.google.com/document/d/1s3bFq2-J2kpy2RE69nFFDAYcTe66KL1F/)
