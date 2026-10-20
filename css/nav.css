@@ -8,7 +8,7 @@
   background-color: var(--secondary-color);
 }
 
-.nav__logo {
+.nav-logo {
   margin-right: auto;
 
   font-family: var(--font-display);
@@ -19,18 +19,18 @@
   transition: all var(--transition-fast);
 }
 
-.nav__logo:hover {
+.nav-logo:hover {
   color: var(--primary-color);
   transform: translateY(-2px) translateX(2px);
   text-shadow: -2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 /*So when you hover over Media Shelf, it doesn't blend in.*/
-#main-page .nav__logo:hover {
+#main-page .nav-logo:hover {
   color: var(--secondary-color);
 }
 
-#social-page .nav__logo:hover {
+#social-page .nav-logo:hover {
   color: var(--secondary-color);
 }
 
@@ -47,7 +47,7 @@
   display: flex;
 }
 
-.nav__menu-btn {
+.nav-menu-btn {
   padding: 0.25rem 1rem;
 
   font-family: var(--font-display);
@@ -68,16 +68,16 @@ desktop, I thought it was mobile.... I was so mad at myself*/
     margin-bottom: 30px;
   }
 
-  .nav__logo {
+  .nav-logo {
     font-size: 3rem;
   }
 
-  .nav__menu-btn {
+  .nav-menu-btn {
     display: none;
   }
 
   /* Makes the menu button disappear.*/
-  .nav_toggle {
+  .nav-toggle {
     display: none;
   }
 

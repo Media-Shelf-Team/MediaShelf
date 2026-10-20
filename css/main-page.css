@@ -1,5 +1,5 @@
 /* ==========================================================
-   mainPage.css  (desktop first)
+   main-page.css  (desktop first)
    Order: base/desktop -> shared tablet+mobile -> tablet only -> mobile only
    ========================================================== */
 
@@ -9,7 +9,7 @@
 mobile first then desktop. So I used Claude to find a good way to
 scale the page, this popped up.
 Two columns on desktop: main content + 380px sidebar. */
-.mainPage {
+.main-page {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 380px;
   gap: 26px;
@@ -160,13 +160,13 @@ but we can allow lowercase to match their actual usernames. */
 }
 
 /*For "Your Shelf" when in desktop.*/
-#recent-Desktoptitle {
+#recent-desktop-title {
   font-weight: normal;
   font-size: clamp(0.5rem, 2vw, 1.6rem);
 }
 
 /*Hides "Recently logged" which is for mobile.*/
-#recent-Mobiletitle {
+#recent-mobile-title {
   display: none;
 }
 
@@ -300,7 +300,7 @@ through javascript to incorporate actual values.*/
 
 .tabs,
 .nav-toggle,
-.nav-Mobilelinks {
+.nav-mobile-links {
   display: none;
 }
 
@@ -310,14 +310,14 @@ through javascript to incorporate actual values.*/
 @media screen and (max-width: 950px) {
   /*The layout for the entire page, mostly did this so the footer would sit at the bottom.
   Despite having the values from footer.css the footers were NOT wanting to stay down there...*/
-  .mainPage {
+  .main-page {
     grid-template-columns: 1fr;
     gap: 10px;
     min-height: 100dvh;
     align-content: start;
   }
 
-  .right-colMobile {
+  .right-col-mobile {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -343,14 +343,14 @@ through javascript to incorporate actual values.*/
   }
 
   /*This is the actual links when you toggle the menu so they're no bulleted.*/
-  .nav-Mobilelinks {
+  .nav-mobile-links {
     list-style: none;
     padding: 8px 0;
   }
 
   /*When you toggle the menu, this makes a flex box for it and let's it sit under the navbar, It also helps
 the toggle from overlapping the contents of the page. */
-  .nav-toggle[aria-expanded='true'] + .nav-Mobilelinks {
+  .nav-toggle[aria-expanded='true'] + .nav-mobile-links {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -358,7 +358,7 @@ the toggle from overlapping the contents of the page. */
   }
 
   /*Styles the boxes and text.*/
-  .nav-Mobileitem {
+  .nav-mobile-item {
     display: block;
     width: 150%;
     padding: 12px;
@@ -471,12 +471,12 @@ the toggle from overlapping the contents of the page. */
   }
 
   /*Hides "your shelf, at a glance"*/
-  #recent-Desktoptitle {
+  #recent-desktop-title {
     display: none;
   }
 
   /*Shows "recently logged"*/
-  #recent-Mobiletitle {
+  #recent-mobile-title {
     display: inline;
   }
 
@@ -532,7 +532,7 @@ the toggle from overlapping the contents of the page. */
    TABLET ONLY (768px - 950px)
    ========================================================== */
 @media screen and (min-width: 768px) and (max-width: 950px) {
-  .mainPage {
+  .main-page {
     padding: 8px 8px 24px;
   }
 
@@ -540,7 +540,7 @@ the toggle from overlapping the contents of the page. */
     padding: 10px;
   }
 
-  .nav__logo {
+  .nav-logo {
     font-size: 2rem;
   }
 
@@ -554,13 +554,13 @@ the toggle from overlapping the contents of the page. */
     font-size: 2rem;
   }
 
-  .nav-Mobilelinks {
+  .nav-mobile-links {
     grid-column: 1 / -1;
     width: 100%;
     text-align: center;
   }
 
-  .nav-Mobileitem:hover {
+  .nav-mobile-item:hover {
     color: var(--secondary-color);
     background-color: var(--primary-color);
   }
@@ -621,7 +621,7 @@ the toggle from overlapping the contents of the page. */
    applies, so these keep mobile winning there.
    ========================================================== */
 @media screen and (max-width: 768px) {
-  .mainPage {
+  .main-page {
     padding: 20px 24px 40px;
   }
 
@@ -634,7 +634,7 @@ the toggle from overlapping the contents of the page. */
     padding: 10px 8px;
   }
 
-  .nav__logo {
+  .nav-logo {
     flex: none;
     font-size: 1.5rem;
   }
@@ -652,17 +652,17 @@ the toggle from overlapping the contents of the page. */
     font-size: 1.5rem;
   }
 
-  .nav-Mobilelinks {
+  .nav-mobile-links {
     flex-basis: 100%;
   }
 
-  .nav-Mobileitem {
+  .nav-mobile-item {
     text-align: center;
     font-size: 1.2rem;
     text-transform: uppercase;
   }
 
-  .nav-Mobileitem.active {
+  .nav-mobile-item.active {
     text-decoration: underline;
   }
 
@@ -710,7 +710,7 @@ the toggle from overlapping the contents of the page. */
    Sits last so it overrides the blocks above; 481px-768px is unchanged.
    ========================================================== */
 @media screen and (max-width: 480px) {
-  .mainPage {
+  .main-page {
     gap: 8px;
     padding: 12px 12px 24px;
   }
@@ -721,7 +721,7 @@ the toggle from overlapping the contents of the page. */
     padding: 8px;
   }
 
-  .nav__logo {
+  .nav-logo {
     font-size: 1.1rem;
   }
 
@@ -735,15 +735,15 @@ the toggle from overlapping the contents of the page. */
     font-size: 1rem;
   }
 
-  .nav-Mobilelinks {
+  .nav-mobile-links {
     padding: 4px 0;
   }
 
-  .nav-toggle[aria-expanded='true'] + .nav-Mobilelinks {
+  .nav-toggle[aria-expanded='true'] + .nav-mobile-links {
     gap: 8px;
   }
 
-  .nav-Mobileitem {
+  .nav-mobile-item {
     padding: 8px 12px;
     font-size: 0.9rem;
   }

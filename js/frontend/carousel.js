@@ -1,5 +1,5 @@
 // Turn vertical wheel movement into horizontal scrolling for the carousel.
-const carousel = document.querySelector('.intro__carousel');
+const carousel = document.querySelector('.intro-carousel');
 if (carousel) {
   carousel.addEventListener(
     'wheel',

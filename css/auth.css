@@ -14,7 +14,7 @@
   padding: 1rem 0 3.5rem;
 }
 
-.signup__box {
+.signup-box {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -31,14 +31,14 @@
   border-radius: var(--radius-md);
 }
 
-.signup__logo {
+.signup-logo {
   width: min(250px, 100%, 30dvh);
   aspect-ratio: 1;
   border-radius: 50%;
   background-color: var(--primary-color);
 }
 
-.signup__content {
+.signup-content {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -47,38 +47,38 @@
 }
 
 /* ----- Text ----- */
-.signup__title {
+.signup-title {
   font-family: var(--font-display);
   font-size: 1.75rem;
 }
 
-.signup__subtitle {
+.signup-subtitle {
   font-size: 0.9rem;
 }
 
-.signup__alt {
+.signup-alt {
   font-size: 0.75rem;
 }
 
-.signup__alt a {
+.signup-alt a {
   color: var(--primary-color);
 }
 
-.signup__forgot {
+.signup-forgot {
   align-self: flex-end;
   font-size: 0.7rem;
   color: var(--primary-color);
 }
 
 /* ----- Form ----- */
-.signup__form {
+.signup-form {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
   width: 100%;
 }
 
-.signup__input {
+.signup-input {
   padding: 0.6rem 0.5rem;
 
   max-width: 100%;
@@ -93,14 +93,14 @@
   border-radius: var(--radius-sm);
 }
 
-.signup__actions {
+.signup-actions {
   display: flex;
   justify-content: center;
   gap: 1rem;
 }
 
 /* ----- Buttons ----- */
-.signup__menu-btn {
+.signup-menu-btn {
   position: absolute;
   top: 0.75rem;
   right: 0.75rem;
@@ -118,7 +118,7 @@
   border-radius: var(--radius-sm);
 }
 
-.signup__submit {
+.signup-submit {
   margin-top: 0.5rem;
   padding: 1rem;
 
@@ -131,7 +131,7 @@
   border-radius: var(--radius-md);
 }
 
-.signup__btn {
+.signup-btn {
   padding: 0.5rem 1.5rem;
 
   font-family: var(--font-display);
@@ -142,23 +142,23 @@
   border-radius: var(--radius-sm);
 }
 
-.signup__btn--cancel {
+.signup-btn-cancel {
   color: var(--header-text-color);
   background-color: var(--surface-color);
 }
 
-.signup__btn--reset {
+.signup-btn-reset {
   color: var(--secondary-color);
   background-color: var(--primary-color);
 }
 
 /* ----- Forgot password variant: light card on the primary-colored page ----- */
-.signup__box--forgot .signup__menu-btn {
+.signup-box-forgot .signup-menu-btn {
   color: var(--secondary-color);
   background-color: var(--primary-color);
 }
 
-.signup__box--forgot .signup__input {
+.signup-box-forgot .signup-input {
   background-color: var(--surface-color);
   border: 1px solid rgba(0, 0, 0, 0.15);
 }
@@ -166,7 +166,7 @@
 /* ===== Desktop ===== */
 @media (min-width: 768px) {
   /* Two panels: image on one side, form on the other. */
-  .signup__box {
+  .signup-box {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0;
@@ -179,7 +179,7 @@
   }
 
   /* Image panel; replace the placeholder text with an image later. */
-  .signup__logo {
+  .signup-logo {
     display: grid;
     place-items: center;
 
@@ -190,25 +190,25 @@
     background-color: var(--tertiary-color);
   }
 
-  .signup__logo::after {
+  .signup-logo::after {
     content: 'Some cool image here...';
     padding: 1.5rem;
     font-size: 2rem;
     color: var(--primary-color);
   }
 
-  .signup__content {
+  .signup-content {
     justify-content: center;
     gap: 1.25rem;
     padding: 1.5rem clamp(2rem, 6vw, 6rem);
   }
 
-  .signup__title {
+  .signup-title {
     font-size: 3rem;
   }
 
   /* Decorative dot before the title */
-  .signup__title::before {
+  .signup-title::before {
     content: '';
     display: inline-block;
     width: 2.5rem;
@@ -219,25 +219,25 @@
     background-color: var(--header-text-color);
   }
 
-  .signup__subtitle {
+  .signup-subtitle {
     font-size: 1.25rem;
   }
 
-  .signup__alt,
-  .signup__forgot {
+  .signup-alt,
+  .signup-forgot {
     font-size: 1rem;
   }
 
-  .signup__form {
+  .signup-form {
     gap: 1.25rem;
   }
 
-  .signup__input {
+  .signup-input {
     padding: 1rem;
     font-size: 1.1rem;
   }
 
-  .signup__menu-btn {
+  .signup-menu-btn {
     top: 1rem;
     right: 1rem;
     left: auto;
@@ -245,55 +245,55 @@
     font-size: 1.25rem;
   }
 
-  .signup__submit {
+  .signup-submit {
     padding: 1.25rem;
     font-size: 1.75rem;
   }
 
-  .signup__btn {
+  .signup-btn {
     padding: 0.6rem 2rem;
     font-size: 1rem;
   }
 
   /* Shared button animation (desktop only) */
-  .signup__menu-btn,
-  .signup__submit,
-  .signup__btn {
+  .signup-menu-btn,
+  .signup-submit,
+  .signup-btn {
     transition:
       transform var(--transition-fast),
       box-shadow var(--transition-fast);
   }
 
-  .signup__menu-btn:hover,
-  .signup__submit:hover,
-  .signup__btn:hover {
+  .signup-menu-btn:hover,
+  .signup-submit:hover,
+  .signup-btn:hover {
     transform: scale(1.05);
     box-shadow: var(--shadow-hover);
   }
 
-  .signup__menu-btn:active,
-  .signup__submit:active,
-  .signup__btn:active {
+  .signup-menu-btn:active,
+  .signup-submit:active,
+  .signup-btn:active {
     transform: scale(0.95);
     box-shadow: none;
   }
 
   /* Login: image panel on the right, menu on the left, no dot beside the title. */
-  .signup__box--login .signup__logo {
+  .signup-box-login .signup-logo {
     order: 1;
   }
 
-  .signup__box--login .signup__menu-btn {
+  .signup-box-login .signup-menu-btn {
     right: auto;
     left: 1rem;
   }
 
-  .signup__box--login .signup__title::before {
+  .signup-box-login .signup-title::before {
     display: none;
   }
 
   /* Forgot password: single centered card with a round image slot above the text. */
-  .signup__box--forgot {
+  .signup-box-forgot {
     display: flex;
     justify-content: center;
     gap: 0.75rem;
@@ -304,7 +304,7 @@
     overflow: visible;
   }
 
-  .signup__box--forgot .signup__logo {
+  .signup-box-forgot .signup-logo {
     width: 8rem;
     height: auto;
     aspect-ratio: 1;
@@ -312,27 +312,27 @@
     background-color: var(--placeholder-color);
   }
 
-  .signup__box--forgot .signup__logo::after {
+  .signup-box-forgot .signup-logo::after {
     content: none;
   }
 
-  .signup__box--forgot .signup__content {
+  .signup-box-forgot .signup-content {
     padding: 0;
   }
 
-  .signup__box--forgot .signup__title {
+  .signup-box-forgot .signup-title {
     font-size: 2rem;
   }
 
-  .signup__box--forgot .signup__title::before {
+  .signup-box-forgot .signup-title::before {
     display: none;
   }
 
-  .signup__box--forgot .signup__subtitle {
+  .signup-box-forgot .signup-subtitle {
     font-size: 1rem;
   }
 
-  .signup__box--forgot .signup__input {
+  .signup-box-forgot .signup-input {
     padding: 0.75rem;
     font-size: 0.9rem;
   }
