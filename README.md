@@ -16,14 +16,16 @@ Media Shelf is a web app for logging movies, TV shows, books, audiobooks, video 
 - [x] `js/frontend/` contains `nav.js` (mobile navigation and shelf tabs), `carousel.js` (temporary horizontal carousel scrolling), and `custandsettingstab.js` (settings and customization tabs).
 - [x] The `.gitignore` excludes local secrets, service-account files, and generated dependencies/logs.
 - [x] Firebase Functions package configuration exists in `functions/package.json`.
-- [x] CI runs Prettier and ESLint on every push and on every pull request into `main` (`.github/workflows/ci.yml`).
+- [x] CI runs Prettier, ESLint, and the Firestore rules tests on every push and on every pull request into `main` (`.github/workflows/ci.yml`).
+- [x] MS-03: Security Rules test harness. `npm test` runs the tests in `tests/rules/` against the Firestore emulator (see [Testing](#testing)).
 
 ### In progress / placeholder
 
 - [ ] `firestore.rules` currently denies every read and write. Firestore access will not work until the rules are implemented.
 - [ ] `functions/index.js` is the Firebase starter scaffold; Media Shelf functions have not been added there yet. When the callable functions (`createUserProfile`, `searchMedia`, `addMediaEntry`) are added, each one must enforce App Check.
 - [ ] No page loads Firebase yet. Pages will start using it as the `js/auth/`, `js/database/`, and `js/media/` scripts are built.
-- [ ] `tests/rules/` contains comment-only test files and a `.gitkeep`; the test harness and assertions are placeholder — not built yet. CI does not run tests yet.
+- [ ] The tests in `tests/rules/` check that every request is denied, matching the placeholder rules. This will be replaced further on.
+- [ ] Cloud Functions have no automated tests yet.
 - [ ] `js/auth/` and `js/database/` contain only `.gitkeep` files: placeholder — not built yet.
 - [ ] `assets/avatars/` and `assets/credits/` do not exist in the repository yet. Create them when the first files are added.
 - [ ] `firestore.indexes.json` exists, but currently defines no indexes.
@@ -31,7 +33,6 @@ Media Shelf is a web app for logging movies, TV shows, books, audiobooks, video 
 ### Next up
 
 - [ ] MS-02: conventions and branch protection.
-- [ ] MS-03: Security Rules test harness.
 - [ ] MS-06: app shell.
 - [ ] MS-10: Security Rules.
 - [ ] MS-11: `createUserProfile`.
@@ -40,7 +41,7 @@ Media Shelf is a web app for logging movies, TV shows, books, audiobooks, video 
 
 Every teammate does this once on each computer they work on.
 
-1. Install **Node.js 24**. Both `package.json` files declare Node.js 24, and CI uses it.
+1. Install **Node.js 24.12 or newer (24.x)**, and check your version with `node -v`. The root `package.json` requires at least 24.12.0, because the rules-testing library needs it. `functions/package.json` declares `24`, which picks the Cloud Functions runtime.
 
 2. Install **Java 21 or newer**. The Firestore emulator needs Java, and Firebase CLI 15 and later will not run the emulators on older Java versions. Check your version:
 
@@ -67,7 +68,7 @@ Every teammate does this once on each computer they work on.
    npm install --prefix functions
    ```
 
-   The root install provides ESLint and Prettier. The `functions/` install provides the Cloud Functions dependencies and their own ESLint.
+   The root install provides ESLint, Prettier, and the testing tools (the project's own Firebase CLI, `@firebase/rules-unit-testing`, and the `firebase` SDK). The `functions/` install provides the Cloud Functions dependencies and their own ESLint.
 
 6. Open the repository folder in VS Code and accept the prompt to install the recommended extensions (Prettier and ESLint, listed in `.vscode/extensions.json`). With them installed, files are formatted with Prettier every time you save.
 
@@ -158,6 +159,56 @@ Configuration lives in `.prettierrc.json`, `.prettierignore`, `.eslintrc.js`, `.
 
 If a check fails on a pull request, open the failed check's **Details** link, expand the step with the red ❌, and read its output. Prettier lists the unformatted files (fix with `npm run format`). ESLint lists the file, `line:column`, message, and rule name for each error.
 
+## Testing
+
+The Firestore Security Rules are tested automatically. From the repository **root**, run:
+
+```bash
+npm test
+```
+
+This one command:
+
+1. Starts the Firestore emulator only (no Auth or Functions emulators), under the fake project ID `demo-mediashelf`. The `demo-` prefix means the tests can never reach our real Firebase project, and no login is needed.
+2. Runs every `tests/rules/*.test.js` file with Node's built-in test runner (`node:test`).
+3. Stops the emulator and throws away its data. If any test fails, the command fails, and so does the **Firestore rules tests** check in CI.
+
+The first run downloads the Firestore emulator, so it takes longer.
+
+### How the tests are organized
+
+| File                               | What it tests                                                                                                    |
+| ---------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `tests/rules/helpers.js`           | Shared setup: loads `firestore.rules` into the emulator, seeds test data, and gives one connection per test user |
+| `tests/rules/users.test.js`        | `users/{uid}` and its profile documents                                                                          |
+| `tests/rules/mediaEntries.test.js` | `users/{uid}/mediaEntries`                                                                                       |
+| `tests/rules/serverOnly.test.js`   | Server-only collections (`usernames`, `apiCache`, `searchCache`, `rateLimits`)                                   |
+| `tests/package.json`               | `{"type": "module"}`, so Node runs the test files as ES modules                                                  |
+
+Test users, created by `seedData()` in `helpers.js`:
+
+| Helper                 | Who                                          | Seeded data                                                        |
+| ---------------------- | -------------------------------------------- | ------------------------------------------------------------------ |
+| `aliceDb(testEnv)`     | Alice, signed in, with a **public** profile  | `users/alice` (`isPublic: true`) and `users/alice/profile/details` |
+| `bobDb(testEnv)`       | Bob, signed in, another user                 | none                                                               |
+| `carolDb(testEnv)`     | Carol, signed in, with a **private** profile | `users/carol` (`isPublic: false`)                                  |
+| `signedOutDb(testEnv)` | Not signed in                                | none                                                               |
+
+Each test reads or writes a document as one of these users and checks the result with `assertSucceeds` (the rules must allow it) or `assertFails` (the rules must deny it). Because the current rules deny everything, every test currently uses `assertFails`.
+
+### Adding a test
+
+1. Open the test file for the area you are testing, and import any helpers you need from `./helpers.js`.
+2. Add a `test('plain-English description', async () => { ... })` that makes one request as one user and checks the result.
+3. When the rules change, update the tests in the same pull request (see [How we work](#how-we-work)).
+
+Notes:
+
+- Run `npm test` from the repository root: `helpers.js` reads `firestore.rules` from the folder the command runs in.
+- `npm test` starts its own emulator, so stop any `firebase emulators:start` you have running first. Otherwise port 8080 is already in use.
+- The project ID `demo-mediashelf` appears in two places, the `test` script in `package.json` and `createTestEnv()` in `helpers.js`. Keep them the same.
+- `npm test` uses the project's own Firebase CLI (15.34.0), the same version as CI, not a globally installed one. To run that CLI directly, use `npx firebase …`.
+
 ## Where things go
 
 The tree below reflects the current repository. A folder listed as a placeholder contains only a `.gitkeep` unless stated otherwise.
@@ -177,17 +228,19 @@ The tree below reflects the current repository. A folder listed as a placeholder
 │   └── media/                # Media-related JavaScript files
 ├── firestore.rules           # Firestore Security Rules
 ├── firestore.indexes.json    # Firestore index configuration (currently empty)
-├── tests/rules/              # Rules test files; assertions and harness are placeholder — not built yet
+├── tests/
+│   ├── package.json          # Makes the test files ES modules ("type": "module")
+│   └── rules/                # Security Rules tests: helpers.js plus one test file per area (see Testing)
 ├── functions/
 │   ├── index.js              # Firebase starter scaffold; project functions are not implemented yet
 │   ├── adapters/             # API adapter modules
 │   ├── lib/                  # Shared helper modules
 │   └── .eslintrc.js          # ESLint config for Cloud Functions
 ├── .github/
-│   ├── workflows/ci.yml      # CI: Prettier and ESLint checks
+│   ├── workflows/ci.yml      # CI: Prettier and ESLint checks, and the Firestore rules tests
 │   └── pull_request_template.md
 ├── .vscode/                  # Shared editor settings and recommended extensions
-├── package.json              # Root tooling: ESLint, Prettier, and their scripts
+├── package.json              # Root tooling: ESLint, Prettier, the rules tests, and their scripts
 ├── .eslintrc.js              # ESLint config for js/, tests/, and HTML pages
 ├── .prettierrc.json          # Prettier config
 ├── .agents/skills/           # Firebase skills for AI coding assistants
@@ -212,7 +265,7 @@ import {auth} from '../firebase-config.js';
 ```
 
 - Don't load `js/firebase-config.js` directly with its own `<script>` tag; let the page's script import it.
-- Pages that don't use Firebase (such as `index.html` and `contact.html`) load neither. Loading Firebase there would start App Check and run reCAPTCHA checks for nothing (This counts towards our reCaptcha quota, after so many it will start charging us.).
+- Pages that don't use Firebase (such as `index.html` and `contact.html`) load neither. Loading Firebase there would start App Check and run reCAPTCHA checks for nothing. Each check counts toward our free monthly reCAPTCHA quota, and checks past that quota are billed.
 - Every Firebase import URL must use the same SDK version (currently `13.0.0`). When upgrading, change all of them together.
 - Always import `firebase-config.js` with the same path and no query string (such as `?v=2`). A different URL makes the browser load it twice, and Firebase fails with a "duplicate app" error.
 
@@ -268,6 +321,18 @@ npm install
 npm install --prefix functions
 ```
 
+**`npm error Missing script: "test"`**
+
+Your copy of the repository is older than the test harness. Pull the latest `main`, then run `npm install`.
+
+**`npm test` says port 8080 is already in use**
+
+A Firestore emulator is already running, usually from `firebase emulators:start` in another terminal. Stop it, then run `npm test` again.
+
+**`EBADENGINE` warnings during `npm install`**
+
+Your Node.js version is older than 24.12. Update Node.js (see [First-time setup](#first-time-setup)), then run `npm install` again.
+
 **Prettier or ESLint passes locally but fails in CI**
 
 Run `npm ci` instead of `npm install` to get exactly the package versions CI uses, and check `git status` for changes you have not committed or pushed.
@@ -299,3 +364,4 @@ GitHub Pages publishes from `main` after the PR is merged. Give it a minute to u
 - [GitHub Repository](https://github.com/Media-Shelf-Team/MediaShelf)
 - [Firebase console](https://console.firebase.google.com/u/0/project/media-shelf-d46e7/overview) (you must be added as a member)
 - [PRD](https://docs.google.com/document/d/1s3bFq2-J2kpy2RE69nFFDAYcTe66KL1F/)
+- [Testing Firestore Security Rules](https://firebase.google.com/docs/firestore/security/test-rules-emulator) and the [`@firebase/rules-unit-testing` reference](https://firebase.google.com/docs/rules/unit-tests) (Firebase docs)

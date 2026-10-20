@@ -52,3 +52,31 @@ jobs:
 
       - name: Lint Cloud Functions (ESLint)
         run: npm run lint --prefix functions
+
+  firestore-rules-test:
+    name: Firestore rules tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      # The Firestore emulator is a Java program.
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Install root dependencies
+        run: npm ci
+
+      # Starts the Firestore emulator, runs tests/rules/*.test.js, stops it.
+      - name: Run Firestore rules tests
+        run: npm test

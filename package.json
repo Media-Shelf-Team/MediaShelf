@@ -3,13 +3,14 @@
   "private": true,
   "description": "MediaShelf root tooling (lint and formatting)",
   "engines": {
-    "node": "24"
+    "node": ">=24.12.0 <25"
   },
   "scripts": {
     "lint": "eslint . --ext .js,.html",
     "lint:fix": "eslint . --ext .js,.html --fix",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "test": "firebase emulators:exec --only firestore --project demo-mediashelf \"node --test tests/rules/*.test.js\""
   },
   "devDependencies": {
     "@html-eslint/eslint-plugin": "^0.67.0",
@@ -17,6 +18,9 @@
     "eslint": "^8.57.1",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^9.1.2",
-    "prettier": "^3.9.10"
+    "prettier": "^3.9.10",
+    "firebase-tools": "15.34.0",
+    "@firebase/rules-unit-testing": "6.0.0",
+    "firebase": "13.0.0"
   }
 }
