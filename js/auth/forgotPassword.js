@@ -1,7 +1,6 @@
 // Forgot-password page script
 
 import {showError, resetPassword} from './auth.js';
-import {LOGIN_PAGE} from '../constants.js';
 
 const forgotPasswordForm = document.getElementById('forgot-password-form');
 const forgotPasswordError = document.getElementById('forgot-password-error');

@@ -37,8 +37,7 @@ loginForm.addEventListener('submit', async (event) => {
   } catch (error) {
     // Show the error message to the user
     showError(loginError, getAuthErrorMessage(error));
-  } finally {
-    // Re-enable the submit button after the login attempt
+    // Re-enable the submit button after failed login attempt
     submitButton.disabled = false;
   }
 });

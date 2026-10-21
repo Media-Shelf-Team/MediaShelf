@@ -64,10 +64,8 @@ signUpForm.addEventListener('submit', async (event) => {
     location.replace(HOME_PAGE);
   } catch (error) {
     // Show any errors on the form that occurred during signup
-    console.log(error);
     showError(errorElement, getAuthErrorMessage(error));
-  } finally {
-    // Re-enable the submit button after the signup attempt
+    // Re-enable the submit button after failed signup attempt
     submitButton.disabled = false;
   }
 });
