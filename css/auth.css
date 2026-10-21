@@ -1,5 +1,10 @@
 /* ===== Auth pages: signup, login, forgot password ===== */
 
+/* hides the page while authentication status is pending */
+html[data-auth='pending'] {
+  visibility: hidden;
+}
+
 /* ----- Layout ----- */
 .signup {
   display: flex;
@@ -97,6 +102,12 @@
   display: flex;
   justify-content: center;
   gap: 1rem;
+}
+
+.form-error {
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+  border-radius: var(--radius-sm);
 }
 
 /* ----- Buttons ----- */

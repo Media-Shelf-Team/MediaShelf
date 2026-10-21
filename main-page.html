@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="swapped-colors">
+<html lang="en" class="swapped-colors" data-auth="pending">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="css/nav.css" />
     <link rel="stylesheet" href="css/footer.css" />
     <link rel="stylesheet" href="css/main-page.css" />
+    <link rel="stylesheet" href="css/auth.css" />
     <title>MediaShelf | My Shelf Page</title>
   </head>
   <body id="main-page">
@@ -38,7 +39,10 @@
         <ul class="nav-mobile-links" id="nav">
           <li><a href="#" class="nav-mobile-item active">My Shelf</a></li>
           <li>
-            <a href="social-page.html" class="nav-mobile-item">Social</a>
+            <!-- <a href="social-page.html" class="nav-mobile-item">Social</a> -->
+            <button class="nav-mobile-item logout-button" type="button">
+              Log Out
+            </button>
           </li>
         </ul>
 
@@ -47,7 +51,10 @@
           <ul class="nav-style">
             <li><a href="#" class="nav-item-active"> My Shelf</a></li>
             <li>
-              <a href="social-page.html" class="nav-item">Social</a>
+              <!-- <a href="social-page.html" class="nav-item">Social</a> -->
+              <button class="logout-button nav-item" type="button">
+                Log Out
+              </button>
             </li>
           </ul>
         </div>
@@ -310,5 +317,6 @@
     </footer>
 
     <script src="js/frontend/nav.js"></script>
+    <script type="module" src="js/auth/signedInPage.js"></script>
   </body>
 </html>

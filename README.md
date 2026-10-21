@@ -18,15 +18,17 @@ Media Shelf is a web app for logging movies, TV shows, books, audiobooks, video 
 - [x] Firebase Functions package configuration exists in `functions/package.json`.
 - [x] CI runs Prettier, ESLint, and the Firestore rules tests on every push and on every pull request into `main` (`.github/workflows/ci.yml`).
 - [x] MS-03: Security Rules test harness. `npm test` runs the tests in `tests/rules/` against the Firestore emulator (see [Testing](#testing)).
+- [x] Email and password authentication: sign up, log in, log out, and password reset by email are built in `js/auth/`. Signed-in pages redirect signed-out users to the login page (see [Authentication](#authentication)).
 
 ### In progress / placeholder
 
 - [ ] `firestore.rules` currently denies every read and write. Firestore access will not work until the rules are implemented.
 - [ ] `functions/index.js` is the Firebase starter scaffold; Media Shelf functions have not been added there yet. When the callable functions (`createUserProfile`, `searchMedia`, `addMediaEntry`) are added, each one must enforce App Check.
-- [ ] No page loads Firebase yet. Pages will start using it as the `js/auth/`, `js/database/`, and `js/media/` scripts are built.
+- [ ] Sign-up creates the Firebase Auth account only. The username is validated in the browser but not saved yet; saving it, and creating the profile, waits for `createUserProfile` in Cloud Functions.
+- [ ] The Social link in the `main-page.html` nav is commented out for now, and the Log Out button sits in its place.
 - [ ] The tests in `tests/rules/` check that every request is denied, matching the placeholder rules. This will be replaced further on.
 - [ ] Cloud Functions have no automated tests yet.
-- [ ] `js/auth/` and `js/database/` contain only `.gitkeep` files: placeholder — not built yet.
+- [ ] `js/database/` contains only a `.gitkeep` file: placeholder — not built yet.
 - [ ] `assets/avatars/` and `assets/credits/` do not exist in the repository yet. Create them when the first files are added.
 - [ ] `firestore.indexes.json` exists, but currently defines no indexes.
 
@@ -209,6 +211,36 @@ Notes:
 - The project ID `demo-mediashelf` appears in two places, the `test` script in `package.json` and `createTestEnv()` in `helpers.js`. Keep them the same.
 - `npm test` uses the project's own Firebase CLI (15.34.0), the same version as CI, not a globally installed one. To run that CLI directly, use `npx firebase …`.
 
+## Authentication
+
+### Rules the auth code follows
+
+- **Sign-up checks:** usernames are 3–30 characters of lowercase letters, numbers, and underscores; the sign-up script lowercases what the user types before checking it (and using it - WIP). Passwords are at least 8 characters, and both password fields must match. Firebase Authentication checks the email.
+- **Login errors don't reveal accounts:** a wrong password and an email with no account both show "Incorrect email or password." The reset page shows the same message whether or not the email has an account.
+- **Redirects use `location.replace()`, not `location.href`,** so Back doesn't return to the login form after logging in, or to a signed-in page after logging out.
+- **Login never checks password length.** Only sign-up does, so raising the minimum later can't lock out existing users.
+
+### Adding a signed-in page
+
+1. Add `data-auth="pending"` to the page's `<html>` tag. The rule in `css/auth.css` hides the page until the user is confirmed, so signed-out users never see it before the redirect.
+2. Link `css/auth.css` in the `<head>`.
+3. Load the guard before `</body>`:
+
+   ```html
+   <script type="module" src="js/auth/signedInPage.js"></script>
+   ```
+
+4. For a Log Out button, use `<button class="logout-button" type="button">Log Out</button>`. The script finds buttons by that class, so desktop and mobile navs can each have one.
+
+`signedInPage.js` also reloads the page when the browser restores it from its back/forward cache. Otherwise Back after logging out could show a frozen copy of a signed-in page without checking again.
+
+### Testing auth in the emulators
+
+With the emulators running and the site open on `localhost` or `127.0.0.1`, every sign-up and login goes to the local Auth emulator. Accounts you create there don't need real email addresses, and they appear in the Emulator UI under **Authentication**.
+
+- **Password reset:** the emulator doesn't send emails. Submit the forgot-password form, then find the line `To reset the password for …, follow this link:` in the terminal running `firebase emulators:start`. Open that link and set a new password. The old password should then fail and the new one should work.
+- **Stopping the emulators deletes their accounts.** Sign up again after a restart.
+
 ## Where things go
 
 The tree below reflects the current repository. A folder listed as a placeholder contains only a `.gitkeep` unless stated otherwise.
@@ -221,8 +253,8 @@ The tree below reflects the current repository. A folder listed as a placeholder
 │   └── img/                  # Images (mediashelfbgidea1.png, dustyicon1–4.png, starwars.jpg)
 ├── js/
 │   ├── firebase-config.js    # One shared Firebase and App Check setup; import auth, db, and functions from here
-│   ├── constants.js          # Shared constants
-│   ├── auth/                 # placeholder — not built yet
+│   ├── constants.js          # Shared constants: page paths, password and username limits
+│   ├── auth/                 # Sign-up, log-in, log-out, password reset, and the signed-in page guard
 │   ├── database/             # Firestore reads and writes; placeholder — not built yet
 │   ├── frontend/             # Browser-side behavior: nav.js, carousel.js, custAndSettingsTab.js
 │   └── media/                # Media-related JavaScript files
@@ -251,17 +283,22 @@ The tree below reflects the current repository. A folder listed as a placeholder
 
 ### How pages load Firebase
 
-Each page that uses Firebase loads **one** entry script for that page, as a module. That script imports what it needs from `firebase-config.js`, which makes the shared setup (Firebase, App Check, and the emulator connections) run first. For example, `login.html` would load:
+Each page that uses Firebase loads **one** entry script for that page, as a module, just before `</body>`. That script imports what it needs, and the imports load the shared setup (Firebase, App Check, and the emulator connections) first. For example, `login.html` loads:
 
 ```html
-<script type="module" src="js/auth/signIn.js"></script>
+<script type="module" src="js/auth/login.js"></script>
 ```
 
-and `js/auth/signIn.js` would start with:
+and `js/auth/login.js` imports the shared auth helpers, which in turn import `auth` from `firebase-config.js`:
 
 ```js
-import {signInWithEmailAndPassword} from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js';
-import {auth} from '../firebase-config.js';
+import {
+  getAuthErrorMessage,
+  redirectIfSignedIn,
+  login,
+  showError,
+} from './auth.js';
+import {HOME_PAGE} from '../constants.js';
 ```
 
 - Don't load `js/firebase-config.js` directly with its own `<script>` tag; let the page's script import it.
@@ -269,7 +306,7 @@ import {auth} from '../firebase-config.js';
 - Every Firebase import URL must use the same SDK version (currently `13.0.0`). When upgrading, change all of them together.
 - Always import `firebase-config.js` with the same path and no query string (such as `?v=2`). A different URL makes the browser load it twice, and Firebase fails with a "duplicate app" error.
 
-The existing `js/media/` files are `entries.js`, `search.js`, and `validate.js`. Use this area for media search, adding items, status changes, and deletion as those features are built. `js/frontend/` is for browser-side behavior such as animations and actions, separate from Firebase data access. `js/database/` is for Firestore reads and writes and currently contains only a `.gitkeep` file. Images belong in `assets/img/`. The `js/auth/` folder is also placeholder — not built yet; it is intended for sign-up, sign-in, sign-out, and password reset code.
+The existing `js/media/` files are `entries.js`, `search.js`, and `validate.js`. Use this area for media search, adding items, status changes, and deletion as those features are built. `js/frontend/` is for browser-side behavior such as animations and actions, separate from Firebase data access. `js/database/` is for Firestore reads and writes and currently contains only a `.gitkeep` file. Images belong in `assets/img/`. `js/auth/` holds the authentication code (see [Authentication](#authentication)).
 
 The `functions/adapters/` folder has one module per external API (`tmdb.js`, `igdb.js`, `openlibrary.js`, and `musicbrainz.js`). `functions/lib/` holds shared helpers (`cache.js`, `rateLimit.js`, and `validate.js`). As Cloud Functions are implemented, keep `index.js` focused on importing and exporting functions, with each function's logic in its own file.
 
@@ -374,4 +411,3 @@ GitHub Pages publishes from `main` after the PR is merged. Give it a minute to u
 - [GitHub Repository](https://github.com/Media-Shelf-Team/MediaShelf)
 - [Firebase console](https://console.firebase.google.com/u/0/project/media-shelf-d46e7/overview) (you must be added as a member)
 - [PRD](https://docs.google.com/document/d/1s3bFq2-J2kpy2RE69nFFDAYcTe66KL1F/)
-- [Testing Firestore Security Rules](https://firebase.google.com/docs/firestore/security/test-rules-emulator) and the [`@firebase/rules-unit-testing` reference](https://firebase.google.com/docs/rules/unit-tests) (Firebase docs)
