@@ -1,5 +1,4 @@
 // Sign-up page script
-
 import {
   getAuthErrorMessage,
   redirectIfSignedIn,
@@ -60,11 +59,12 @@ signUpForm.addEventListener('submit', async (event) => {
 
   // Attempt to sign up the user
   try {
-    await signup({username, email, password});
+    await signup(email, password);
     // this is where we will call createUserProfile with username.
     location.replace(HOME_PAGE);
   } catch (error) {
     // Show any errors on the form that occurred during signup
+    console.log(error);
     showError(errorElement, getAuthErrorMessage(error));
   } finally {
     // Re-enable the submit button after the signup attempt

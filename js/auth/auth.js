@@ -8,7 +8,7 @@ import {
 } from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js';
 import {auth} from '../firebase-config.js';
 
-import {MIN_PASSWORD_LENGTH, LOGIN_PAGE, HOME_PAGE} from './constants.js';
+import {MIN_PASSWORD_LENGTH, LOGIN_PAGE, HOME_PAGE} from '../constants.js';
 
 // Firebase error codes. Maps Firebase auth error codes to user-friendly messages.
 const ERROR_MESSAGES = {
