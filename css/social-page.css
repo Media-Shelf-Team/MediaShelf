@@ -92,7 +92,7 @@
 }
 
 /*For "Your Shelf" when in desktop.*/
-#social-Desktoptitle {
+#social-desktop-title {
   margin-left: 10px;
   font-weight: normal;
   font-size: clamp(1rem, 2vw, 2rem);

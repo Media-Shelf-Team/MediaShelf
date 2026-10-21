@@ -1,5 +1,5 @@
 /* ===== Intro ===== */
-.intro__content {
+.intro-content {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -9,11 +9,11 @@
   text-align: center;
 }
 
-.intro__info {
+.intro-info {
   flex: 1 1 50%;
 }
 
-.intro__title {
+.intro-title {
   padding: 1rem 0;
 
   text-align: center;
@@ -21,7 +21,7 @@
   font-size: 1.5rem;
 }
 
-.intro__text {
+.intro-text {
   margin: 2rem 0;
   padding: 0 1rem;
 
@@ -32,7 +32,7 @@
   color: var(--font-color);
 }
 
-.intro__carousel {
+.intro-carousel {
   display: flex;
   gap: 1em;
   align-content: center;
@@ -46,12 +46,12 @@
   scroll-behavior: smooth;
 }
 
-.intro__carousel img {
+.intro-carousel img {
   max-width: 100%;
   height: auto;
 }
 
-.intro__card {
+.intro-card {
   flex: 0 0 20em;
   height: 20em;
   padding: 1rem;
@@ -65,17 +65,17 @@
   transition: all var(--transition-fast);
 }
 
-.intro__card:hover {
+.intro-card:hover {
   transform: scale(1.05);
   box-shadow: var(--shadow-hover);
 }
 
 @media (min-width: 768px) {
-  .intro__content {
+  .intro-content {
     flex-direction: row;
   }
 
-  .intro__carousel {
+  .intro-carousel {
     width: 90%;
     gap: 1.5rem;
   }

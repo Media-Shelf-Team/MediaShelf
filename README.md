@@ -11,9 +11,9 @@ Media Shelf is a web app for logging movies, TV shows, books, audiobooks, video 
 - [x] Shared browser Firebase setup exists in `js/firebase-config.js`; on localhost it connects Auth, Firestore, and Functions to the local emulators.
 - [x] Firebase App Check is set up for the web app with the Fraud Defense (reCAPTCHA Enterprise) provider, and `js/firebase-config.js` initializes it. On localhost it uses a debug token instead (see [App Check](#app-check)).
 - [x] Firebase Authentication lists the GitHub Pages domain as an authorized domain.
-- [x] The current HTML pages are `index.html`, `login.html`, `signup.html`, `forgot-password.html`, `mainPage.html`, `socialPage.html`, `settingsAndCustomization.html`, and `contact.html`.
+- [x] The current HTML pages are `index.html`, `login.html`, `signup.html`, `forgot-password.html`, `main-page.html`, `social-page.html`, `settings-and-customization.html`, and `contact.html`.
 - [x] The `css/` folder contains the current page styles.
-- [x] `js/frontend/` contains `nav.js` (mobile navigation and shelf tabs), `carousel.js` (temporary horizontal carousel scrolling), and `custandsettingstab.js` (settings and customization tabs).
+- [x] `js/frontend/` contains `nav.js` (mobile navigation and shelf tabs), `carousel.js` (temporary horizontal carousel scrolling), and `custAndSettingsTab.js` (settings and customization tabs).
 - [x] The `.gitignore` excludes local secrets, service-account files, and generated dependencies/logs.
 - [x] Firebase Functions package configuration exists in `functions/package.json`.
 - [x] CI runs Prettier, ESLint, and the Firestore rules tests on every push and on every pull request into `main` (`.github/workflows/ci.yml`).
@@ -215,7 +215,7 @@ The tree below reflects the current repository. A folder listed as a placeholder
 
 ```text
 .
-├── *.html                    # Pages: index, login, signup, forgot-password, mainPage, socialPage, settingsAndCustomization, contact
+├── *.html                    # Pages: index, login, signup, forgot-password, main-page, social-page, settings-and-customization, contact
 ├── css/                      # Page styles
 ├── assets/
 │   └── img/                  # Images (mediashelfbgidea1.png, dustyicon1–4.png, starwars.jpg)
@@ -224,7 +224,7 @@ The tree below reflects the current repository. A folder listed as a placeholder
 │   ├── constants.js          # Shared constants
 │   ├── auth/                 # placeholder — not built yet
 │   ├── database/             # Firestore reads and writes; placeholder — not built yet
-│   ├── frontend/             # Browser-side behavior: nav.js, carousel.js, custandsettingstab.js
+│   ├── frontend/             # Browser-side behavior: nav.js, carousel.js, custAndSettingsTab.js
 │   └── media/                # Media-related JavaScript files
 ├── firestore.rules           # Firestore Security Rules
 ├── firestore.indexes.json    # Firestore index configuration (currently empty)
@@ -276,7 +276,7 @@ The `functions/adapters/` folder has one module per external API (`tmdb.js`, `ig
 ## How we work
 
 1. Pick an issue for the current sprint from the GitHub Project and move it to **In Progress**.
-2. Pull the latest `main`, then create a branch from it named `type/MS-xx-short-name`. Replace `xx` with the backlog issue number and `short-name` with a brief description. Use `feature/` for app features and `infra/` for tooling and CI.
+2. Pull the latest `main`, then create a branch from it named `type/description`.
 3. Commit to your branch and push it.
 4. Before opening a pull request, rebase onto the latest `main` and push with `--force-with-lease`. **ONLY REBASE A BRANCH THAT YOU ALONE WORK ON.**
 
@@ -289,6 +289,16 @@ The `functions/adapters/` folder has one module per external API (`tmdb.js`, `ig
 5. Open a PR into `main` with `Closes #<issue number>` in its description. All CI checks must pass, and at least one other teammate reviews it before merging.
 6. If you change the data model, update `firestore.rules` and its tests in the same PR.
 7. After the PR is merged, delete the branch.
+
+## Naming Conventions
+
+- JavaScript files: `camelCase.js` for general scripts.
+- Functions: `camelCase` for function names.
+- Variables and constants: `camelCase` for variables, `UPPER_SNAKE_CASE` for constants.
+- CSS classes: `kebab-case`.
+- CSS Files: `kebab-case.css`
+- HTML IDs: `kebab-case`.
+- HTML Files: `kebab-case.html`
 
 ## Rules we don't break
 
