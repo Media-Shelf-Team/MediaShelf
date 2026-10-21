@@ -6,15 +6,9 @@ import {
   onAuthStateChanged,
   sendPasswordResetEmail,
 } from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js';
-
 import {auth} from '../firebase-config.js';
 
-import MIN_PASSWORD_LENGTH from './constants.js';
-
-export const LOGIN_PAGE = 'login.html';
-export const LANDING_PAGE = 'index.html';
-export const HOME_PAGE = 'main-page.html';
-export const SIGNUP_PAGE = 'signup.html';
+import {MIN_PASSWORD_LENGTH, LOGIN_PAGE, HOME_PAGE} from './constants.js';
 
 // Firebase error codes. Maps Firebase auth error codes to user-friendly messages.
 const ERROR_MESSAGES = {

@@ -1,13 +1,13 @@
 // Sign-up page script
 
 import {
-  HOME_PAGE,
-  MIN_PASSWORD_LENGTH,
   getAuthErrorMessage,
   redirectIfSignedIn,
   signup,
   showError,
 } from './auth.js';
+
+import {MIN_PASSWORD_LENGTH, HOME_PAGE} from '../constants.js';
 
 redirectIfSignedIn();
 

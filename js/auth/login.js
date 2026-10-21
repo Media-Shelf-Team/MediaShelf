@@ -1,11 +1,12 @@
 // Login page script
 import {
-  HOME_PAGE,
   getAuthErrorMessage,
   redirectIfSignedIn,
   login,
   showError,
 } from './auth.js';
+
+import {HOME_PAGE} from '../constants.js';
 
 redirectIfSignedIn();
 
@@ -16,6 +17,9 @@ const submitButton = loginForm.querySelector('button[type="submit"]');
 loginForm.addEventListener('submit', async (event) => {
   // Prevent the default form submission behavior
   event.preventDefault();
+
+  // Clear any previous error messages
+  showError(loginError, '');
 
   const formData = new FormData(loginForm);
   const email = formData.get('email');
