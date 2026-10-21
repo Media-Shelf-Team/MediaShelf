@@ -1,5 +1,10 @@
 /* ===== Auth pages: signup, login, forgot password ===== */
 
+/* hides the page while authentication status is pending */
+html[data-auth='pending'] {
+  visibility: hidden;
+}
+
 /* ----- Layout ----- */
 .signup {
   display: flex;

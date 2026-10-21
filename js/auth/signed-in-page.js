@@ -2,7 +2,16 @@
 
 import {logout, requireSignedInUser} from './auth.js';
 
-requireSignedInUser();
+const user = await requireSignedInUser();
+if (user) {
+  document.documentElement.removeAttribute('data-auth');
+}
+
+window.addEventListener('pageshow', (event) => {
+  if (event.persisted) {
+    location.reload();
+  }
+});
 
 const logoutButton = document.querySelectorAll('.logout-button');
 

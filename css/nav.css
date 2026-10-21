@@ -19,6 +19,13 @@
   transition: all var(--transition-fast);
 }
 
+.logout-button {
+  border: 0;
+  background-color: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
 .nav-logo:hover {
   color: var(--primary-color);
   transform: translateY(-2px) translateX(2px);
