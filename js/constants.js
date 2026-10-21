@@ -1,1 +1,6 @@
 // categories for media, statuses, avatar IDs, length limits...
+
+// Password and username length constraints
+export const MIN_PASSWORD_LENGTH = 8;
+export const MIN_USERNAME_LENGTH = 3;
+export const MAX_USERNAME_LENGTH = 30;

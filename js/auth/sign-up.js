@@ -1,3 +1,5 @@
+// Sign-up page script
+
 import {
   HOME_PAGE,
   MIN_PASSWORD_LENGTH,

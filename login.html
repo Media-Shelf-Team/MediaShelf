@@ -28,7 +28,13 @@
           <h1 class="signup-title">Welcome Back</h1>
           <p class="signup-subtitle">Please enter your information.</p>
 
-          <form class="signup-form" method="post">
+          <form id="login-form" class="signup-form" method="post">
+            <p
+              class="form-input-error"
+              id="login-error"
+              role="alert"
+              hidden
+            ></p>
             <input
               class="signup-input"
               type="email"
@@ -67,5 +73,7 @@
         &copy; 2026 The Media Shelf Team - All rights reserved.
       </p>
     </footer>
+
+    <script type="module" src="js/auth/login.js"></script>
   </body>
 </html>
