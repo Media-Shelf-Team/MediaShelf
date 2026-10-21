@@ -77,9 +77,8 @@ export function resetPassword(email) {
 }
 
 /**
- * Resolves with the current Fuser (or null) once Firebase has restored the
- * session. auth.currentUser is null until then, so don't read it directly
- * on page load.
+ * Resolves with the current user (or null) once Firebase has restored the
+ * session.
  * @return {Promise<?Object>}
  */
 export function getCurrentUser() {
@@ -117,12 +116,12 @@ export async function redirectIfSignedIn() {
 
 /**
  * Shows error messages to the user inside the form's error container.
+ * @param {HTMLElement} element - The error container element.
  * @param {string} message - The error message to display.
  */
-export function showError(message) {
-  const errorContainer = document.getElementById('error-container');
-  if (errorContainer) {
-    errorContainer.textContent = message;
-    errorContainer.hidden = !message;
+export function showError(element, message) {
+  if (element) {
+    element.textContent = message;
+    element.hidden = !message;
   }
 }

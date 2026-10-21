@@ -28,7 +28,23 @@
           <h1 class="signup-title">Sign Up</h1>
           <p class="signup-subtitle">Please enter your information.</p>
 
-          <form class="signup-form" method="post">
+          <form id="signup-form" class="signup-form" method="post">
+            <p id="signup-error" role="alert" hidden></p>
+            <input
+              class="signup-input"
+              type="text"
+              name="username"
+              placeholder="Enter a Username"
+              aria-label="Username"
+              autocomplete="off"
+              autocapitalize="none"
+              spellcheck="false"
+              minlength="3"
+              maxlength="30"
+              pattern="[a-z0-9_]+"
+              title="3–30 characters: lowercase letters, numbers, and underscores"
+              required
+            />
             <input
               class="signup-input"
               type="email"
