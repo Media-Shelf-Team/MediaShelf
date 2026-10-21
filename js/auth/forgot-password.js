@@ -1,6 +1,6 @@
 // Forgot-password page script
 
-import {showError, sendPasswordResetEmail} from './auth.js';
+import {showError, resetPassword} from './auth.js';
 import {LOGIN_PAGE} from '../constants.js';
 
 const forgotPasswordForm = document.getElementById('forgot-password-form');
@@ -23,10 +23,7 @@ forgotPasswordForm.addEventListener('submit', async (event) => {
 
   try {
     // Attempt to send the password reset email
-    await sendPasswordResetEmail(email);
-
-    // Redirect to login page
-    location.replace(LOGIN_PAGE);
+    await resetPassword(email);
   } catch (error) {
     // Ignore error.
   }

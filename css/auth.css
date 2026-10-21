@@ -104,6 +104,12 @@ html[data-auth='pending'] {
   gap: 1rem;
 }
 
+.form-error {
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+  border-radius: var(--radius-sm);
+}
+
 /* ----- Buttons ----- */
 .signup-menu-btn {
   position: absolute;

@@ -16,10 +16,12 @@ const ERROR_MESSAGES = {
   'auth/weak-password': `Password must be at least ${MIN_PASSWORD_LENGTH} characters.`,
   'auth/email-already-in-use': 'Email is already in use.',
   'auth/invalid-email': 'Invalid email address.',
+  'auth/user-not-found': 'Invalid email or password.',
   'auth/too-many-requests':
     'Too many unsuccessful login attempts. Please try again later.',
   'auth/network-request-failed':
     'Network error. Please check your internet connection and try again.',
+  'auth/wrong-password': 'Incorrect email or password.',
 };
 // Generic error message for unknown errors so that the user sees a friendly message even if the error code is not recognized.
 const GENERIC_ERROR_MESSAGE = 'An unknown error occurred.';
