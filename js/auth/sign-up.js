@@ -9,20 +9,34 @@ import {
 
 redirectIfSignedIn();
 
+const USERNAME_PATTERN = /^[a-z0-9_]{3,30}$/;
+
 const signUpForm = document.getElementById('signup-form');
 const errorElement = document.getElementById('signup-error');
+const submitButton = signUpForm.querySelector('button[type="submit"]');
 
 signUpForm.addEventListener('submit', async (event) => {
+  // Prevent the default form submission behavior
   event.preventDefault();
 
   // Clear any previous error messages
   showError(errorElement, '');
 
+  // Get the form data values
   const formData = new FormData(signUpForm);
-  const username = formData.get('username');
+  const username = formData.get('username').trim().toLowerCase();
   const email = formData.get('email');
   const password = formData.get('password');
   const confirmPassword = formData.get('confirmPassword');
+
+  // Check if username matches the required pattern
+  if (!USERNAME_PATTERN.test(username)) {
+    showError(
+      errorElement,
+      'Username must be 3–30 characters: lowercase letters, numbers, and underscores.',
+    );
+    return;
+  }
 
   // Check if passwords match
   if (password !== confirmPassword) {
@@ -38,10 +52,20 @@ signUpForm.addEventListener('submit', async (event) => {
     );
     return;
   }
+
+  // Disable the submit button to prevent multiple submissions
+  submitButton.disabled = true;
+
+  // Attempt to sign up the user
   try {
     await signup({username, email, password});
+    // this is where we will call createUserProfile with username.
     location.replace(HOME_PAGE);
   } catch (error) {
+    // Show any errors on the form that occurred during signup
     showError(errorElement, getAuthErrorMessage(error));
+  } finally {
+    // Re-enable the submit button after the signup attempt
+    submitButton.disabled = false;
   }
 });
