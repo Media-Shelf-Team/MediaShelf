@@ -226,6 +226,14 @@ Some limits are written in both places, because the rules can't import JavaScrip
 | Avatar IDs          | `AVATAR_IDS`                                                  | `isValidAvatarId()`           |
 | Log statuses        | `LOG_STATUS`                                                  | `mediaEntries` update rule    |
 
+### Updating firestore.rules
+
+Deploy the updated `firestore.rules` to the Firebase project using the Firebase CLI:
+
+```bash
+firebase deploy --only firestore:rules
+```
+
 ## Testing
 
 The Firestore Security Rules are tested automatically. From the repository **root**, run:
