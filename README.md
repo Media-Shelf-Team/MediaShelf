@@ -19,14 +19,15 @@ Media Shelf is a web app for logging movies, TV shows, books, audiobooks, video 
 - [x] CI runs Prettier, ESLint, and the Firestore rules tests on every push and on every pull request into `main` (`.github/workflows/ci.yml`).
 - [x] MS-03: Security Rules test harness. `npm test` runs the tests in `tests/rules/` against the Firestore emulator (see [Testing](#testing)).
 - [x] Email and password authentication: sign up, log in, log out, and password reset by email are built in `js/auth/`. Signed-in pages redirect signed-out users to the login page (see [Authentication](#authentication)).
+- [x] MS-10: Security Rules. `firestore.rules` allows owner and public-profile access to `users/{uid}` and its subcollections, validates every browser write, and leaves profile creation and deletion, media entry creation, and the server-only collections to Cloud Functions (see [Security Rules](#security-rules)).
 
 ### In progress / placeholder
 
-- [ ] `firestore.rules` currently denies every read and write. Firestore access will not work until the rules are implemented.
+- [ ] The tests in `tests/rules/` still expected every request to be denied, so some of them fail against the current rules. The **Firestore rules tests** check fails until they are rewritten, because of this I have removed the current tests (see [Testing](#testing)).
+- [ ] `AVATAR_IDS` in `js/constants.js` is still empty, while `firestore.rules` accepts `avatar1`, `avatar2`, and `avatar3`. We need to finalize an avatar list and naming convention.
 - [ ] `functions/index.js` is the Firebase starter scaffold; Media Shelf functions have not been added there yet. When the callable functions (`createUserProfile`, `searchMedia`, `addMediaEntry`) are added, each one must enforce App Check.
 - [ ] Sign-up creates the Firebase Auth account only. The username is validated in the browser but not saved yet; saving it, and creating the profile, waits for `createUserProfile` in Cloud Functions.
 - [ ] The Social link in the `main-page.html` nav is commented out for now, and the Log Out button sits in its place.
-- [ ] The tests in `tests/rules/` check that every request is denied, matching the placeholder rules. This will be replaced further on.
 - [ ] Cloud Functions have no automated tests yet.
 - [ ] `js/database/` contains only a `.gitkeep` file: placeholder — not built yet.
 - [ ] `assets/avatars/` and `assets/credits/` do not exist in the repository yet. Create them when the first files are added.
@@ -36,7 +37,7 @@ Media Shelf is a web app for logging movies, TV shows, books, audiobooks, video 
 
 - [ ] MS-02: conventions and branch protection.
 - [ ] MS-06: app shell.
-- [ ] MS-10: Security Rules.
+- [ ] Rewrite the Security Rules to properly test the rules defined in `firestore.rules`.
 - [ ] MS-11: `createUserProfile`.
 
 ## First-time setup
@@ -96,7 +97,7 @@ Every teammate does this once on each computer they work on.
 
    Open the URL printed by `serve`.
 
-When you open the app on `localhost` or `127.0.0.1`, `js/firebase-config.js` connects the browser SDK to the local Auth, Firestore, and Functions emulators. Sign-ups and database requests stay local and do not reach the live Firebase services. Note that Firestore requests are currently denied by the placeholder rules.
+When you open the app on `localhost` or `127.0.0.1`, `js/firebase-config.js` connects the browser SDK to the local Auth, Firestore, and Functions emulators. Sign-ups and database requests stay local and do not reach the live Firebase services. The Firestore emulator loads `firestore.rules`, so local requests follow the same [Security Rules](#security-rules) as the live database. Profiles and media entries are created only by Cloud Functions, which are not built yet, so to try reads and updates locally, add the documents by hand in the Emulator UI first.
 
 | Emulator       | Port |
 | -------------- | ---: |
@@ -161,6 +162,70 @@ Configuration lives in `.prettierrc.json`, `.prettierignore`, `.eslintrc.js`, `.
 
 If a check fails on a pull request, open the failed check's **Details** link, expand the step with the red ❌, and read its output. Prettier lists the unformatted files (fix with `npm run format`). ESLint lists the file, `line:column`, message, and rule name for each error.
 
+## Security Rules
+
+`firestore.rules` decides what the browser may read and write in Firestore. It is deny-by-default: anything not matched below, including any new collection, is denied by the catch-all rule at the bottom of the file.
+
+Cloud Functions use the Admin SDK, which skips Security Rules entirely. That is why some writes are marked "Cloud Functions only": the rules deny them from the browser, and the matching function does them on the server after its own checks.
+
+### Who can do what
+
+"Signed in" means any user with a Firebase Auth account. "Owner" means the signed-in user whose UID matches `{uid}` in the path. "Public" means `users/{uid}` has `isPublic: true`.
+
+| Path                                                 | Read                                                                                            | Write                                                                                                                                |
+| ---------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `users/{uid}`                                        | Any signed-in user can get one document. Listing the collection: no.                            | **Update:** owner only, with valid fields (below). **Create / delete:** Cloud Functions only (`createUserProfile`, `onUserDeleted`). |
+| `users/{uid}/profile/details`                        | Owner, or any signed-in user if the profile is public.                                          | **Update:** owner only, and only the `bio` field. **Create / delete:** Cloud Functions only.                                         |
+| `users/{uid}/mediaEntries/{entryId}`                 | Owner, or any signed-in user if the profile is public. Queries need a `limit()` of 100 or less. | **Update:** owner only, and only the `status` field. **Delete:** owner. **Create:** Cloud Functions only (`addMediaEntry`).          |
+| `users/{uid}/private/account`                        | Owner only.                                                                                     | Cloud Functions only.                                                                                                                |
+| `usernames`, `apiCache`, `searchCache`, `rateLimits` | No browser access.                                                                              | Cloud Functions only.                                                                                                                |
+| Anything else                                        | Denied.                                                                                         | Denied.                                                                                                                              |
+
+Signed-out users can't read or write anything.
+
+### What a valid write looks like
+
+- **`users/{uid}`** must contain exactly `displayName`, `avatarId`, and `isPublic`, no more and no fewer. An update must send all three (`setDoc` with all fields, or `updateDoc` on a document that already has them).
+  - `displayName`: a string of 2–30 characters with no leading or trailing spaces.
+  - `avatarId`: one of `avatar1`, `avatar2`, `avatar3` (Currently).
+  - `isPublic`: `true` or `false`.
+- **`profile/details`** may contain only `bio` (Currently), a string of at most 155 characters.
+- **`mediaEntries/{entryId}`**: an update may change only `status` (Currently, TR will include notes and other fields), and the new value must be `planned`, `in_progress`, or `completed`. Every other field is set by `addMediaEntry` and can't be edited from the browser. Entry IDs follow the pattern `{category}_{externalId}` (for example, `movie_603`).
+
+### Querying media entries
+
+The Log Page and category views read entries with a query, and the rules currently only allow a query that asks for **100 documents or fewer**. Always add `limit()` and paginate with `startAfter()`:
+
+```js
+import {
+  collection,
+  query,
+  where,
+  limit,
+} from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js';
+
+const q = query(
+  collection(db, 'users', uid, 'mediaEntries'),
+  where('status', '==', 'completed'),
+  limit(50),
+);
+```
+
+A query without `limit()`, or with a limit above 100, fails with `Missing or insufficient permissions`.
+
+Reading another user's profile details or media entries makes the rules look up their `users/{uid}` document to check `isPublic`. Firestore bills that lookup as one extra document read per request.
+
+### Keep the rules and `js/constants.js` in sync
+
+Some limits are written in both places, because the rules can't import JavaScript. When you change one, change the other in the same pull request, together with the tests:
+
+| Value               | `js/constants.js`                                             | `firestore.rules`             |
+| ------------------- | ------------------------------------------------------------- | ----------------------------- |
+| Display name length | `MIN_DISPLAY_NAME_LENGTH` (2), `MAX_DISPLAY_NAME_LENGTH` (30) | `isValidDisplayName()`        |
+| Bio length          | `MAX_BIO_LENGTH` (155)                                        | `profile/details` update rule |
+| Avatar IDs          | `AVATAR_IDS`                                                  | `isValidAvatarId()`           |
+| Log statuses        | `LOG_STATUS`                                                  | `mediaEntries` update rule    |
+
 ## Testing
 
 The Firestore Security Rules are tested automatically. From the repository **root**, run:
@@ -196,7 +261,7 @@ Test users, created by `seedData()` in `helpers.js`:
 | `carolDb(testEnv)`     | Carol, signed in, with a **private** profile | `users/carol` (`isPublic: false`)                                  |
 | `signedOutDb(testEnv)` | Not signed in                                | none                                                               |
 
-Each test reads or writes a document as one of these users and checks the result with `assertSucceeds` (the rules must allow it) or `assertFails` (the rules must deny it). Because the current rules deny everything, every test currently uses `assertFails`.
+Each test reads or writes a document as one of these users and checks the result with `assertSucceeds` (the rules must allow it) or `assertFails` (the rules must deny it).
 
 ### Adding a test
 
@@ -253,12 +318,12 @@ The tree below reflects the current repository. A folder listed as a placeholder
 │   └── img/                  # Images (mediashelfbgidea1.png, dustyicon1–4.png, starwars.jpg)
 ├── js/
 │   ├── firebase-config.js    # One shared Firebase and App Check setup; import auth, db, and functions from here
-│   ├── constants.js          # Shared constants: page paths, password and username limits
+│   ├── constants.js          # Shared constants: page paths, auth and profile limits, categories, statuses, avatar IDs
 │   ├── auth/                 # Sign-up, log-in, log-out, password reset, and the signed-in page guard
 │   ├── database/             # Firestore reads and writes; placeholder — not built yet
 │   ├── frontend/             # Browser-side behavior: nav.js, carousel.js, custAndSettingsTab.js
 │   └── media/                # Media-related JavaScript files
-├── firestore.rules           # Firestore Security Rules
+├── firestore.rules           # Firestore Security Rules (see Security Rules)
 ├── firestore.indexes.json    # Firestore index configuration (currently empty)
 ├── tests/
 │   ├── package.json          # Makes the test files ES modules ("type": "module")
@@ -324,7 +389,7 @@ The `functions/adapters/` folder has one module per external API (`tmdb.js`, `ig
    ```
 
 5. Open a PR into `main` with `Closes #<issue number>` in its description. All CI checks must pass, and at least one other teammate reviews it before merging.
-6. If you change the data model, update `firestore.rules` and its tests in the same PR.
+6. If you change the data model, update `firestore.rules`, its tests, and any matching values in `js/constants.js` in the same PR.
 7. After the PR is merged, delete the branch.
 
 ## Naming Conventions
@@ -383,6 +448,10 @@ Your Node.js version is older than 24.12. Update Node.js (see [First-time setup]
 **Prettier or ESLint passes locally but fails in CI**
 
 Run `npm ci` instead of `npm install` to get exactly the package versions CI uses, and check `git status` for changes you have not committed or pushed.
+
+**`Missing or insufficient permissions` from Firestore**
+
+The Security Rules denied the request. Open **Firestore > Requests** in the Emulator UI to see which rule denied it. Common causes: a media entries query without `limit()` (or with a limit above 100), an update that changes a field the rules don't allow, a value outside the allowed list, or a browser create of a document that only Cloud Functions may create (see [Security Rules](#security-rules)).
 
 **My page can't find `firebase-config.js`**
 
