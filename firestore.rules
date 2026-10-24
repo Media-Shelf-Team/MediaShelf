@@ -3,7 +3,9 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // ----------- Helpers -----------
+    // ----------------------------------------
+    // ----------- Helper Functions -----------
+    // ----------------------------------------
     function isSignedIn() {
       return request.auth != null;
     }
@@ -42,7 +44,9 @@ service cloud.firestore {
         && data.isPublic is bool;
     }
 
-    // ----------- User Collections -----------
+    // --------------------------------------------
+    // ------------- User Collections -------------
+    // --------------------------------------------
     match /users/{userId} {
       allow get: if isSignedIn();
       allow list: if false;
@@ -80,7 +84,9 @@ service cloud.firestore {
       }
     }
 
+    // -----------------------------------------------
     // ----------- Server-Only Collections -----------
+    // -----------------------------------------------
     match /usernames/{id}   { allow read, write: if false; }
     match /apiCache/{id}    { allow read, write: if false; }
     match /searchCache/{id} { allow read, write: if false; }
