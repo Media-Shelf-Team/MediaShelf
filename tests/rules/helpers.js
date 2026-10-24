@@ -31,6 +31,16 @@ export async function seedData(testEnv) {
       isPublic: false,
     });
     await setDoc(doc(db, 'users/alice/profile/details'), {bio: 'Hi'});
+
+    await setDoc(doc(db, 'users/carol/profile/details'), {bio: 'hello'});
+
+    await setDoc(doc(db, 'users/alice/private/account'), {username: 'alice'});
+    await setDoc(doc(db, 'users/carol/private/account'), {username: 'carol'});
+
+    await setDoc(doc(db, 'usernames/alice'), {uid: 'alice'});
+    await setDoc(doc(db, 'apiCache/movie_550'), {title: 'ClayFace'});
+    await setDoc(doc(db, 'searchCache/q1'), {results: []});
+    await setDoc(doc(db, 'rateLimits/tmdb'), {count: 3});
   });
 }
 
