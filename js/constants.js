@@ -5,8 +5,8 @@ export const MIN_USERNAME_LENGTH = 3;
 export const MAX_USERNAME_LENGTH = 30;
 export const USERNAME_PATTERN = /^[a-z0-9_]{3,30}$/;
 
-// Display Name Constraints
-export const MIN_DISPLAY_NAME_LENGTH = 3;
+// Display Name Constraints (Need to also change in firestore.rules)
+export const MIN_DISPLAY_NAME_LENGTH = 2;
 export const MAX_DISPLAY_NAME_LENGTH = 30;
 
 // Password and email length constraints (these are to match the html forms)

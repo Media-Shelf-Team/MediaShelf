@@ -2,6 +2,86 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    // ----------- Helpers -----------
+    function isSignedIn() { 
+      return request.auth != null; 
+    }
+
+    function isOwner(userId) { 
+      return request.auth != null && request.auth.uid == userId; 
+    }
+
+    function isPublicProfile(userId) {
+      return get(/databases/$(database)/documents/users/$(userId)/profile)
+      .data.isPublic == true;
+    }
+
+    function canReadGate(userId) {
+      return isOwner(userId) || (isSignedIn() && isPublicProfile(userId));
+    }
+
+    // Make sure to update this if you change the constants
+    // related to display name length in the client code
+    function isValidDisplayName(displayName) {
+      return displayName is string 
+        && displayName.size() >= 2 
+        && displayName.size() <= 30;
+    }
+
+    function isValidUser(user) {
+      return user.keys().hasAll(['displayName', 'avatarId', 'isPublic'])
+        && user.keys().hasOnly(['displayName', 'avatarId', 'isPublic'])
+        && isValidDisplayName(user.displayName)
+        && user.avatarId in ['avatar1', 'avatar2', 'avatar3']
+        && user.isPublic is bool;
+    }
+
+    // ----------- User Collections -----------
+
+    match /users/{userId} {
+      allow get: if isSignedIn();
+      allow create, delete: if false;
+      allow update: if isOwner(userId) && isValidUser(request.resource.data);
+
+      match /profile/{details} {
+        allow get: if canReadGate(userId);
+        allow create, delete: if false;
+        allow update: if isOwner(userId) 
+          && isValidUser(request.resource.data)
+          && request.resource.data.keys().hasOnly(['bio'])
+          && request.resource.data.bio is string
+          && request.resource.data.bio.size() <= 155;
+      }
+
+      match /mediaEntries/{externalId} {
+        allow get: if canReadGate(userId);
+        allow create: if false;
+        allow delete: if isOwner(userId);
+        allow update: if isOwner(userId)
+          && request.resource.data.keys().diff(resource.data)
+            .affectedKeys().hasOnly(['status'])
+          && request.resource.data.status in 
+            ['planned', 'in_progress', 'completed'];
+      }
+
+      match /private/{account} {
+        allow get: if isOwner(userId);
+        allow write: if false;
+      }
+    }
+
+    // ----------- Server Only Collections -----------
+    match /usernames/{id} 
+      {allow read, write: if false;}
+    match /apiCache/{id} 
+      {allow read, write: if false;}
+    match /searchCache/{id} 
+      {allow read, write: if false;}
+    match /rateLimits/{id} 
+      {allow read, write: if false;}
+
+    // ----------- Default deny all -----------
     match /{document=**} {
       allow read, write: if false;
     }
