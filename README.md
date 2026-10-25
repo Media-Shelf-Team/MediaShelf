@@ -20,10 +20,13 @@ Media Shelf is a web app for logging movies, TV shows, books, audiobooks, video 
 - [x] MS-03: Security Rules test harness. `npm test` runs the tests in `tests/rules/` against the Firestore emulator (see [Testing](#testing)).
 - [x] Email and password authentication: sign up, log in, log out, and password reset by email are built in `js/auth/`. Signed-in pages redirect signed-out users to the login page (see [Authentication](#authentication)).
 - [x] MS-10: Security Rules. `firestore.rules` allows owner and public-profile access to `users/{uid}` and its subcollections, validates every browser write, and leaves profile creation and deletion, media entry creation, and the server-only collections to Cloud Functions (see [Security Rules](#security-rules)).
+- [x] Security Rules tests rewritten for the current `firestore.rules`. `users.test.js` and `serverOnly.test.js` cover `users/{uid}`, `profile/details`, `private/account`, the server-only collections, and the default-deny catch-all, using the test users Alice, Bob, Carol, and a signed-out user (see [Testing](#testing)).
 
 ### In progress / placeholder
 
-- [ ] The tests in `tests/rules/` still expected every request to be denied, so some of them fail against the current rules. The **Firestore rules tests** check fails until they are rewritten, because of this I have removed the current tests (see [Testing](#testing)).
+- [ ] Three tests in `users.test.js` expect listing to succeed (`bob can list the users collection`, `bob can list alices profile`, `alice can list her own private collection`), but `firestore.rules` denies `list` on all three paths. They are marked `{todo: true}`, so they don't fail CI. We need to decide for each one whether to flip it to `assertFails` or change the rules.
+- [ ] The two avatar tests in `users.test.js` are still skipped (waiting on #97). The rules and the seed data already use `avatar1`-`avatar3`. When the list is final, remove the `skip` and change their `avatarId: '2'` to a valid ID such as `'avatar2'`.
+- [ ] `mediaEntries.test.js` has only one test (Alice reading her own entry). The media entry rules (gated reads, the `limit()` cap on queries, `status` updates, and deletes) still need tests.
 - [ ] `AVATAR_IDS` in `js/constants.js` is still empty, while `firestore.rules` accepts `avatar1`, `avatar2`, and `avatar3`. We need to finalize an avatar list and naming convention.
 - [ ] `functions/index.js` is the Firebase starter scaffold; Media Shelf functions have not been added there yet. When the callable functions (`createUserProfile`, `searchMedia`, `addMediaEntry`) are added, each one must enforce App Check.
 - [ ] Sign-up creates the Firebase Auth account only. The username is validated in the browser but not saved yet; saving it, and creating the profile, waits for `createUserProfile` in Cloud Functions.
@@ -37,7 +40,7 @@ Media Shelf is a web app for logging movies, TV shows, books, audiobooks, video 
 
 - [ ] MS-02: conventions and branch protection.
 - [ ] MS-06: app shell.
-- [ ] Rewrite the Security Rules to properly test the rules defined in `firestore.rules`.
+- [ ] Write the media entry tests in `mediaEntries.test.js`.
 - [ ] MS-11: `createUserProfile`.
 
 ## First-time setup
@@ -255,27 +258,45 @@ The first run downloads the Firestore emulator, so it takes longer.
 | File                               | What it tests                                                                                                    |
 | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
 | `tests/rules/helpers.js`           | Shared setup: loads `firestore.rules` into the emulator, seeds test data, and gives one connection per test user |
-| `tests/rules/users.test.js`        | `users/{uid}` and its profile documents                                                                          |
-| `tests/rules/mediaEntries.test.js` | `users/{uid}/mediaEntries`                                                                                       |
-| `tests/rules/serverOnly.test.js`   | Server-only collections (`usernames`, `apiCache`, `searchCache`, `rateLimits`)                                   |
+| `tests/rules/users.test.js`        | `users/{uid}`, `users/{uid}/profile/details`, and `users/{uid}/private/account`                                  |
+| `tests/rules/mediaEntries.test.js` | `users/{uid}/mediaEntries` (one test so far)                                                                     |
+| `tests/rules/serverOnly.test.js`   | Server-only collections (`usernames`, `apiCache`, `searchCache`, `rateLimits`) and paths with no rule            |
 | `tests/package.json`               | `{"type": "module"}`, so Node runs the test files as ES modules                                                  |
 
 Test users, created by `seedData()` in `helpers.js`:
 
-| Helper                 | Who                                          | Seeded data                                                        |
-| ---------------------- | -------------------------------------------- | ------------------------------------------------------------------ |
-| `aliceDb(testEnv)`     | Alice, signed in, with a **public** profile  | `users/alice` (`isPublic: true`) and `users/alice/profile/details` |
-| `bobDb(testEnv)`       | Bob, signed in, another user                 | none                                                               |
-| `carolDb(testEnv)`     | Carol, signed in, with a **private** profile | `users/carol` (`isPublic: false`)                                  |
-| `signedOutDb(testEnv)` | Not signed in                                | none                                                               |
+| Helper                 | Who                                          | Seeded data                                                                                                      |
+| ---------------------- | -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `aliceDb(testEnv)`     | Alice, signed in, with a **public** profile  | `users/alice` (`isPublic: true`, `avatarId: 'avatar1'`), `profile/details`, `private/account`, `usernames/alice` |
+| `bobDb(testEnv)`       | Bob, signed in, another user                 | none (no profile)                                                                                                |
+| `carolDb(testEnv)`     | Carol, signed in, with a **private** profile | `users/carol` (`isPublic: false`, `avatarId: 'avatar2'`), `profile/details`, `private/account`                   |
+| `signedOutDb(testEnv)` | Not signed in                                | none                                                                                                             |
+
+`seedData()` also writes one document to each server-only collection: `apiCache/movie_550`, `searchCache/q1`, and `rateLimits/tmdb`.
 
 Each test reads or writes a document as one of these users and checks the result with `assertSucceeds` (the rules must allow it) or `assertFails` (the rules must deny it).
+
+`users.test.js` clears the emulator and seeds the data again before every test, because its allowed writes change the documents. The other files seed once and only make requests that are denied, so nothing changes between tests.
+
+The seed data must pass the rules' own validation. A `users/{uid}` update is checked against the whole document after the change, not just the fields sent, so one invalid seeded field (such as an avatar ID the rules don't accept) makes every update by that user fail.
 
 ### Adding a test
 
 1. Open the test file for the area you are testing, and import any helpers you need from `./helpers.js`.
-2. Add a `test('plain-English description', async () => { ... })` that makes one request as one user and checks the result.
-3. When the rules change, update the tests in the same pull request (see [How we work](#how-we-work)).
+2. Add a `test('plain-English description', async () => { ... })` that makes one request as one user and checks the result. Name the test after the user and the outcome, for example `bob cannot read carols private bio`.
+3. Put it in the file's matching section: requests the rules should deny go under **DENIED**, requests they should allow under **ALLOWED**.
+4. When the rules change, update the tests in the same pull request (see [How we work](#how-we-work)).
+
+Two options mark tests that aren't ready:
+
+| Option             | What happens                                                                                                                               |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `{todo: true}`     | The test still runs, but a failure doesn't fail `npm test`. The output shows `ok … # TODO` if it passes and `not ok … # TODO` if it fails. |
+| `{skip: 'reason'}` | The test doesn't run at all. The reason appears in the output.                                                                             |
+
+Use them only for behavior that is waiting on a decision or another issue, and remove them as soon as that is settled. A todo test hides a real failure, so check the `# TODO` lines in the output.
+
+If a test needs a setup step that must work first (for example, Alice making her profile private before Bob tries to read her bio), wrap that step in `assertSucceeds`. Then a broken setup step is reported as such, instead of looking like the rule under test failed.
 
 Notes:
 
