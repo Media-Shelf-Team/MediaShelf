@@ -243,18 +243,18 @@ test('signed out user cannot delete alices card', async () => {
 // --- Reading (any signed-in user, even when the profile is private) ---
 
 // alice reading her own card
-test('alice can read her own card', {todo: true}, async () => {
+test('alice can read her own card', async () => {
   await assertSucceeds(getDoc(doc(aliceDb(testEnv), 'users/alice')));
 });
 
 // bob reading alice's card (alice's profile is public)
-test('bob can read alices card', {todo: true}, async () => {
+test('bob can read alices card', async () => {
   await assertSucceeds(getDoc(doc(bobDb(testEnv), 'users/alice')));
 });
 
 // bob reading carol's card (carol's profile is private, but cards are
 // always readable)
-test('bob can read carols card', {todo: true}, async () => {
+test('bob can read carols card', async () => {
   await assertSucceeds(getDoc(doc(bobDb(testEnv), 'users/carol')));
 });
 
@@ -266,48 +266,44 @@ test('bob can list the users collection', {todo: true}, async () => {
 // --- Updating (owner only, within the limits) ---
 
 // alice changing her displayName to a normal name
-test('alice can update her display name', {todo: true}, async () => {
+test('alice can update her display name', async () => {
   const ref = doc(aliceDb(testEnv), 'users/alice');
   await assertSucceeds(updateDoc(ref, {displayName: 'Alicia'}));
 });
 
 // alice changing her displayName to exactly 2 characters (the minimum)
-test('alice can use a 2 character display name', {todo: true}, async () => {
+test('alice can use a 2 character display name', async () => {
   const ref = doc(aliceDb(testEnv), 'users/alice');
   await assertSucceeds(updateDoc(ref, {displayName: 'Al'}));
 });
 
 // alice changing her displayName to exactly 30 characters (the maximum)
-test('alice can use a 30 character display name', {todo: true}, async () => {
+test('alice can use a 30 character display name', async () => {
   const ref = doc(aliceDb(testEnv), 'users/alice');
   await assertSucceeds(updateDoc(ref, {displayName: 'a'.repeat(30)}));
 });
 
 // alice using a space in the middle of her displayName
 // (only spaces at the start or end are banned)
-test(
-  'alice can use a space inside her display name',
-  {todo: true},
-  async () => {
-    const ref = doc(aliceDb(testEnv), 'users/alice');
-    await assertSucceeds(updateDoc(ref, {displayName: 'Al Ice'}));
-  },
-);
+test('alice can use a space inside her display name', async () => {
+  const ref = doc(aliceDb(testEnv), 'users/alice');
+  await assertSucceeds(updateDoc(ref, {displayName: 'Al Ice'}));
+});
 
 // alice switching her profile from public to private
-test('alice can set her profile to private', {todo: true}, async () => {
+test('alice can set her profile to private', async () => {
   const ref = doc(aliceDb(testEnv), 'users/alice');
   await assertSucceeds(updateDoc(ref, {isPublic: false}));
 });
 
 // carol changing her own displayName while her profile is private
-test('carol can update her name while private', {todo: true}, async () => {
+test('carol can update her name while private', async () => {
   const ref = doc(carolDb(testEnv), 'users/carol');
   await assertSucceeds(updateDoc(ref, {displayName: 'Caroline'}));
 });
 
-// carol switching her profile form public to private
-test('carol can set her profile to public', {todo: true}, async () => {
+// carol switching her profile from private to public
+test('carol can set her profile to public', async () => {
   const ref = doc(carolDb(testEnv), 'users/carol');
   await assertSucceeds(updateDoc(ref, {isPublic: true}));
 });
@@ -341,14 +337,12 @@ test(
 // ===========================================================================
 
 // a signed out user reading a bio of a public user
-
 test('signed out user cannot read bio of public user', async () => {
   const ref = doc(signedOutDb(testEnv), 'users/alice/profile/details');
   await assertFails(getDoc(ref));
 });
 
 // bob updating alice's bio (not the owner)
-
 test('bob cannot update alices bio', async () => {
   const ref = doc(bobDb(testEnv), 'users/alice/profile/details');
   await assertFails(updateDoc(ref, {bio: 'get hacked'}));
@@ -440,20 +434,33 @@ test('signed out user cannot delete alices details', async () => {
   await assertFails(deleteDoc(ref));
 });
 
+// a signed out user reading private user bio
+test('signed out user cannot read private user bio', async () => {
+  const ref = doc(signedOutDb(testEnv), 'users/carol/profile/details');
+  await assertFails(getDoc(ref));
+});
+
+// public user goes private, then signed-in user can no longer read her bio
+test('signed-in user cannot read bio after owner goes private', async () => {
+  await assertSucceeds(
+    updateDoc(doc(aliceDb(testEnv), 'users/alice'), {isPublic: false}),
+  );
+  const ref = doc(bobDb(testEnv), 'users/alice/profile/details');
+  await assertFails(getDoc(ref));
+});
+
 // ===========================================================================
 // users/{uid}/profile/details: Requests that should be ALLOWED
 // ===========================================================================
 
 // a signed in user reading a bio of public user
-
-test('bob can read alices bio', {todo: true}, async () => {
+test('bob can read alices bio', async () => {
   const ref = doc(bobDb(testEnv), 'users/alice/profile/details');
   await assertSucceeds(getDoc(ref));
 });
 
 // a user changing their bio within the bio character limit constraints 0-155
-
-test('alice can change her bio to 40 characters', {todo: true}, async () => {
+test('alice can change her bio to 40 characters', async () => {
   const ref = doc(aliceDb(testEnv), 'users/alice/profile/details');
   await assertSucceeds(
     updateDoc(ref, {bio: 'Metal Gear Solid is my all time favorite'}),
@@ -461,31 +468,31 @@ test('alice can change her bio to 40 characters', {todo: true}, async () => {
 });
 
 // a user changing their bio to the limit constraint (0 characters allowed)
-test('alice can change her bio to zero characters', {todo: true}, async () => {
+test('alice can change her bio to zero characters', async () => {
   const ref = doc(aliceDb(testEnv), 'users/alice/profile/details');
   await assertSucceeds(updateDoc(ref, {bio: ''}));
 });
 
 // a user changing their bio to the limit constraint (155 characters)
-test('alice can change her bio to 155 characters', {todo: true}, async () => {
+test('alice can change her bio to 155 characters', async () => {
   const ref = doc(aliceDb(testEnv), 'users/alice/profile/details');
   await assertSucceeds(updateDoc(ref, {bio: 'a'.repeat(155)}));
 });
 
 // alice reading her own bio (the owner can always read)
-test('alice can read her own bio', {todo: true}, async () => {
+test('alice can read her own bio', async () => {
   const ref = doc(aliceDb(testEnv), 'users/alice/profile/details');
   await assertSucceeds(getDoc(ref));
 });
 
 // carol reading her own bio (the owner can read even while private)
-test('carol can read her own bio', {todo: true}, async () => {
+test('carol can read her own bio', async () => {
   const ref = doc(carolDb(testEnv), 'users/carol/profile/details');
   await assertSucceeds(getDoc(ref));
 });
 
 // carol updating her bio while here account is private
-test('carol can update her bio while private', {todo: true}, async () => {
+test('carol can update her bio while private', async () => {
   const ref = doc(carolDb(testEnv), 'users/carol/profile/details');
   await assertSucceeds(updateDoc(ref, {bio: 'Metal Gear Solid fan'}));
 });
@@ -603,22 +610,21 @@ test('signed out user cannot delete alices account', async () => {
 
 // ===========================================================================
 // users/{uid}/private/account: Username. Requests that should be ALLOWED
-// (todo until the rules are implemented)
 // ===========================================================================
 
 // alice reading her own username
-test('alice can read her own account', {todo: true}, async () => {
+test('alice can read her own account', async () => {
   const ref = doc(aliceDb(testEnv), 'users/alice/private/account');
   await assertSucceeds(getDoc(ref));
 });
 
 // carol reading her own username (private profile makes no difference)
-test('carol can read her own account', {todo: true}, async () => {
+test('carol can read her own account', async () => {
   const ref = doc(carolDb(testEnv), 'users/carol/private/account');
   await assertSucceeds(getDoc(ref));
 });
 
-// alice listing her own private subcollection
+// alice can list her own private collection {username}
 test('alice can list her own private collection', {todo: true}, async () => {
   const ref = collection(aliceDb(testEnv), 'users/alice/private');
   await assertSucceeds(getDocs(ref));

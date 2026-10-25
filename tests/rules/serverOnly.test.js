@@ -36,7 +36,7 @@ test('alice cannot read her own usernames entry', async () => {
   await assertFails(getDoc(doc(aliceDb(testEnv), 'usernames/alice')));
 });
 
-// alice attemtping to change her own username entry
+// alice attempting to change her own username entry
 test('alice cannot update her own usernames entry', async () => {
   const ref = doc(aliceDb(testEnv), 'usernames/alice');
   await assertFails(updateDoc(ref, {uid: 'allie'}));
@@ -45,11 +45,10 @@ test('alice cannot update her own usernames entry', async () => {
 // alice attempting to create a username document
 test('alice cannot create her own username document', async () => {
   const ref = doc(aliceDb(testEnv), 'usernames/kevin_q');
-  await assertFails(setDoc(ref, {uid: 'allie'}));
+  await assertFails(setDoc(ref, {uid: 'alice'}));
 });
 
 // alice attempting to list usernames collection
-
 test('alice cannot list usernames', async () => {
   const ref = collection(aliceDb(testEnv), 'usernames');
   await assertFails(getDocs(ref));
@@ -80,7 +79,7 @@ test('bob cannot update alices usernames entry', async () => {
 // bob attempting to create a username document
 test('bob cannot create his own usernames document', async () => {
   const ref = doc(bobDb(testEnv), 'usernames/bobbyHill');
-  await assertFails(setDoc(ref, {uid: 'rick123'}));
+  await assertFails(setDoc(ref, {uid: 'bob'}));
 });
 
 // bob attempting to list usernames collection
@@ -100,7 +99,7 @@ test('bob cannot delete alices username entry', async () => {
 // signed out usernames
 // =====================================================
 
-// a signed out user asstempting to read alices username
+// a signed out user attempting to read alices username
 test('a signed out user cannot read alices username entry', async () => {
   const ref = doc(signedOutDb(testEnv), 'usernames/alice');
   await assertFails(getDoc(ref));

@@ -22,12 +22,12 @@ export async function seedData(testEnv) {
     const db = context.firestore();
     await setDoc(doc(db, 'users/alice'), {
       displayName: 'Alice',
-      avatarId: '1',
+      avatarId: 'avatar1',
       isPublic: true,
     });
     await setDoc(doc(db, 'users/carol'), {
       displayName: 'Carol',
-      avatarId: '2',
+      avatarId: 'avatar2',
       isPublic: false,
     });
     await setDoc(doc(db, 'users/alice/profile/details'), {bio: 'Hi'});
