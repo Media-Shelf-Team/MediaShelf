@@ -95,6 +95,7 @@ but we can allow lowercase to match their actual usernames. */
 }
 
 .btn-outline {
+  display: inline-block;
   margin-right: 16px;
   padding: 10px 14px;
   background: transparent;
