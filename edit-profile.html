@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en" class="swapped-colors" data-auth="pending">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="The Media Shelf Team" />
+    <title>Media Shelf | Edit Profile</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/edit-profile.css" />
+  </head>
+  <body class="edit-profile-page">
+    <header class="edit-header">
+      <a class="edit-brand" href="main-page.html">MEDIA SHELF</a>
+      <a class="edit-header-link" href="main-page.html">MY SHELF</a>
+    </header>
+    <main class="edit-main">
+      <a class="edit-back" href="main-page.html">← Back to Dashboard</a>
+      <h1>Edit Profile</h1>
+      <p class="edit-subtitle">Make your Media Shelf profile your own.</p>
+      <form id="edit-profile-form" class="edit-card">
+        <div class="edit-avatar-section">
+          <img id="avatar-preview" class="edit-avatar" alt="Profile avatar preview" hidden />
+          <div id="avatar-placeholder" class="edit-avatar-placeholder" aria-hidden="true">MS</div>
+          <label class="edit-upload-button" for="avatar-file">Change Avatar</label>
+          <input id="avatar-file" name="avatar" type="file" accept="image/jpeg,image/png,image/webp" />
+          <p class="edit-hint">JPG, PNG or WebP. Maximum 2 MB.</p>
+        </div>
+        <div class="edit-field">
+          <label for="profile-username">Username</label>
+          <input id="profile-username" name="username" type="text" autocomplete="username" maxlength="30" required disabled />
+          <p class="edit-hint">Usernames must be unique.</p>
+        </div>
+        <div class="edit-field">
+          <label for="profile-display-name">Display Name</label>
+          <input id="profile-display-name" name="displayName" type="text" maxlength="30" minlength="2" required disabled />
+        </div>
+        <div class="edit-field">
+          <label for="profile-bio">Bio</label>
+          <textarea id="profile-bio" name="bio" rows="4" maxlength="155" disabled></textarea>
+          <p id="bio-counter" class="edit-hint">0 / 155 characters</p>
+        </div>
+        <p id="edit-status" class="edit-status" role="status" aria-live="polite">Profile editing will be available once Firebase is connected.</p>
+        <div class="edit-actions">
+          <a class="edit-cancel" href="main-page.html">Cancel</a>
+          <button id="save-profile" class="edit-save" type="submit" disabled>Save Changes</button>
+        </div>
+      </form>
+    </main>
+    <script type="module" src="js/auth/editProfile.js"></script>
+  </body>
+</html>
