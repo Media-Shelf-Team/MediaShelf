@@ -60,7 +60,7 @@ service cloud.firestore {
         allow update: if isOwner(userId)
           && request.resource.data.keys().hasOnly(['bio'])
           && request.resource.data.bio is string
-          && request.resource.data.bio.size() <= 155;
+          && request.resource.data.bio.size() <= 255;
       }
 
       // users/{uid}/mediaEntries/{category}_{externalId}
