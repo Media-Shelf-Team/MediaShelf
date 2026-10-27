@@ -61,6 +61,12 @@ Every teammate does this once on each computer they work on.
    npm install -g firebase-tools
    ```
 
+   If this is failing, use the following command instead:
+
+   ```bash
+   curl -sL https://firebase.tools | bash
+   ```
+
 4. Ask the project owner to add you as a member of the Firebase project, then sign in:
 
    ```bash
@@ -78,9 +84,9 @@ Every teammate does this once on each computer they work on.
 
 6. Open the repository folder in VS Code and accept the prompt to install the recommended extensions (Prettier and ESLint, listed in `.vscode/extensions.json`). With them installed, files are formatted with Prettier every time you save.
 
-7. Do NOT run `firebase init`. The repository is already connected to the Firebase project through `.firebaserc`.
+> Do NOT run `firebase init`. The repository is already connected to the Firebase project through `.firebaserc`.
 
-8. The first time you run the app locally in a browser, register your App Check debug token (see [App Check](#app-check)). Do this again for each new browser or computer.
+> The first time you run the app locally in a browser, register your App Check debug token (see [App Check](#app-check)). Do this again for each new browser or computer.
 
 ## Running the app locally
 
