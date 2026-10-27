@@ -17,7 +17,6 @@ export function createTestEnv() {
  * Writes the test documents, with the security rules switched off.
  * @param {RulesTestEnvironment} testEnv The test environment.
  */
-
 export async function seedData(testEnv) {
   await testEnv.withSecurityRulesDisabled(async (context) => {
     const db = context.firestore();
