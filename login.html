@@ -13,21 +13,48 @@
       rel="stylesheet"
     />
 
+    <link rel="stylesheet" href="css/nav.css" />
     <link rel="stylesheet" href="css/base.css" />
     <link rel="stylesheet" href="css/auth.css" />
     <link rel="stylesheet" href="css/footer.css" />
     <title>MediaShelf | Log In</title>
   </head>
   <body>
+    <nav class="auth-nav">
+      <a href="#" class="nav-item"> Media Shelf </a>
+      <ul class="auth-nav-links">
+        <li>
+          <p style="color: var(--header-text-color); font-size: 1.5rem">
+            New here?
+          </p>
+        </li>
+        <li><a class="auth-nav-signup" href="signup.html"> Sign Up </a></li>
+      </ul>
+    </nav>
+
     <main class="signup">
       <div class="signup-box signup-box-login">
-        <a class="signup-menu-btn" href="index.html">MENU</a>
-        <div class="signup-logo"></div>
+        <div class="signup-logo">
+          <img
+            class="signup-image"
+            src="assets/img/mediashelfbgidea1.png"
+            alt="placeholder image"
+          />
+          <div class="signup-image-card">
+            <h2 class="signup-image-card-title">Pick up where you left off.</h2>
+            <p class="signup-image-card-text">
+              Your shelf, your ratings and your friends' latest logs are
+              waiting.
+            </p>
+          </div>
+        </div>
 
         <div class="signup-content">
+          <img class="signup-avatar" src="assets/img/dustyicon1.png" />
           <h1 class="signup-title">Welcome Back</h1>
           <p class="signup-subtitle">Please enter your information.</p>
 
+          <p class="signup-body">Email or Username</p>
           <form id="login-form" class="signup-form" method="post">
             <p class="form-error" id="login-error" role="alert" hidden></p>
             <input
@@ -40,20 +67,27 @@
               maxlength="254"
               required
             />
-            <input
-              class="signup-input"
-              type="password"
-              name="password"
-              placeholder="Enter Your Password"
-              aria-label="Password"
-              autocomplete="current-password"
-              maxlength="128"
-              required
-            />
-            <a class="signup-forgot" href="forgot-password.html"
-              >Forgot password?</a
-            >
-            <button class="signup-submit" type="submit">Sign In</button>
+            <div class="signup-field">
+              <div class="signup-field-row">
+                <label class="signup-label" for="login-password"
+                  >Password</label
+                >
+                <a class="signup-forgot" href="forgot-password.html"
+                  >Forgot password?</a
+                >
+              </div>
+              <input
+                class="signup-input"
+                type="password"
+                name="password"
+                placeholder="Enter Your Password"
+                aria-label="Password"
+                autocomplete="current-password"
+                maxlength="128"
+                required
+              />
+            </div>
+            <button class="signup-submit" type="submit">Log In</button>
           </form>
 
           <p class="signup-alt">

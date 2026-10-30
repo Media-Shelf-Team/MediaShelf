@@ -67,6 +67,61 @@
   border-radius: var(--radius-sm);
 }
 
+/* To make the navigation fit the stlye of the images, I created a new nav for it. */
+.auth-nav {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  right: 1rem;
+  z-index: 10;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.auth-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.auth-nav .nav-item {
+  color: var(--header-text-color);
+  text-decoration: none;
+}
+
+/* Red Sign Up button */
+.auth-nav-signup {
+  display: inline-block;
+  padding: 0.4rem 1.1rem;
+
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: #ffffff;
+  text-decoration: none;
+
+  background-color: #d62828;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+
+  transition:
+    transform var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.auth-nav-signup:hover {
+  background-color: #b01e1e;
+  transform: scale(1.05);
+}
+
+.auth-nav-signup:active {
+  transform: scale(0.95);
+}
+
 /* I felt so stupid, cause for like 20 mins I was messing around and everything was
 looking completely wrong. I didn't realize the media change below me was 
 desktop, I thought it was mobile.... I was so mad at myself*/
@@ -136,6 +191,11 @@ desktop, I thought it was mobile.... I was so mad at myself*/
     gap: 40px;
     padding: 16px 20px;
     border-bottom: 2px solid black;
+  }
+
+  .auth-nav-signup {
+    padding: 0.5rem 1.5rem;
+    font-size: 1.25rem;
   }
 
   /* I used Claude for the search input, I assumed it was similar to 
