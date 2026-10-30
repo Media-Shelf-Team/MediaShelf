@@ -56,91 +56,98 @@
             <p class="form-error" id="signup-error" role="alert" hidden></p>
 
             <fieldset class="avatar-picker">
-            <legend class="signup-label">Pick an avatar</legend>
-            <div class="avatar-options">
-              <label class="avatar-option">
-                <input type="radio" name="avatar" value="bookworm" checked />
-                <img src="assets/img/bookworm.png" alt="Bookworm" />
-              </label>
-              <label class="avatar-option">
-                <input type="radio" name="avatar" value="songbird" />
-                <img src="assets/img/songbird.png" alt="Songbird" />
-              </label>
-              <label class="avatar-option">
-                <input type="radio" name="avatar" value="cat" />
-                <img src="assets/img/cinemacat.png" alt="Cat" />
-              </label>
+              <legend class="signup-label">Pick an avatar</legend>
+              <div class="avatar-options">
+                <label class="avatar-option">
+                  <input type="radio" name="avatar" value="bookworm" checked />
+                  <img src="assets/img/bookworm.png" alt="Bookworm" />
+                </label>
+                <label class="avatar-option">
+                  <input type="radio" name="avatar" value="songbird" />
+                  <img src="assets/img/songbird.png" alt="Songbird" />
+                </label>
+                <label class="avatar-option">
+                  <input type="radio" name="avatar" value="cat" />
+                  <img src="assets/img/cinemacat.png" alt="Cat" />
+                </label>
               </div>
-              </fieldset>
+            </fieldset>
 
-              <div class="signup-field">
+            <div class="signup-field">
               <label class="signup-label" for="signup-username">Username</label>
-                <input
-              class="signup-input"
-              type="text"
-              name="username"
-              placeholder="Enter a Username"
-              aria-label="Username"
-              autocomplete="off"
-              spellcheck="false"
-              minlength="3"
-              maxlength="30"
-              pattern="[a-zA-Z0-9_]+"
-              title="3-30 characters: lowercase letters, numbers, and underscores"
-              required
-            />
+              <input
+                class="signup-input"
+                type="text"
+                name="username"
+                placeholder="Enter a Username"
+                aria-label="Username"
+                autocomplete="off"
+                spellcheck="false"
+                minlength="3"
+                maxlength="30"
+                pattern="[a-zA-Z0-9_]+"
+                title="3-30 characters: lowercase letters, numbers, and underscores"
+                required
+              />
             </div>
 
             <div class="signup-field">
-            <label class="signup-label" for="signup-email">Email</label>
-            <input
-              class="signup-input"
-              type="email"
-              name="email"
-              placeholder="Enter Your Email"
-              aria-label="Email"
-              autocomplete="email"
-              maxlength="254"
-              required
-            />
+              <label class="signup-label" for="signup-email">Email</label>
+              <input
+                class="signup-input"
+                type="email"
+                name="email"
+                placeholder="Enter Your Email"
+                aria-label="Email"
+                autocomplete="email"
+                maxlength="254"
+                required
+              />
             </div>
             <div class="signup-field">
-            <div class="signup-field-pair">
-              <div class="signup-field">
-                <label class="signup-label" for="signup-password">Password</label>
-                <input
-                  id="signup-password"
-                  class="signup-input"
-                  type="password"
-                  name="password"
-                  autocomplete="new-password"
-                  minlength="8"
-                  maxlength="128"
-                  required
-                />
+              <div class="signup-field-pair">
+                <div class="signup-field">
+                  <label class="signup-label" for="signup-password"
+                    >Password</label
+                  >
+                  <input
+                    id="signup-password"
+                    class="signup-input"
+                    type="password"
+                    name="password"
+                    autocomplete="new-password"
+                    minlength="8"
+                    maxlength="128"
+                    required
+                  />
+                </div>
+                <div class="signup-field">
+                  <label class="signup-label" for="signup-confirm"
+                    >Confirm password</label
+                  >
+                  <input
+                    id="signup-confirm"
+                    class="signup-input"
+                    type="password"
+                    name="confirmPassword"
+                    autocomplete="new-password"
+                    minlength="8"
+                    maxlength="128"
+                    required
+                  />
+                </div>
               </div>
-              <div class="signup-field">
-                <label class="signup-label" for="signup-confirm">Confirm password</label>
-                <input
-                  id="signup-confirm"
-                  class="signup-input"
-                  type="password"
-                  name="confirmPassword"
-                  autocomplete="new-password"
-                  minlength="8"
-                  maxlength="128"
-                  required
-                />
-            </div>
-            <p class="signup-hint">At least 8 characters.</p>
+              <p class="signup-hint">At least 8 characters.</p>
             </div>
 
             <button class="signup-submit" type="submit">Create My Shelf</button>
+          </form>
 
           <p class="signup-alt">
             Already have an account? <a href="login.html">Sign in now.</a>
           </p>
         </div>
+      </div>
     </main>
 
     <footer class="footer footer-fixed">
@@ -148,6 +155,5 @@
         &copy; 2026 The Media Shelf Team - All rights reserved.
       </p>
     </footer>
-
   </body>
 </html>
