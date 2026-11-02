@@ -66,11 +66,11 @@ test('signed out user cannot read carols card', async () => {
 // a signed out user listing every card in the users collection
 test('signed out user cannot list the users collection', async () => {
   await assertFails(getDocs(collection(signedOutDb(testEnv), 'users')));
+});
 
-  // bob listing every card in the users collection
+// bob listing every card in the users collection
 test('bob cannot list the users collection', async () => {
   await assertFails(getDocs(collection(bobDb(testEnv), 'users')));
-});
 });
 
 // --- Updating: values outside the limits ---
@@ -503,8 +503,6 @@ test('carol can update her bio while private', async () => {
   await assertSucceeds(updateDoc(ref, {bio: 'Metal Gear Solid fan'}));
 });
 
-
-
 // ===========================================================================
 // users/{uid}/private/account: Username. Requests that should be DENIED
 // Only the owner can read it, and nobody can write to it from the browser
@@ -543,7 +541,6 @@ test('signed out user cannot list alices private collection', async () => {
   const ref = collection(signedOutDb(testEnv), 'users/alice/private');
   await assertFails(getDocs(ref));
 });
-
 
 // alice listing her own private subcollection (nobody can list private,
 // not even the owner)
