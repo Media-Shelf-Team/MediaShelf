@@ -15,7 +15,6 @@ const USERNAME_PATTERN = /^[a-z0-9_]{3,30}$/;
 const signUpForm = document.getElementById('signup-form');
 const errorElement = document.getElementById('signup-error');
 const submitButton = signUpForm.querySelector('button[type="submit"]');
-
 signUpForm.addEventListener('submit', async (event) => {
   // Prevent the default form submission behavior
   event.preventDefault();
