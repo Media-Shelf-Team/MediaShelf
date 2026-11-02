@@ -10,7 +10,7 @@
     "lint:fix": "eslint . --ext .js,.html --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test": "firebase emulators:exec --only firestore --project demo-mediashelf \"node --test tests/rules/*.test.js\""
+    "test": "firebase emulators:exec --only firestore --project demo-mediashelf \"node --test --test-concurrency=1 tests/rules/*.test.js\""
   },
   "devDependencies": {
     "@html-eslint/eslint-plugin": "^0.67.0",
