@@ -1,0 +1,9 @@
+[extend]
+useDefault = true
+
+# Firebase web apiKey is public by design. Only this exact value is allowed;
+# any other key, anywhere, fails the check.
+[[allowlists]]
+description = "Firebase web apiKey (public by design)"
+regexTarget = "secret"
+regexes = ['''^AIzaSyCqQxFUSXnZNnU8pooEG5CIObs5sNmFMGg$''']
