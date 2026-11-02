@@ -66,6 +66,11 @@ test('signed out user cannot read carols card', async () => {
 // a signed out user listing every card in the users collection
 test('signed out user cannot list the users collection', async () => {
   await assertFails(getDocs(collection(signedOutDb(testEnv), 'users')));
+
+  // bob listing every card in the users collection
+test('bob cannot list the users collection', async () => {
+  await assertFails(getDocs(collection(bobDb(testEnv), 'users')));
+});
 });
 
 // --- Updating: values outside the limits ---
@@ -258,11 +263,6 @@ test('bob can read carols card', async () => {
   await assertSucceeds(getDoc(doc(bobDb(testEnv), 'users/carol')));
 });
 
-// bob listing every card in the users collection
-test('bob can list the users collection', {todo: true}, async () => {
-  await assertSucceeds(getDocs(collection(bobDb(testEnv), 'users')));
-});
-
 // --- Updating (owner only, within the limits) ---
 
 // alice changing her displayName to a normal name
@@ -440,6 +440,12 @@ test('signed out user cannot read private user bio', async () => {
   await assertFails(getDoc(ref));
 });
 
+// bob listing alice's profile subcollection (alice's profile is public)
+test('bob cannot list alices profile', async () => {
+  const ref = collection(bobDb(testEnv), 'users/alice/profile');
+  await assertFails(getDocs(ref));
+});
+
 // public user goes private, then signed-in user can no longer read her bio
 test('signed-in user cannot read bio after owner goes private', async () => {
   await assertSucceeds(
@@ -497,11 +503,7 @@ test('carol can update her bio while private', async () => {
   await assertSucceeds(updateDoc(ref, {bio: 'Metal Gear Solid fan'}));
 });
 
-// bob listing alice's profile subcollection (alice's profile is public)
-test('bob can list alices profile', {todo: true}, async () => {
-  const ref = collection(bobDb(testEnv), 'users/alice/profile');
-  await assertSucceeds(getDocs(ref));
-});
+
 
 // ===========================================================================
 // users/{uid}/private/account: Username. Requests that should be DENIED
@@ -542,6 +544,13 @@ test('signed out user cannot list alices private collection', async () => {
   await assertFails(getDocs(ref));
 });
 
+
+// alice listing her own private subcollection (nobody can list private,
+// not even the owner)
+test('alice cannot list her own private collection', async () => {
+  const ref = collection(aliceDb(testEnv), 'users/alice/private');
+  await assertFails(getDocs(ref));
+});
 // --- Updating: nobody, not even the owner ---
 
 // alice changing her own username (usernames can never change)
@@ -622,10 +631,4 @@ test('alice can read her own account', async () => {
 test('carol can read her own account', async () => {
   const ref = doc(carolDb(testEnv), 'users/carol/private/account');
   await assertSucceeds(getDoc(ref));
-});
-
-// alice can list her own private collection {username}
-test('alice can list her own private collection', {todo: true}, async () => {
-  const ref = collection(aliceDb(testEnv), 'users/alice/private');
-  await assertSucceeds(getDocs(ref));
 });
