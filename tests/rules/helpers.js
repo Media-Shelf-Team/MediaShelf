@@ -41,6 +41,25 @@ export async function seedData(testEnv) {
     await setDoc(doc(db, 'apiCache/movie_550'), {title: 'ClayFace'});
     await setDoc(doc(db, 'searchCache/q1'), {results: []});
     await setDoc(doc(db, 'rateLimits/tmdb'), {count: 3});
+
+    await setDoc(doc(db, 'users/alice/mediaEntries/movie_550'), {
+      category: 'movie',
+      source: 'tmdb',
+      externalId: '550',
+      title: 'ClayFace',
+      coverImageUrl: 'https://image.tmdb.org/t/p/w500/clayface.jpg',
+      status: 'planned',
+      createdAt: new Date('2026-01-01T00:00:00Z'),
+    });
+    await setDoc(doc(db, 'users/carol/mediaEntries/book_OL1W'), {
+      category: 'book',
+      source: 'openlibrary',
+      externalId: 'OL1W',
+      title: 'Dune',
+      coverImageUrl: 'https://covers.openlibrary.org/b/id/1-L.jpg',
+      status: 'in_progress',
+      createdAt: new Date('2026-01-01T00:00:00Z'),
+    });
   });
 }
 
