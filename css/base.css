@@ -9,8 +9,8 @@
   --surface-color: #fff;
   --placeholder-color: #8a8479;
 
-  --font-display: 'Bungee', sans-serif;
-  --font-body: 'Bungee', sans-serif;
+  --font-display: 'Poppins', sans-serif;
+  --font-body: 'Inter', sans-serif;
 
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
@@ -43,4 +43,13 @@ button {
 main {
   margin: 20rem auto;
   max-width: 1200px;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
 }
