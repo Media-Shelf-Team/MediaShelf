@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="swapped-colors" data-auth="pending">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,314 +9,1075 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Bungee&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Protest+Guerrilla&display=swap"
-      rel="stylesheet"
-    />
-
-    <link rel="stylesheet" href="css/base.css" />
-    <link rel="stylesheet" href="css/nav.css" />
-    <link rel="stylesheet" href="css/footer.css" />
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@800&display=swap"
+      rel="stylesheet"/>
     <link rel="stylesheet" href="css/main-page.css" />
-    <link rel="stylesheet" href="css/auth.css" />
+    <link rel="stylesheet" href="css/modal.css" />
+    <link rel="stylesheet" href="css/cust-and-settings.css" />
     <title>MediaShelf | My Shelf Page</title>
   </head>
   <body id="main-page">
-    <header>
-      <nav class="nav-main">
-        <a class="nav-logo" href="index.html">MEDIA SHELF</a>
-        <form class="search" role="search">
-          <input
-            type="search"
-            placeholder="SEARCH FOR A CATEGORY OR TITLE..."
-            aria-label="Search"
-          />
-        </form>
+    <header class="site-header">
+      <div class="site-header__inner container">
+        <a class="logo" href="index.html">Media Shelf</a>
 
-        <!--MOBILE NAV-->
-        <button class="nav-toggle" aria-expanded="false" aria-controls="nav">
-          MENU
+        <button type="button" class="btn btn--primary" data-open-log>
+          + Log<span class="btn__extra">&nbsp;Media</span>
         </button>
-        <ul class="nav-mobile-links" id="nav">
-          <li><a href="#" class="nav-mobile-item active">My Shelf</a></li>
-          <li>
-            <!-- <a href="social-page.html" class="nav-mobile-item">Social</a> -->
-            <button class="nav-mobile-item logout-button" type="button">
-              Log Out
-            </button>
-          </li>
-        </ul>
 
-        <!--DESKTOP NAV-->
-        <div class="nav-links">
-          <ul class="nav-style">
-            <li><a href="#" class="nav-item-active"> My Shelf</a></li>
-            <li>
-              <!-- <a href="social-page.html" class="nav-item">Social</a> -->
-              <button class="logout-button nav-item" type="button">
-                Log Out
-              </button>
-            </li>
-          </ul>
+        <nav class="site-nav" aria-label="Main">
+          <a class="site-nav__link" href="#" aria-current="page">My Shelf</a>
+          <a class="site-nav__link" href="socialPage.html">Social</a>
+        </nav>
+
+        <div class="user-menu">
+          <button
+            type="button"
+            class="avatar-btn"
+            id="user-menu-button"
+            aria-label="Account menu"
+            aria-expanded="false"
+            aria-controls="user-menu-panel"
+          >
+            <span class="avatar-btn__img" aria-hidden="true"></span>
+            <span class="avatar-btn__caret" aria-hidden="true"></span>
+          </button>
+
+          <div class="user-menu__panel" id="user-menu-panel" hidden>
+            <div class="user-menu__header">
+              <span class="user-menu__avatar" aria-hidden="true"></span>
+              <div>
+                <p class="user-menu__name">Username</p>
+                <p class="user-menu__handle">@username</p>
+              </div>
+            </div>
+            <hr class="user-menu__rule" />
+            <button
+              type="button"
+              class="user-menu__item"
+              data-open-settings="customization"
+            >
+              Edit profile
+            </button>
+            <button
+              type="button"
+              class="user-menu__item"
+              data-open-settings="settings"
+            >
+              Settings
+            </button>
+            <hr class="user-menu__rule" />
+            <a class="user-menu__item user-menu__item--danger" href="index.html"
+              >Log out</a
+            >
+          </div>
         </div>
-      </nav>
+      </div>
     </header>
 
-    <main class="main-page scaling-box page" data-tab="logs">
-      <div>
-        <section class="profile-card" aria-label="Profile">
-          <div class="avatar" role="img" aria-label="Profile Picture"></div>
+    <main class="page container">
+      <!-- PROFILE -->
+      <section class="profile" aria-label="Profile">
+        <div class="profile__banner">
+          <span aria-hidden="true">Banner / cover image</span>
+        </div>
 
-          <div class="banner"></div>
+        <div class="profile__body">
+          <div
+            class="profile__avatar"
+            role="img"
+            aria-label="Profile picture"
+          ></div>
 
-          <div class="profile-info">
-            <h1 class="username">USERNAME</h1>
-            <p class="friend-count">NO FRIENDS D:</p>
-            <p class="bio">
-              AWESOME BIO: My name is Jasmine and I love Domo...
+          <div class="profile__info">
+            <h1 class="profile__name">Username</h1>
+            <p class="profile__handle">@username &middot; Joined 2026</p>
+            <p class="profile__bio">
+              Short bio goes here &mdash; what you're into, what you're
+              watching, reading or playing.
             </p>
           </div>
 
-          <div class="profile-actions">
-            <button class="btn-outline" type="button">EDIT PROFILE</button>
-            <a class="settings" href="#">
-              <span class="settings-icon"></span>
-            </a>
+          <div class="profile__side">
+            <ul class="stats" aria-label="Shelf stats">
+              <li>
+                <span class="stats__num">00</span>
+                <span class="stats__label">Logged</span>
+              </li>
+              <li>
+                <span class="stats__num">00</span>
+                <span class="stats__label">Friends</span>
+              </li>
+              <li>
+                <span class="stats__num">00</span>
+                <span class="stats__label">This month</span>
+              </li>
+            </ul>
+
+            <div class="profile__actions">
+              <button
+                type="button"
+                class="btn btn--outline"
+                data-open-settings="customization"
+              >
+                Edit profile
+              </button>
+              <button
+                type="button"
+                class="btn btn--outline btn--icon"
+                data-open-settings="settings"
+                aria-label="Settings"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="12" cy="12" r="3" />
+                  <path
+                    d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <nav class="tabs" aria-label="Profile sections">
-          <button type="button" data-tab="logs" aria-current="true">
-            Logs
-          </button>
-          <button type="button" data-tab="friends">Friends</button>
-          <button type="button" data-tab="requests">Friend Requests</button>
-        </nav>
-
-        <section class="recent" aria-labelledby="recent-title">
-          <div class="recent-header">
-            <h2 id="recent-title">
-              <span id="recent-desktop-title"> Your shelf, at a glance...</span>
-              <span id="recent-mobile-title">Your shelf, at a glance...</span>
-            </h2>
+      <!-- SHELF -->
+      <section class="shelf" aria-label="Your shelf">
+        <div class="toolbar">
+          <div class="toolbar__chips" data-toggle-group>
+            <button type="button" class="chip" aria-pressed="true">
+              All <span class="chip__count">00</span>
+            </button>
+            <button type="button" class="chip" aria-pressed="false">
+              Films <span class="chip__count">00</span>
+            </button>
+            <button type="button" class="chip" aria-pressed="false">
+              Books <span class="chip__count">00</span>
+            </button>
+            <button type="button" class="chip" aria-pressed="false">
+              Games <span class="chip__count">00</span>
+            </button>
+            <button type="button" class="chip" aria-pressed="false">
+              Music <span class="chip__count">00</span>
+            </button>
+            <button type="button" class="chip" aria-pressed="false">
+              Shows <span class="chip__count">00</span>
+            </button>
           </div>
 
+          <input
+            class="control control--search"
+            type="search"
+            placeholder="Search my shelf..."
+            aria-label="Search my shelf"
+          />
+          <select class="control control--select" aria-label="Sort by">
+            <option>Sort: Date logged</option>
+            <option>Sort: Title</option>
+            <option>Sort: Rating</option>
+          </select>
+          <select class="control control--select" aria-label="Filter by rating">
+            <option>Rating</option>
+            <option>5 stars</option>
+            <option>4+ stars</option>
+            <option>3+ stars</option>
+          </select>
+
+          <div class="view-toggle" data-toggle-group>
+            <button type="button" aria-pressed="true" aria-label="Grid view">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="4" y="4" width="6" height="6" />
+                <rect x="14" y="4" width="6" height="6" />
+                <rect x="4" y="14" width="6" height="6" />
+                <rect x="14" y="14" width="6" height="6" />
+              </svg>
+            </button>
+            <button type="button" aria-pressed="false" aria-label="List view">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <line x1="4" y1="6" x2="20" y2="6" />
+                <line x1="4" y1="12" x2="20" y2="12" />
+                <line x1="4" y1="18" x2="20" y2="18" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <section class="month" aria-labelledby="month-october">
+          <h2 class="month__title" id="month-october">
+            October 2026 <span class="month__count">8 logged</span>
+          </h2>
           <ul class="media-grid">
-            <li class="media-item">
-              <div class="cover"></div>
-              <p class="metadata">
-                <span>NAME</span>
-                <span>CATEGORY</span>
-                <span>DATE</span>
+            <li
+              class="media-item"
+              data-title="Title"
+              data-category="Film"
+              data-creator="Creator"
+              data-date="Oct 21"
+            >
+              <div class="cover"><span class="badge">Film</span></div>
+              <p class="media-item__title">Title</p>
+              <p class="media-item__meta">
+                <span
+                  class="stars"
+                  data-rating="5"
+                  role="img"
+                  aria-label="5 out of 5 stars"
+                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
+                >
+                <span aria-hidden="true">&middot;</span>
+                <span>Oct 21</span>
               </p>
             </li>
-            <li class="media-item">
-              <div class="cover"></div>
-              <p class="metadata">
-                <span>NAME</span>
-                <span>CATEGORY</span>
-                <span>DATE</span>
+            <li
+              class="media-item"
+              data-title="Title"
+              data-category="Book"
+              data-creator="Creator"
+              data-date="Oct 20"
+            >
+              <div class="cover"><span class="badge">Book</span></div>
+              <p class="media-item__title">Title</p>
+              <p class="media-item__meta">
+                <span
+                  class="stars"
+                  data-rating="4"
+                  role="img"
+                  aria-label="4 out of 5 stars"
+                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
+                >
+                <span aria-hidden="true">&middot;</span>
+                <span>Oct 20</span>
               </p>
             </li>
-            <li class="media-item">
-              <div class="cover"></div>
-              <p class="metadata">
-                <span>NAME</span>
-                <span>CATEGORY</span>
-                <span>DATE</span>
+            <li
+              class="media-item"
+              data-title="Title"
+              data-category="Game"
+              data-creator="Creator"
+              data-date="Oct 19"
+            >
+              <div class="cover"><span class="badge">Game</span></div>
+              <p class="media-item__title">Title</p>
+              <p class="media-item__meta">
+                <span
+                  class="stars"
+                  data-rating="3"
+                  role="img"
+                  aria-label="3 out of 5 stars"
+                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
+                >
+                <span aria-hidden="true">&middot;</span>
+                <span>Oct 19</span>
               </p>
             </li>
-            <li class="media-item">
-              <div class="cover"></div>
-              <p class="metadata">
-                <span>NAME</span>
-                <span>CATEGORY</span>
-                <span>DATE</span>
+            <li
+              class="media-item"
+              data-title="Title"
+              data-category="Album"
+              data-creator="Creator"
+              data-date="Oct 18"
+            >
+              <div class="cover"><span class="badge">Album</span></div>
+              <p class="media-item__title">Title</p>
+              <p class="media-item__meta">
+                <span
+                  class="stars"
+                  data-rating="5"
+                  role="img"
+                  aria-label="5 out of 5 stars"
+                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
+                >
+                <span aria-hidden="true">&middot;</span>
+                <span>Oct 18</span>
               </p>
             </li>
-            <li class="media-item">
-              <div class="cover"></div>
-              <p class="metadata">
-                <span>NAME</span>
-                <span>CATEGORY</span>
-                <span>DATE</span>
+            <li
+              class="media-item"
+              data-title="Title"
+              data-category="Show"
+              data-creator="Creator"
+              data-date="Oct 17"
+            >
+              <div class="cover"><span class="badge">Show</span></div>
+              <p class="media-item__title">Title</p>
+              <p class="media-item__meta">
+                <span
+                  class="stars"
+                  data-rating="4"
+                  role="img"
+                  aria-label="4 out of 5 stars"
+                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
+                >
+                <span aria-hidden="true">&middot;</span>
+                <span>Oct 17</span>
               </p>
             </li>
-            <li class="media-item">
-              <div class="cover"></div>
-              <p class="metadata">
-                <span>NAME</span>
-                <span>CATEGORY</span>
-                <span>DATE</span>
+            <li
+              class="media-item"
+              data-title="Title"
+              data-category="Film"
+              data-creator="Creator"
+              data-date="Oct 16"
+            >
+              <div class="cover"><span class="badge">Film</span></div>
+              <p class="media-item__title">Title</p>
+              <p class="media-item__meta">
+                <span
+                  class="stars"
+                  data-rating="3"
+                  role="img"
+                  aria-label="3 out of 5 stars"
+                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
+                >
+                <span aria-hidden="true">&middot;</span>
+                <span>Oct 16</span>
+              </p>
+            </li>
+            <li
+              class="media-item"
+              data-title="Title"
+              data-category="Book"
+              data-creator="Creator"
+              data-date="Oct 15"
+            >
+              <div class="cover"><span class="badge">Book</span></div>
+              <p class="media-item__title">Title</p>
+              <p class="media-item__meta">
+                <span
+                  class="stars"
+                  data-rating="5"
+                  role="img"
+                  aria-label="5 out of 5 stars"
+                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
+                >
+                <span aria-hidden="true">&middot;</span>
+                <span>Oct 15</span>
+              </p>
+            </li>
+            <li
+              class="media-item"
+              data-title="Title"
+              data-category="Game"
+              data-creator="Creator"
+              data-date="Oct 14"
+            >
+              <div class="cover"><span class="badge">Game</span></div>
+              <p class="media-item__title">Title</p>
+              <p class="media-item__meta">
+                <span
+                  class="stars"
+                  data-rating="4"
+                  role="img"
+                  aria-label="4 out of 5 stars"
+                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
+                >
+                <span aria-hidden="true">&middot;</span>
+                <span>Oct 14</span>
               </p>
             </li>
           </ul>
+        </section>
+
+        <section class="month" aria-labelledby="month-september">
+          <h2 class="month__title" id="month-september">
+            September 2026 <span class="month__count">8 logged</span>
+          </h2>
           <ul class="media-grid">
-            <li class="media-item">
-              <div class="cover"></div>
-              <p class="metadata">
-                <span>NAME</span>
-                <span>CATEGORY</span>
-                <span>DATE</span>
+            <li
+              class="media-item"
+              data-title="Title"
+              data-category="Album"
+              data-creator="Creator"
+              data-date="Sep 30"
+            >
+              <div class="cover"><span class="badge">Album</span></div>
+              <p class="media-item__title">Title</p>
+              <p class="media-item__meta">
+                <span
+                  class="stars"
+                  data-rating="5"
+                  role="img"
+                  aria-label="5 out of 5 stars"
+                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
+                >
+                <span aria-hidden="true">&middot;</span>
+                <span>Sep 30</span>
               </p>
             </li>
-            <li class="media-item">
-              <div class="cover"></div>
-              <p class="metadata">
-                <span>NAME</span>
-                <span>CATEGORY</span>
-                <span>DATE</span>
+            <li
+              class="media-item"
+              data-title="Title"
+              data-category="Show"
+              data-creator="Creator"
+              data-date="Sep 29"
+            >
+              <div class="cover"><span class="badge">Show</span></div>
+              <p class="media-item__title">Title</p>
+              <p class="media-item__meta">
+                <span
+                  class="stars"
+                  data-rating="4"
+                  role="img"
+                  aria-label="4 out of 5 stars"
+                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
+                >
+                <span aria-hidden="true">&middot;</span>
+                <span>Sep 29</span>
               </p>
             </li>
-            <li class="media-item">
-              <div class="cover"></div>
-              <p class="metadata">
-                <span>NAME</span>
-                <span>CATEGORY</span>
-                <span>DATE</span>
+            <li
+              class="media-item"
+              data-title="Title"
+              data-category="Film"
+              data-creator="Creator"
+              data-date="Sep 28"
+            >
+              <div class="cover"><span class="badge">Film</span></div>
+              <p class="media-item__title">Title</p>
+              <p class="media-item__meta">
+                <span
+                  class="stars"
+                  data-rating="3"
+                  role="img"
+                  aria-label="3 out of 5 stars"
+                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
+                >
+                <span aria-hidden="true">&middot;</span>
+                <span>Sep 28</span>
               </p>
             </li>
-            <li class="media-item">
-              <div class="cover"></div>
-              <p class="metadata">
-                <span>NAME</span>
-                <span>CATEGORY</span>
-                <span>DATE</span>
+            <li
+              class="media-item"
+              data-title="Title"
+              data-category="Book"
+              data-creator="Creator"
+              data-date="Sep 27"
+            >
+              <div class="cover"><span class="badge">Book</span></div>
+              <p class="media-item__title">Title</p>
+              <p class="media-item__meta">
+                <span
+                  class="stars"
+                  data-rating="5"
+                  role="img"
+                  aria-label="5 out of 5 stars"
+                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
+                >
+                <span aria-hidden="true">&middot;</span>
+                <span>Sep 27</span>
               </p>
             </li>
-            <li class="media-item">
-              <div class="cover"></div>
-              <p class="metadata">
-                <span>NAME</span>
-                <span>CATEGORY</span>
-                <span>DATE</span>
+            <li
+              class="media-item"
+              data-title="Title"
+              data-category="Game"
+              data-creator="Creator"
+              data-date="Sep 26"
+            >
+              <div class="cover"><span class="badge">Game</span></div>
+              <p class="media-item__title">Title</p>
+              <p class="media-item__meta">
+                <span
+                  class="stars"
+                  data-rating="4"
+                  role="img"
+                  aria-label="4 out of 5 stars"
+                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
+                >
+                <span aria-hidden="true">&middot;</span>
+                <span>Sep 26</span>
               </p>
             </li>
-            <li class="media-item">
-              <div class="cover"></div>
-              <p class="metadata">
-                <span>NAME</span>
-                <span>CATEGORY</span>
-                <span>DATE</span>
+            <li
+              class="media-item"
+              data-title="Title"
+              data-category="Film"
+              data-creator="Creator"
+              data-date="Sep 25"
+            >
+              <div class="cover"><span class="badge">Film</span></div>
+              <p class="media-item__title">Title</p>
+              <p class="media-item__meta">
+                <span
+                  class="stars"
+                  data-rating="3"
+                  role="img"
+                  aria-label="3 out of 5 stars"
+                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
+                >
+                <span aria-hidden="true">&middot;</span>
+                <span>Sep 25</span>
+              </p>
+            </li>
+            <li
+              class="media-item"
+              data-title="Title"
+              data-category="Book"
+              data-creator="Creator"
+              data-date="Sep 24"
+            >
+              <div class="cover"><span class="badge">Book</span></div>
+              <p class="media-item__title">Title</p>
+              <p class="media-item__meta">
+                <span
+                  class="stars"
+                  data-rating="5"
+                  role="img"
+                  aria-label="5 out of 5 stars"
+                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
+                >
+                <span aria-hidden="true">&middot;</span>
+                <span>Sep 24</span>
+              </p>
+            </li>
+            <li
+              class="media-item"
+              data-title="Title"
+              data-category="Game"
+              data-creator="Creator"
+              data-date="Sep 23"
+            >
+              <div class="cover"><span class="badge">Game</span></div>
+              <p class="media-item__title">Title</p>
+              <p class="media-item__meta">
+                <span
+                  class="stars"
+                  data-rating="4"
+                  role="img"
+                  aria-label="4 out of 5 stars"
+                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
+                >
+                <span aria-hidden="true">&middot;</span>
+                <span>Sep 23</span>
               </p>
             </li>
           </ul>
-
-          <div class="recent-footer">
-            <button type="button" class="btn-add">+ Add A Log</button>
-            <a href="#" class="view-all">View All</a>
-          </div>
         </section>
-      </div>
 
-      <div class="right-col-mobile">
-        <aside class="right-col">
-          <section
-            class="side-card"
-            id="friends-card"
-            aria-labelledby="friends-title"
-          >
-            <h2 id="friends-title">Friends</h2>
-            <ul class="user-list">
-              <li class="user">
-                <div class="user-avatar"></div>
-                <div>
-                  <a href="#" class="user-name">USERNAME</a>
-                  <p class="mutual">00 MUTUAL FRIENDS</p>
-                </div>
-              </li>
-              <li class="user">
-                <div class="user-avatar"></div>
-                <div>
-                  <a href="#" class="user-name">USERNAME</a>
-                  <p class="mutual">00 MUTUAL FRIENDS</p>
-                </div>
-              </li>
-              <li class="user">
-                <div class="user-avatar"></div>
-                <div>
-                  <a href="#" class="user-name">USERNAME</a>
-                  <p class="mutual">00 MUTUAL FRIENDS</p>
-                </div>
-              </li>
-              <li class="user">
-                <div class="user-avatar"></div>
-                <div>
-                  <a href="#" class="user-name">USERNAME</a>
-                  <p class="mutual">00 MUTUAL FRIENDS</p>
-                </div>
-              </li>
-              <li class="user">
-                <div class="user-avatar"></div>
-                <div>
-                  <a href="#" class="user-name">USERNAME</a>
-                  <p class="mutual">00 MUTUAL FRIENDS</p>
-                </div>
-              </li>
-              <li class="user">
-                <div class="user-avatar"></div>
-                <div>
-                  <a href="#" class="user-name">USERNAME</a>
-                  <p class="mutual">00 MUTUAL FRIENDS</p>
-                </div>
-              </li>
-            </ul>
-          </section>
+        <div class="load-more">
+          <button type="button" class="btn btn--outline">Load more</button>
+        </div>
+      </section>
 
-          <section
-            class="side-card"
-            id="requests-card"
-            aria-labelledby="requests-title"
-          >
-            <h2 id="requests-title">Friend Requests</h2>
-            <ul class="user-list">
-              <li class="user">
-                <div class="user-avatar"></div>
-                <div>
-                  <a href="#" class="user-name">USERNAME</a>
-                  <p class="mutual">00 Mutual Friends</p>
-                </div>
-              </li>
-              <li class="user">
-                <div class="user-avatar"></div>
-                <div>
-                  <a href="#" class="user-name">USERNAME</a>
-                  <p class="mutual">00 Mutual Friends</p>
-                </div>
-              </li>
-              <li class="user">
-                <div class="user-avatar"></div>
-                <div>
-                  <a href="#" class="user-name">USERNAME</a>
-                  <p class="mutual">00 Mutual Friends</p>
-                </div>
-              </li>
-              <li class="user">
-                <div class="user-avatar"></div>
-                <div>
-                  <a href="#" class="user-name">USERNAME</a>
-                  <p class="mutual">00 Mutual Friends</p>
-                </div>
-              </li>
-              <li class="user">
-                <div class="user-avatar"></div>
-                <div>
-                  <a href="#" class="user-name">USERNAME</a>
-                  <p class="mutual">00 Mutual Friends</p>
-                </div>
-              </li>
-            </ul>
-          </section>
-        </aside>
-      </div>
+      <!-- SIDEBAR -->
+      <aside class="sidebar" aria-label="Friends">
+        <section class="side-card" aria-labelledby="requests-title">
+          <h2 class="side-card__title" id="requests-title">
+            Friend requests <span class="count-badge">2</span>
+          </h2>
+          <ul class="request-list">
+            <li class="request">
+              <span class="request__avatar" aria-hidden="true"></span>
+              <div class="request__text">
+                <a class="request__name" href="#">Username</a>
+                <p class="request__mutual">00 mutual friends</p>
+              </div>
+              <button
+                type="button"
+                class="icon-btn icon-btn--accept"
+                aria-label="Accept request from Username"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M4 12.5l5 5L20 6.5" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                class="icon-btn"
+                aria-label="Decline request from Username"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                </svg>
+              </button>
+            </li>
+            <li class="request">
+              <span class="request__avatar" aria-hidden="true"></span>
+              <div class="request__text">
+                <a class="request__name" href="#">Username</a>
+                <p class="request__mutual">00 mutual friends</p>
+              </div>
+              <button
+                type="button"
+                class="icon-btn icon-btn--accept"
+                aria-label="Accept request from Username"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M4 12.5l5 5L20 6.5" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                class="icon-btn"
+                aria-label="Decline request from Username"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                </svg>
+              </button>
+            </li>
+          </ul>
+        </section>
+
+        <section class="side-card" aria-labelledby="friends-title">
+          <h2 class="side-card__title" id="friends-title">
+            Friends <span class="side-card__count">00</span>
+          </h2>
+          <ul class="friend-grid">
+            <li>
+              <a class="friend" href="#"
+                ><span class="friend__avatar" aria-hidden="true"></span
+                ><span>User</span></a
+              >
+            </li>
+            <li>
+              <a class="friend" href="#"
+                ><span class="friend__avatar" aria-hidden="true"></span
+                ><span>User</span></a
+              >
+            </li>
+            <li>
+              <a class="friend" href="#"
+                ><span class="friend__avatar" aria-hidden="true"></span
+                ><span>User</span></a
+              >
+            </li>
+            <li>
+              <a class="friend" href="#"
+                ><span class="friend__avatar" aria-hidden="true"></span
+                ><span>User</span></a
+              >
+            </li>
+            <li>
+              <a class="friend" href="#"
+                ><span class="friend__avatar" aria-hidden="true"></span
+                ><span>User</span></a
+              >
+            </li>
+            <li>
+              <a class="friend" href="#"
+                ><span class="friend__avatar" aria-hidden="true"></span
+                ><span>User</span></a
+              >
+            </li>
+            <li>
+              <a class="friend" href="#"
+                ><span class="friend__avatar" aria-hidden="true"></span
+                ><span>User</span></a
+              >
+            </li>
+            <li>
+              <a class="friend" href="#"
+                ><span class="friend__avatar" aria-hidden="true"></span
+                ><span>User</span></a
+              >
+            </li>
+          </ul>
+          <a class="see-all" href="#">See all friends &rarr;</a>
+        </section>
+      </aside>
     </main>
 
-    <footer class="footer">
-      <p class="footer-copy">
-        &copy; 2026 The Media Shelf Team - All rights reserved.
-      </p>
+    <footer class="site-footer">
+      <div class="site-footer__inner container">
+        <p><strong>Media Shelf</strong> &copy; 2026</p>
+        <ul class="site-footer__links">
+          <li><a href="about.html">About</about></a></li>
+        </ul>
+      </div>
     </footer>
 
-    <script src="js/frontend/nav.js"></script>
-    <script type="module" src="js/auth/signedInPage.js"></script>
+    <!-- LOG MEDIA MODAL -->
+    <dialog class="log-modal" id="log-modal" aria-labelledby="log-modal-title">
+      <form class="log-modal__form" method="dialog">
+        <header class="log-modal__header">
+          <h2 class="log-modal__title" id="log-modal-title">Log media</h2>
+          <button
+            type="button"
+            class="log-modal__close"
+            aria-label="Close"
+            data-log-close
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <line x1="5" y1="5" x2="19" y2="19" />
+              <line x1="19" y1="5" x2="5" y2="19" />
+            </svg>
+          </button>
+        </header>
+
+        <div class="log-modal__body">
+          <fieldset class="log-field">
+            <legend class="log-label">Type</legend>
+            <div class="log-types">
+              <label class="log-pill">
+                <input
+                  type="radio"
+                  name="type"
+                  value="film"
+                  data-plural="films"
+                  data-creator-role="Director"
+                  checked
+                />
+                <span>Film</span>
+              </label>
+              <label class="log-pill">
+                <input
+                  type="radio"
+                  name="type"
+                  value="book"
+                  data-plural="books"
+                  data-creator-role="Author"
+                />
+                <span>Book</span>
+              </label>
+              <label class="log-pill">
+                <input
+                  type="radio"
+                  name="type"
+                  value="game"
+                  data-plural="games"
+                  data-creator-role="Developer"
+                />
+                <span>Game</span>
+              </label>
+              <label class="log-pill">
+                <input
+                  type="radio"
+                  name="type"
+                  value="music"
+                  data-plural="music"
+                  data-creator-role="Artist"
+                />
+                <span>Music</span>
+              </label>
+              <label class="log-pill">
+                <input
+                  type="radio"
+                  name="type"
+                  value="show"
+                  data-plural="shows"
+                  data-creator-role="Creator"
+                />
+                <span>Show</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <div class="log-field">
+            <label class="log-label" for="log-title">Title</label>
+            <input
+              class="log-input"
+              id="log-title"
+              name="title"
+              type="text"
+              placeholder="Search films..."
+              autocomplete="off"
+              required
+            />
+            <!-- Placeholder results: the backend will fill this list. -->
+            <ul
+              class="log-results"
+              role="radiogroup"
+              aria-label="Search results"
+            >
+              <li role="none">
+                <label class="log-result">
+                  <input type="radio" name="result" value="1" />
+                  <span class="log-result__row">
+                    <span class="log-result__thumb" aria-hidden="true"></span>
+                    <span class="log-result__text">
+                      <span class="log-result__name">Title</span>
+                      <span class="log-result__meta"
+                        >Year &middot;
+                        <span data-creator-label>Director</span></span
+                      >
+                    </span>
+                    <span class="log-result__check" aria-hidden="true"></span>
+                  </span>
+                </label>
+              </li>
+              <li role="none">
+                <label class="log-result">
+                  <input type="radio" name="result" value="2" />
+                  <span class="log-result__row">
+                    <span class="log-result__thumb" aria-hidden="true"></span>
+                    <span class="log-result__text">
+                      <span class="log-result__name">Title</span>
+                      <span class="log-result__meta"
+                        >Year &middot;
+                        <span data-creator-label>Director</span></span
+                      >
+                    </span>
+                    <span class="log-result__check" aria-hidden="true"></span>
+                  </span>
+                </label>
+              </li>
+              <li role="none">
+                <label class="log-result">
+                  <input type="radio" name="result" value="3" />
+                  <span class="log-result__row">
+                    <span class="log-result__thumb" aria-hidden="true"></span>
+                    <span class="log-result__text">
+                      <span class="log-result__name">Title</span>
+                      <span class="log-result__meta"
+                        >Year &middot;
+                        <span data-creator-label>Director</span></span
+                      >
+                    </span>
+                    <span class="log-result__check" aria-hidden="true"></span>
+                  </span>
+                </label>
+              </li>
+            </ul>
+          </div>
+
+          <div class="log-row">
+            <fieldset class="log-field">
+              <legend class="log-label">Status</legend>
+              <div class="log-segmented">
+                <label>
+                  <input type="radio" name="status" value="finished" checked />
+                  <span>Finished</span>
+                </label>
+                <label>
+                  <input type="radio" name="status" value="in-progress" />
+                  <span>In progress</span>
+                </label>
+                <label>
+                  <input type="radio" name="status" value="want-to" />
+                  <span>Want to</span>
+                </label>
+              </div>
+            </fieldset>
+
+            <div class="log-field">
+              <label class="log-label" for="log-date">Date</label>
+              <input class="log-input" id="log-date" name="date" type="date" />
+            </div>
+          </div>
+
+          <div class="log-row log-row--end">
+            <fieldset class="log-field">
+              <legend class="log-label">Rating</legend>
+              <div class="log-stars">
+                <input type="radio" name="rating" id="log-star-5" value="5" />
+                <label for="log-star-5"
+                  ><span aria-hidden="true">&#9733;</span
+                  ><span class="log-sr">5 stars</span></label
+                >
+                <input type="radio" name="rating" id="log-star-4" value="4" />
+                <label for="log-star-4"
+                  ><span aria-hidden="true">&#9733;</span
+                  ><span class="log-sr">4 stars</span></label
+                >
+                <input type="radio" name="rating" id="log-star-3" value="3" />
+                <label for="log-star-3"
+                  ><span aria-hidden="true">&#9733;</span
+                  ><span class="log-sr">3 stars</span></label
+                >
+                <input type="radio" name="rating" id="log-star-2" value="2" />
+                <label for="log-star-2"
+                  ><span aria-hidden="true">&#9733;</span
+                  ><span class="log-sr">2 stars</span></label
+                >
+                <input type="radio" name="rating" id="log-star-1" value="1" />
+                <label for="log-star-1"
+                  ><span aria-hidden="true">&#9733;</span
+                  ><span class="log-sr">1 star</span></label
+                >
+              </div>
+            </fieldset>
+          </div>
+
+          <div class="log-field">
+            <label class="log-label" for="log-notes">Notes (optional)</label>
+            <textarea
+              class="log-input log-input--area"
+              id="log-notes"
+              name="notes"
+              rows="3"
+              placeholder="What did you think?"
+            ></textarea>
+          </div>
+        </div>
+
+        <footer class="log-modal__footer">
+          <button type="button" class="log-modal__manual">
+            Can't find it? Add manually
+          </button>
+          <div class="log-modal__actions">
+            <button
+              type="button"
+              class="log-modal__btn log-modal__btn--cancel"
+              data-log-close
+            >
+              Cancel
+            </button>
+            <button type="submit" class="log-modal__btn log-modal__btn--save">
+              Save to shelf
+            </button>
+          </div>
+        </footer>
+      </form>
+    </dialog>
+
+    <!-- SETTINGS MODAL (Edit profile / Settings) -->
+    <dialog
+      class="settings-modal"
+      id="settings-modal"
+      aria-labelledby="sm-title"
+    >
+      <button type="button" class="settings-modal__close" aria-label="Close">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <line x1="3" y1="3" x2="21" y2="21"></line>
+          <line x1="21" y1="3" x2="3" y2="21"></line>
+        </svg>
+      </button>
+
+      <h2 class="settings-modal__sr" id="sm-title">Profile settings</h2>
+
+      <div class="settings-modal__layout">
+        <!-- Left side: section tabs -->
+        <div
+          class="settings-modal__tabs"
+          role="tablist"
+          aria-label="Settings sections"
+        >
+          <button
+            type="button"
+            class="settings-modal__tab"
+            role="tab"
+            id="sm-tab-customization"
+            aria-controls="sm-panel-customization"
+            aria-selected="true"
+            data-tab="customization"
+          >
+            Customization
+          </button>
+          <button
+            type="button"
+            class="settings-modal__tab"
+            role="tab"
+            id="sm-tab-settings"
+            aria-controls="sm-panel-settings"
+            aria-selected="false"
+            data-tab="settings"
+          >
+            Settings
+          </button>
+        </div>
+
+        <!-- Right side: section content -->
+        <div class="settings-modal__panels">
+          <!-- CUSTOMIZATION -->
+          <section
+            class="settings-modal__panel"
+            role="tabpanel"
+            id="sm-panel-customization"
+            aria-labelledby="sm-tab-customization"
+            data-panel="customization"
+          >
+            <fieldset class="settings-modal__group">
+              <legend class="settings-modal__heading">
+                Change your avatar
+              </legend>
+              <div class="settings-modal__avatars">
+                <!-- Swap each placeholder span's contents for <img src="..." alt=""> later -->
+                <label class="settings-modal__avatar">
+                  <input type="radio" name="sm-avatar" value="1" checked />
+                  <span class="settings-modal__avatar-img"></span>
+                  <span class="settings-modal__sr">Avatar 1</span>
+                </label>
+                <label class="settings-modal__avatar">
+                  <input type="radio" name="sm-avatar" value="2" />
+                  <span class="settings-modal__avatar-img"></span>
+                  <span class="settings-modal__sr">Avatar 2</span>
+                </label>
+                <label class="settings-modal__avatar">
+                  <input type="radio" name="sm-avatar" value="3" />
+                  <span class="settings-modal__avatar-img"></span>
+                  <span class="settings-modal__sr">Avatar 3</span>
+                </label>
+                <label class="settings-modal__avatar">
+                  <input type="radio" name="sm-avatar" value="4" />
+                  <span class="settings-modal__avatar-img"></span>
+                  <span class="settings-modal__sr">Avatar 4</span>
+                </label>
+              </div>
+            </fieldset>
+
+            <div class="settings-modal__group">
+              <label class="settings-modal__heading" for="sm-display-name">
+                Change your display name
+              </label>
+              <input
+                type="text"
+                class="settings-modal__field"
+                id="sm-display-name"
+                maxlength="30"
+                placeholder="Display name..."
+                autocomplete="off"
+              />
+              <p
+                class="settings-modal__counter"
+                data-counter-for="sm-display-name"
+              >
+                0 / 30
+              </p>
+            </div>
+
+            <div class="settings-modal__group">
+              <label class="settings-modal__heading" for="sm-bio">
+                Change your bio
+              </label>
+              <textarea
+                class="settings-modal__field"
+                id="sm-bio"
+                maxlength="200"
+                placeholder="Bio..."
+              ></textarea>
+              <p class="settings-modal__counter" data-counter-for="sm-bio">
+                0 / 200
+              </p>
+            </div>
+          </section>
+
+          <!-- SETTINGS -->
+          <section
+            class="settings-modal__panel"
+            role="tabpanel"
+            id="sm-panel-settings"
+            aria-labelledby="sm-tab-settings"
+            data-panel="settings"
+            hidden
+          >
+            <fieldset class="settings-modal__group">
+              <legend class="settings-modal__heading">
+                Change your privacy settings
+              </legend>
+              <div class="settings-modal__options">
+                <label class="settings-modal__option">
+                  <input type="radio" name="sm-privacy" value="private" checked />
+                  Private
+                </label>
+                <label class="settings-modal__option">
+                  <input type="radio" name="sm-privacy" value="friends" />
+                  Friends only
+                </label>
+                <label class="settings-modal__option">
+                  <input type="radio" name="sm-privacy" value="public" />
+                  Public
+                </label>
+              </div>
+            </fieldset>
+          </section>
+        </div>
+      </div>
+    </dialog>
+
+    <script src="js/frontend/mainpage.js"></script>
+    <script src="js/frontend/logModal.js"></script>
+    <script src="js/frontend/custAndSettingsModal.js"></script>
   </body>
 </html>
