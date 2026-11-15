@@ -8,11 +8,12 @@ Media Shelf is a web app for logging movies, TV shows, books, audiobooks, video 
 
 - [x] Firebase project setup (`.firebaserc`, `firebase.json`) and one shared browser setup in `js/firebase-config.js`, which uses the local emulators on localhost.
 - [x] App Check with reCAPTCHA Enterprise (see [App Check](#app-check)).
-- [x] Pages: `index`, `login`, `signup`, `forgot-password`, `main-page`, `social-page`, `settings-and-customization`, and `contact`, with styles in `css/`.
+- [x] Pages: `index`, `login`, `signup`, `forgot-password`, `main-page`, `social-page`, `settings-and-customization`, `contact`, and `about`, with styles in `css/`.
 - [x] Email and password sign-up, log-in, log-out, and password reset (see [Authentication](#authentication)).
 - [x] MS-10: Firestore Security Rules (see [Security Rules](#security-rules)).
 - [x] MS-03: Security Rules tests with `npm test` (see [Testing](#testing)).
-- [x] CI: Prettier, ESLint, and the rules tests on every pull request into `main`.
+- [x] Cloud Functions: `createUserProfile`, `searchMedia`, `addMediaEntry`, and `onUserDeleted` (see [Cloud Functions](#cloud-functions)), with tests run by `npm run test:functions`.
+- [x] CI: Prettier, ESLint, the rules tests, and the Cloud Functions tests on every pull request into `main`.
 - [x] Secret scan on every push and pull request (see [Secret scanning](#secret-scanning)).
 
 ### In progress
@@ -20,7 +21,7 @@ Media Shelf is a web app for logging movies, TV shows, books, audiobooks, video 
 - [ ] Three `{todo: true}` tests in `users.test.js` expect listing to succeed, but the rules deny it. Decide for each: flip to `assertFails` or change the rules.
 - [ ] The two avatar tests are skipped until the avatar list is final (#97). `AVATAR_IDS` in `js/constants.js` is still empty; the rules accept `avatar1`–`avatar3`.
 - [ ] `mediaEntries.test.js` has only one test.
-- [ ] Cloud Functions aren't written yet (`functions/index.js` is the starter scaffold) and have no tests. Until `createUserProfile` exists, sign-up doesn't save the username or create a profile.
+- [ ] The browser doesn't call the Cloud Functions yet: `signup.js` (`createUserProfile`), `js/media/` (`searchMedia`, `addMediaEntry`), and account deletion in Settings. Until sign-up calls `createUserProfile`, it doesn't save the username or create a profile.
 - [ ] The Social link in the `main-page.html` nav is commented out; Log Out sits in its place.
 - [ ] Placeholders: `js/database/` and `firestore.indexes.json` are empty; `assets/avatars/` and `assets/credits/` don't exist yet.
 
@@ -28,7 +29,7 @@ Media Shelf is a web app for logging movies, TV shows, books, audiobooks, video 
 
 - [ ] MS-06: app shell.
 - [ ] Media entry tests in `mediaEntries.test.js`.
-- [ ] MS-11: `createUserProfile`.
+- [ ] MS-11: call `createUserProfile` from sign-up.
 
 ## First-time setup
 
@@ -72,7 +73,7 @@ On `localhost` or `127.0.0.1`, the app uses the local emulators, so nothing reac
 | Firestore      | 8080 |
 | Emulator UI    | 4000 |
 
-In the Emulator UI, use **Authentication** for test users, **Firestore** for data, **Firestore > Requests** to see which rule allowed or denied a request, and **Logs** for function output. Profiles and media entries are created only by Cloud Functions (not built yet), so add test documents by hand in the Emulator UI.
+In the Emulator UI, use **Authentication** for test users, **Firestore** for data, **Firestore > Requests** to see which rule allowed or denied a request, and **Logs** for function output. Profiles and media entries are created only by Cloud Functions. Until the pages call them, add test documents by hand in the Emulator UI. For `searchMedia` to reach the real APIs locally, add the API keys to `functions/.secret.local` (see [Cloud Functions](#cloud-functions)).
 
 ## App Check
 
@@ -122,7 +123,7 @@ The **Secret scan (gitleaks)** check fails if an API key, token, password, or pr
 - `.gitleaks.toml` allows exactly one key: the public Firebase web `apiKey`.
 - `.gitleaksignore` lists findings the team has confirmed are not secrets.
 
-**Where real keys go:** in Cloud Functions, use `defineSecret('TMDB_API_KEY')` and set the value with `firebase functions:secrets:set TMDB_API_KEY`. For local emulator runs, put values in `functions/.secret.local` (gitignored). Never put third-party keys in browser code.
+**Where real keys go:** in Cloud Functions, use `defineSecret('TMDB_READ_TOKEN')` and set the value with `firebase functions:secrets:set TMDB_READ_TOKEN`. For local emulator runs, put values in `functions/.secret.local` (gitignored). Never put third-party keys in browser code.
 
 **If the check fails:**
 
@@ -134,6 +135,30 @@ The **Secret scan (gitleaks)** check fails if an API key, token, password, or pr
 **False positive?** Have a teammate confirm, then add the finding's **Fingerprint** from the log to `.gitleaksignore`.
 
 To scan locally with [gitleaks](https://github.com/gitleaks/gitleaks#installing) installed: `gitleaks git . --redact --verbose`.
+
+## Cloud Functions
+
+The browser can't be trusted with API keys or with creating profiles and media entries, so that work runs in `functions/`. Every callable function requires App Check and a signed-in user. See [`functions/CLOUD_FUNCTIONS.md`](functions/CLOUD_FUNCTIONS.md) for each function's request, response, and errors.
+
+| Function            | Called by                       | What it does                                                                      |
+| ------------------- | ------------------------------- | --------------------------------------------------------------------------------- |
+| `createUserProfile` | Sign-up, after the Auth account | Reserves the username and creates the profile documents.                          |
+| `searchMedia`       | Search                          | Searches one category. Uses the 30-day cache, else calls the API (45 per minute). |
+| `addMediaEntry`     | "Add" on a search result        | Adds a title using the cached title and cover. Rejects duplicates.                |
+| `onUserDeleted`     | Firebase, automatically         | Deletes the user's data and frees their username when the account is deleted.     |
+
+**API keys** are Firebase secrets, never in the code:
+
+| Secret               | Where to get it                                                            |
+| -------------------- | -------------------------------------------------------------------------- |
+| `TMDB_READ_TOKEN`    | themoviedb.org > Settings > API > **API Read Access Token** (the long one) |
+| `IGDB_CLIENT_ID`     | dev.twitch.tv > Console > Applications > your app                          |
+| `IGDB_CLIENT_SECRET` | The same app > **New Secret**                                              |
+
+- For the emulator, put them in `functions/.secret.local` (gitignored), one `NAME=value` per line.
+- For the live project, set each once with `firebase functions:secrets:set NAME`. Deploying fails until all three exist.
+
+Deploy with `firebase deploy --only functions`.
 
 ## Security Rules
 
@@ -184,6 +209,8 @@ The test users are Alice (public profile), Carol (private profile), Bob (no prof
 
 **Adding a test:** in the matching file, add a `test('bob cannot read carols private bio', …)` that makes one request as one user and checks it with `assertSucceeds` or `assertFails`. Put it under **ALLOWED** or **DENIED**. Use `{todo: true}` or `{skip: 'reason'}` only for tests waiting on a decision, and remove them when it's settled. Seeded data must pass the rules' own validation.
 
+**Cloud Functions tests:** run `npm run test:functions` from the repository root. It runs every `functions/test/*.test.js` file against the Firestore emulator. The tests use fake API keys and fake API responses, so they need no secrets and never call the real APIs.
+
 ## Authentication
 
 - **Sign-up:** usernames are 3–30 lowercase letters, numbers, or underscores; passwords are at least 8 characters and must match.
@@ -213,9 +240,11 @@ The test users are Alice (public profile), Carol (private profile), Bob (no prof
 │   ├── frontend/             # Browser behavior (nav, carousel, settings tabs)
 │   └── media/                # Media search, adding, status changes, deletion
 ├── functions/
-│   ├── index.js              # Imports and exports Cloud Functions
+│   ├── index.js              # The four Cloud Functions
 │   ├── adapters/             # One module per external API (TMDB, IGDB, Open Library, MusicBrainz)
-│   └── lib/                  # Shared helpers (cache, rate limit, validation)
+│   ├── lib/                  # Shared helpers (validation, API requests, rate limit, cache)
+│   ├── test/                 # Cloud Functions tests
+│   └── CLOUD_FUNCTIONS.md    # What each function and file does
 ├── tests/rules/              # Security Rules tests
 ├── firestore.rules           # Security Rules
 ├── .github/workflows/        # CI and the secret scan
