@@ -1,0 +1,529 @@
+/* css/logModal.css
+ * The "Log media" modal. Uses its own variables, so it works on any page.
+ */
+
+.log-modal {
+  --lm-bg: #faf6f1;
+  --lm-bg-alt: #f4ece6;
+  --lm-ink: #15282f;
+  --lm-label: #8a8479;
+  --lm-muted: #8a8479;
+  --lm-line: #e3d8cd;
+  --lm-accent: #e93d45;
+  --lm-accent-dark: #bf373e;
+  --lm-empty: #e0d3c8;
+
+  width: min(760px, calc(100vw - 2rem));
+  max-height: calc(100vh - 2rem);
+  max-height: calc(100dvh - 2rem);
+  margin: auto;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 20px;
+  background: var(--lm-bg);
+  color: var(--lm-ink);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+}
+
+.log-modal[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+.log-modal::backdrop {
+  background: rgba(21, 39, 47, 0.55);
+}
+
+/* Stop the page behind from scrolling while the modal is open */
+body:has(.log-modal[open]) {
+  overflow: hidden;
+}
+
+.log-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.log-modal__form {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* ---------- Header ---------- */
+.log-modal__header {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 30px;
+  border-bottom: 1px solid var(--lm-line);
+}
+
+.log-modal__title {
+  margin: 0;
+  font-family: var(--font-display, 'Inter Tight', system-ui, sans-serif);
+  font-size: 1.9rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.log-modal__close {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--lm-line);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--lm-ink);
+  cursor: pointer;
+}
+
+.log-modal__close:hover {
+  background: var(--lm-bg-alt);
+}
+
+.log-modal__close svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+/* ---------- Body ---------- */
+.log-modal__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 26px 30px 8px;
+  overflow-y: auto;
+}
+
+.log-field {
+  min-width: 0;
+  margin: 0 0 22px;
+  padding: 0;
+  border: 0;
+}
+
+.log-label {
+  display: block;
+  margin: 0 0 10px;
+  padding: 0;
+  color: var(--lm-label);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.log-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 20px;
+}
+
+.log-row--end {
+  align-items: end;
+}
+
+.log-row--end > .log-check {
+  margin-bottom: 22px;
+}
+
+/* Type pills */
+.log-types {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.log-pill {
+  position: relative;
+}
+
+.log-pill input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.log-pill span {
+  display: inline-block;
+  padding: 8px 15px;
+  border: 1px solid var(--lm-line);
+  border-radius: 999px;
+  background: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.log-pill input:checked + span {
+  border-color: var(--lm-ink);
+  background: var(--lm-ink);
+  color: #fff;
+}
+
+.log-pill input:focus-visible + span {
+  outline: 3px solid var(--lm-accent);
+  outline-offset: 2px;
+}
+
+/* Text fields */
+.log-input {
+  display: block;
+  width: 100%;
+  min-height: 46px;
+  padding: 12px 16px;
+  border: 1px solid var(--lm-line);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--lm-ink);
+}
+
+.log-input::placeholder {
+  color: var(--lm-muted);
+}
+
+.log-input:focus {
+  border-color: var(--lm-ink);
+  outline: 2px solid transparent;
+  box-shadow: 0 0 0 3px rgba(21, 39, 47, 0.14);
+}
+
+.log-input--area {
+  min-height: 96px;
+  resize: vertical;
+}
+
+/* Search results (placeholder list until the backend fills it) */
+.log-results {
+  margin: 6px 0 0;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--lm-line);
+  border-radius: 12px;
+  background: #fff;
+  list-style: none;
+}
+
+.log-modal.is-manual .log-results {
+  display: none;
+}
+
+.log-results li + li {
+  border-top: 1px solid var(--lm-line);
+}
+
+.log-result {
+  position: relative;
+  display: block;
+  cursor: pointer;
+}
+
+.log-result input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.log-result__row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px 12px 13px;
+  border-left: 3px solid transparent;
+}
+
+.log-result:hover .log-result__row {
+  background: var(--lm-bg);
+}
+
+.log-result input:checked + .log-result__row {
+  border-left-color: var(--lm-accent);
+  background: #fdeaec;
+}
+
+.log-result input:focus-visible + .log-result__row {
+  outline: 3px solid var(--lm-accent);
+  outline-offset: -3px;
+}
+
+.log-result__thumb {
+  flex: none;
+  width: 40px;
+  height: 56px;
+  border-radius: 6px;
+  background: #3f4d8c;
+}
+
+li:nth-child(2) > .log-result .log-result__thumb {
+  background: #b85c3c;
+}
+
+li:nth-child(3) > .log-result .log-result__thumb {
+  background: #5b8f88;
+}
+
+.log-result__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.log-result__name {
+  display: block;
+  font-weight: 700;
+}
+
+.log-result__meta {
+  display: block;
+  color: var(--lm-muted);
+  font-size: 0.85rem;
+}
+
+.log-result__check {
+  display: none;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e8333f' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12.5l5 5L20 6.5'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+}
+
+.log-result input:checked + .log-result__row .log-result__check {
+  display: block;
+}
+
+/* Status (segmented control) */
+.log-segmented {
+  display: flex;
+  overflow: hidden;
+  border: 1px solid var(--lm-line);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.log-segmented label {
+  position: relative;
+  flex: 1;
+}
+
+.log-segmented input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.log-segmented span {
+  display: block;
+  padding: 12px 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.log-segmented input:checked + span {
+  background: var(--lm-ink);
+  color: #fff;
+}
+
+.log-segmented input:focus-visible + span {
+  outline: 3px solid var(--lm-accent);
+  outline-offset: -3px;
+}
+
+/* Rating: radios in reverse order so earlier stars light up with CSS only */
+.log-stars {
+  position: relative;
+  display: inline-flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
+
+.log-stars input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.log-stars label {
+  padding: 0 4px;
+  color: var(--lm-empty);
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.log-stars input:checked ~ label,
+.log-stars label:hover,
+.log-stars label:hover ~ label {
+  color: var(--lm-accent);
+}
+
+.log-stars input:focus-visible + label {
+  border-radius: 4px;
+  outline: 3px solid var(--lm-accent);
+  outline-offset: 2px;
+}
+
+/* Favorites checkbox */
+.log-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.log-check input {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  border: 2px solid var(--lm-ink);
+  border-radius: 6px;
+  background: #fff center / 80% no-repeat;
+  appearance: none;
+  cursor: pointer;
+}
+
+.log-check input:checked {
+  border-color: var(--lm-accent);
+  background-color: var(--lm-accent);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12.5l5 5L20 6.5'/%3E%3C/svg%3E");
+}
+
+/* ---------- Footer ---------- */
+.log-modal__footer {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 30px;
+  border-top: 1px solid var(--lm-line);
+  background: var(--lm-bg-alt);
+}
+
+.log-modal__manual {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--lm-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.log-modal__manual:hover {
+  color: var(--lm-ink);
+  text-decoration: underline;
+}
+
+.log-modal__actions {
+  display: flex;
+  gap: 10px;
+}
+
+.log-modal__btn {
+  min-height: 48px;
+  padding: 0 24px;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.log-modal__btn--cancel {
+  border-color: var(--lm-ink);
+  background: transparent;
+  color: var(--lm-ink);
+}
+
+.log-modal__btn--cancel:hover {
+  background: var(--lm-ink);
+  color: #fff;
+}
+
+.log-modal__btn--save {
+  background: var(--lm-accent);
+  color: #fff;
+}
+
+.log-modal__btn--save:hover {
+  background: var(--lm-accent-dark);
+}
+
+/* ---------- Mobile: full-screen sheet ---------- */
+@media (max-width: 640px) {
+  .log-modal {
+    width: 100vw;
+    max-width: none;
+    height: 100vh;
+    height: 100dvh;
+    max-height: none;
+    border-radius: 0;
+  }
+
+  .log-modal__header {
+    padding: 16px 18px;
+  }
+
+  .log-modal__title {
+    font-size: 1.6rem;
+  }
+
+  .log-modal__body {
+    padding: 20px 18px 4px;
+  }
+
+  .log-row {
+    grid-template-columns: 1fr;
+  }
+
+  .log-row--end > .log-check {
+    margin-top: -6px;
+  }
+
+  .log-modal__footer {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    padding: 14px 18px calc(14px + env(safe-area-inset-bottom));
+  }
+
+  .log-modal__manual {
+    padding: 8px;
+  }
+
+  .log-modal__actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
