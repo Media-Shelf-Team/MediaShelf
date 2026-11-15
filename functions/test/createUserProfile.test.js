@@ -1,7 +1,12 @@
 const {describe, test, beforeEach} = require('node:test');
 const assert = require('node:assert/strict');
 const {
-  functions, db, clearFirestore, callAs, callSignedOut, hasError,
+  functions,
+  db,
+  clearFirestore,
+  callAs,
+  callSignedOut,
+  hasError,
 } = require('./helpers.js');
 
 const fn = functions.createUserProfile;

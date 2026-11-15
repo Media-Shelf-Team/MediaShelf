@@ -1,7 +1,12 @@
 const {describe, test, beforeEach, afterEach, mock} = require('node:test');
 const assert = require('node:assert/strict');
 const {
-  functions, db, clearFirestore, callAs, callSignedOut, hasError,
+  functions,
+  db,
+  clearFirestore,
+  callAs,
+  callSignedOut,
+  hasError,
 } = require('./helpers.js');
 const tmdb = require('../adapters/tmdb.js');
 
@@ -96,7 +101,10 @@ describe('searchMedia', () => {
   test('the same search a second time comes from the cache', async () => {
     const api = fakeTmdb(FAKE_MOVIES);
     await callAs(fn, 'alice', {category: 'movie', query: 'matrix'});
-    const second = await callAs(fn, 'bob', {category: 'movie', query: 'MATRIX'});
+    const second = await callAs(fn, 'bob', {
+      category: 'movie',
+      query: 'MATRIX',
+    });
 
     assert.strictEqual(second.fromCache, true);
     assert.deepStrictEqual(second.results, FAKE_MOVIES);
@@ -116,11 +124,18 @@ describe('searchMedia', () => {
   test('drops unusable results and keeps at most 10', async () => {
     const many = [null];
     for (let i = 1; i <= 12; i++) {
-      many.push({externalId: String(i), title: `Movie ${i}`, coverImageUrl: null});
+      many.push({
+        externalId: String(i),
+        title: `Movie ${i}`,
+        coverImageUrl: null,
+      });
     }
     fakeTmdb(many);
 
-    const result = await callAs(fn, 'alice', {category: 'movie', query: 'movie'});
+    const result = await callAs(fn, 'alice', {
+      category: 'movie',
+      query: 'movie',
+    });
     assert.strictEqual(result.results.length, 10);
     assert.ok(result.results.every((r) => r !== null));
   });

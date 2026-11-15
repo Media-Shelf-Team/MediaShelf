@@ -9,6 +9,7 @@ on:
 permissions:
   contents: read
 
+# Cancels previous workflow actions when a new run takes place
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
@@ -77,3 +78,39 @@ jobs:
       # Starts the Firestore emulator, runs tests/rules/*.test.js, stops it.
       - name: Run Firestore rules tests
         run: npm test
+
+  firestore-functions-test:
+    name: Cloud Functions tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: |
+            package-lock.json
+            functions/package-lock.json
+
+      # The Firestore emulator is a Java program.
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      # Root: firebase-tools, which runs the emulator.
+      - name: Install root dependencies
+        run: npm ci
+
+      # functions/: firebase-admin and firebase-functions, which the tests load.
+      - name: Install functions dependencies
+        run: npm ci --prefix functions
+
+      # Starts the Firestore emulator, runs functions/test/*.test.js, stops it.
+      - name: Run Cloud Functions tests
+        run: npm run test:functions

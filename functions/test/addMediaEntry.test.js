@@ -1,8 +1,14 @@
 const {describe, test, beforeEach} = require('node:test');
 const assert = require('node:assert/strict');
 const {
-  functions, db, clearFirestore, callAs, callSignedOut, hasError,
-  seedProfile, seedApiCache,
+  functions,
+  db,
+  clearFirestore,
+  callAs,
+  callSignedOut,
+  hasError,
+  seedProfile,
+  seedApiCache,
 } = require('./helpers.js');
 
 const fn = functions.addMediaEntry;
@@ -31,7 +37,10 @@ describe('addMediaEntry', () => {
       {...GOOD, status: 'done'},
     ];
     for (const data of bad) {
-      await assert.rejects(callAs(fn, 'alice', data), hasError('invalid-argument'));
+      await assert.rejects(
+        callAs(fn, 'alice', data),
+        hasError('invalid-argument'),
+      );
     }
   });
 

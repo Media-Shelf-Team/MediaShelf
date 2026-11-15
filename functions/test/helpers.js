@@ -1,11 +1,11 @@
 // Shared setup for the Cloud Functions tests.
-// Run them with: npm test --prefix functions
+// Run them with: npm run test:functions
 // (that starts the Firestore emulator and runs the test files one at a time).
 
 // Safety: never run these tests against the real database.
 if (!process.env.FIRESTORE_EMULATOR_HOST) {
   throw new Error(
-    'Run the function tests with the emulator: npm test --prefix functions',
+    'Run the function tests with the emulator: npm run test:functions',
   );
 }
 
