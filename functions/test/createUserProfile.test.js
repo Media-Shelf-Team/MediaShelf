@@ -32,10 +32,13 @@ describe('createUserProfile', () => {
   });
 
   test('rejects an unknown avatar', async () => {
-    await assert.rejects(
-      callAs(fn, 'alice', {...GOOD, avatarId: 'avatar9'}),
-      hasError('invalid-argument'),
-    );
+    for (const avatarId of ['avatar9', 'avatar5', '1', 'bookworm']) {
+      await assert.rejects(
+        callAs(fn, 'alice', {...GOOD, avatarId}),
+        hasError('invalid-argument'),
+        avatarId,
+      );
+    }
   });
 
   test('rejects extra fields like isPublic', async () => {
@@ -80,6 +83,12 @@ describe('createUserProfile', () => {
 
     const account = await db.doc('users/alice/private/account').get();
     assert.strictEqual(account.data().username, 'kevin_q');
+  });
+
+  test('accepts avatar4, the last bundled avatar', async () => {
+    await callAs(fn, 'alice', {...GOOD, avatarId: 'avatar4'});
+    const user = (await db.doc('users/alice').get()).data();
+    assert.strictEqual(user.avatarId, 'avatar4');
   });
 
   test('a failed sign-up writes nothing', async () => {

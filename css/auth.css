@@ -195,7 +195,9 @@ html[data-auth='pending'] {
   height: 1px;
 }
 
-.avatar-option img {
+/* The pictures, and the blank circle used until an avatar has a picture. */
+.avatar-option img,
+.avatar-option__placeholder {
   display: block;
   width: clamp(2.5rem, 6dvh, 3.5rem);
   aspect-ratio: 1;
@@ -208,16 +210,24 @@ html[data-auth='pending'] {
     outline-color var(--transition-fast);
 }
 
-.avatar-option:hover img {
+.avatar-option:hover img,
+.avatar-option:hover .avatar-option__placeholder {
   transform: scale(1.08);
 }
 
-.avatar-option input:checked + img {
+.avatar-option input:checked + img,
+.avatar-option input:checked + .avatar-option__placeholder {
   outline-color: #d62828;
 }
 
-.avatar-option input:focus-visible + img {
+.avatar-option input:focus-visible + img,
+.avatar-option input:focus-visible + .avatar-option__placeholder {
   box-shadow: 0 0 0 6px rgba(214, 40, 40, 0.3);
+}
+
+/* Blank avatar: a grey circle until its picture is added. */
+.avatar-option__placeholder {
+  background: #8a8479;
 }
 
 /* ----- Buttons ----- */

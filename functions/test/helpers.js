@@ -92,22 +92,44 @@ async function seedProfile(uid) {
 
 /**
  * Creates an apiCache entry for one title, as searchMedia would.
- * @param {string} category The cache category ('book' for audiobooks).
+ * @param {string} category The media category, e.g. 'movie' or 'book'.
  * @param {string} externalId The title's ID in the API.
  * @param {string} title The title.
- * @param {number=} expiresInMs How long until it expires (negative = expired).
+ * @param {Object=} options Optional settings:
+ *     expiresInMs  how long until it expires (negative = expired);
+ *                  default one day
+ *     source       the API's name; default 'tmdb'
+ *     creator      the creator's name, or null. Leave it out to make an
+ *                  entry with no creator field, like a movie or show whose
+ *                  creator hasn't been looked up yet.
  * @return {Promise<void>}
  */
-async function seedApiCache(category, externalId, title, expiresInMs) {
-  const ttl = expiresInMs === undefined ? ONE_DAY_MS : expiresInMs;
-  await db.doc(`apiCache/${category}_${externalId}`).set({
+async function seedApiCache(category, externalId, title, options = {}) {
+  const ttl =
+    options.expiresInMs === undefined ? ONE_DAY_MS : options.expiresInMs;
+  const details = {
     category: category,
-    source: 'tmdb',
+    source: options.source || 'tmdb',
     externalId: externalId,
     title: title,
     coverImageUrl: null,
     expiresAt: Timestamp.fromMillis(Date.now() + ttl),
-  });
+  };
+  if (options.creator !== undefined) {
+    details.creator = options.creator;
+  }
+  await db.doc(`apiCache/${category}_${externalId}`).set(details);
+}
+
+/**
+ * A day counted from today in UTC, written YYYY-MM-DD the way logs store
+ * dates. utcDay(0) is today, utcDay(1) tomorrow, utcDay(-1) yesterday.
+ * @param {number} offsetDays How many days from today.
+ * @return {string}
+ */
+function utcDay(offsetDays) {
+  const ms = Date.now() + offsetDays * ONE_DAY_MS;
+  return new Date(ms).toISOString().slice(0, 10);
 }
 
 module.exports = {
@@ -119,4 +141,5 @@ module.exports = {
   hasError,
   seedProfile,
   seedApiCache,
+  utcDay,
 };

@@ -9,12 +9,29 @@ const {
   hasError,
 } = require('./helpers.js');
 const tmdb = require('../adapters/tmdb.js');
+const openlibrary = require('../adapters/openlibrary.js');
 
 const fn = functions.searchMedia;
 
+// TMDB search results have no creator; addMediaEntry looks it up later.
 const FAKE_MOVIES = [
-  {externalId: '603', title: 'The Matrix', coverImageUrl: null},
-  {externalId: '604', title: 'The Matrix Reloaded', coverImageUrl: null},
+  {externalId: '603', title: 'The Matrix', creator: null, coverImageUrl: null},
+  {
+    externalId: '604',
+    title: 'The Matrix Reloaded',
+    creator: null,
+    coverImageUrl: null,
+  },
+];
+
+// Open Library search results include the first author.
+const FAKE_BOOKS = [
+  {
+    externalId: 'OL1W',
+    title: 'Dune',
+    creator: 'Frank Herbert',
+    coverImageUrl: null,
+  },
 ];
 
 /**
@@ -49,10 +66,14 @@ describe('searchMedia', () => {
   });
 
   test('rejects an unknown category', async () => {
-    await assert.rejects(
-      callAs(fn, 'alice', {category: 'podcast', query: 'matrix'}),
-      hasError('invalid-argument'),
-    );
+    // 'audiobook' was removed and 'tv' is now 'show'.
+    for (const category of ['podcast', 'audiobook', 'tv']) {
+      await assert.rejects(
+        callAs(fn, 'alice', {category, query: 'matrix'}),
+        hasError('invalid-argument'),
+        category,
+      );
+    }
   });
 
   test('rejects blank and too-long search text', async () => {
@@ -98,6 +119,13 @@ describe('searchMedia', () => {
     assert.strictEqual(limit, 10);
   });
 
+  test('searches shows with TMDB', async () => {
+    const api = fakeTmdb(FAKE_MOVIES);
+    await callAs(fn, 'alice', {category: 'show', query: 'breaking bad'});
+    const [category] = api.mock.calls[0].arguments;
+    assert.strictEqual(category, 'show');
+  });
+
   test('the same search a second time comes from the cache', async () => {
     const api = fakeTmdb(FAKE_MOVIES);
     await callAs(fn, 'alice', {category: 'movie', query: 'matrix'});
@@ -121,12 +149,34 @@ describe('searchMedia', () => {
     assert.strictEqual(cached.data().source, 'tmdb');
   });
 
+  test('saves a book author to apiCache as the creator', async () => {
+    mock.method(openlibrary, 'search', async () => FAKE_BOOKS);
+    const result = await callAs(fn, 'alice', {category: 'book', query: 'dune'});
+    assert.strictEqual(result.results[0].creator, 'Frank Herbert');
+
+    const cached = (await db.doc('apiCache/book_OL1W').get()).data();
+    assert.strictEqual(cached.creator, 'Frank Herbert');
+  });
+
+  test("a new search doesn't erase a creator addMediaEntry looked up", async () => {
+    fakeTmdb(FAKE_MOVIES);
+    // As if addMediaEntry already found the director of The Matrix.
+    await db.doc('apiCache/movie_603').set({creator: 'Lana Wachowski'});
+
+    await callAs(fn, 'alice', {category: 'movie', query: 'matrix'});
+
+    const cached = (await db.doc('apiCache/movie_603').get()).data();
+    assert.strictEqual(cached.title, 'The Matrix');
+    assert.strictEqual(cached.creator, 'Lana Wachowski');
+  });
+
   test('drops unusable results and keeps at most 10', async () => {
     const many = [null];
     for (let i = 1; i <= 12; i++) {
       many.push({
         externalId: String(i),
         title: `Movie ${i}`,
+        creator: null,
         coverImageUrl: null,
       });
     }

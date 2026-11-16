@@ -717,7 +717,7 @@
                 <input
                   type="radio"
                   name="type"
-                  value="film"
+                  value="movie"
                   data-plural="films"
                   data-creator-role="Director"
                   checked
@@ -836,30 +836,40 @@
           </div>
 
           <div class="log-row">
+            <!-- Values match LOG_STATUS in js/constants.js. -->
             <fieldset class="log-field">
               <legend class="log-label">Status</legend>
               <div class="log-segmented">
                 <label>
-                  <input type="radio" name="status" value="finished" checked />
-                  <span>Finished</span>
+                  <input type="radio" name="status" value="completed" checked />
+                  <span>Completed</span>
                 </label>
                 <label>
-                  <input type="radio" name="status" value="in-progress" />
+                  <input type="radio" name="status" value="in_progress" />
                   <span>In progress</span>
                 </label>
                 <label>
-                  <input type="radio" name="status" value="want-to" />
-                  <span>Want to</span>
+                  <input type="radio" name="status" value="planned" />
+                  <span>Planned</span>
                 </label>
               </div>
             </fieldset>
 
+            <!-- The day it was watched/read/played. logModal.js sets it to
+                 today and stops future days (max). -->
             <div class="log-field">
               <label class="log-label" for="log-date">Date</label>
-              <input class="log-input" id="log-date" name="date" type="date" />
+              <input
+                class="log-input"
+                id="log-date"
+                name="date"
+                type="date"
+                required
+              />
             </div>
           </div>
 
+          <!-- Optional: no star picked means "not rated" (rating: null). -->
           <div class="log-row log-row--end">
             <fieldset class="log-field">
               <legend class="log-label">Rating</legend>
@@ -900,13 +910,15 @@
               id="log-notes"
               name="notes"
               rows="3"
+              maxlength="500"
               placeholder="What did you think?"
             ></textarea>
           </div>
         </div>
 
         <footer class="log-modal__footer">
-          <button type="button" class="log-modal__manual">
+          <!-- Hidden for the MVP: every log comes from a search result. -->
+          <button type="button" class="log-modal__manual" hidden>
             Can't find it? Add manually
           </button>
           <div class="log-modal__actions">
@@ -986,24 +998,30 @@
                 Change your avatar
               </legend>
               <div class="settings-modal__avatars">
-                <!-- Swap each placeholder span's contents for <img src="..." alt=""> later -->
+                <!-- Values match AVATAR_IDS in js/constants.js.
+                     Swap each placeholder span's contents for <img src="..." alt=""> later -->
                 <label class="settings-modal__avatar">
-                  <input type="radio" name="sm-avatar" value="1" checked />
+                  <input
+                    type="radio"
+                    name="sm-avatar"
+                    value="avatar1"
+                    checked
+                  />
                   <span class="settings-modal__avatar-img"></span>
                   <span class="settings-modal__sr">Avatar 1</span>
                 </label>
                 <label class="settings-modal__avatar">
-                  <input type="radio" name="sm-avatar" value="2" />
+                  <input type="radio" name="sm-avatar" value="avatar2" />
                   <span class="settings-modal__avatar-img"></span>
                   <span class="settings-modal__sr">Avatar 2</span>
                 </label>
                 <label class="settings-modal__avatar">
-                  <input type="radio" name="sm-avatar" value="3" />
+                  <input type="radio" name="sm-avatar" value="avatar3" />
                   <span class="settings-modal__avatar-img"></span>
                   <span class="settings-modal__sr">Avatar 3</span>
                 </label>
                 <label class="settings-modal__avatar">
-                  <input type="radio" name="sm-avatar" value="4" />
+                  <input type="radio" name="sm-avatar" value="avatar4" />
                   <span class="settings-modal__avatar-img"></span>
                   <span class="settings-modal__sr">Avatar 4</span>
                 </label>
@@ -1037,11 +1055,11 @@
               <textarea
                 class="settings-modal__field"
                 id="sm-bio"
-                maxlength="200"
+                maxlength="155"
                 placeholder="Bio..."
               ></textarea>
               <p class="settings-modal__counter" data-counter-for="sm-bio">
-                0 / 200
+                0 / 155
               </p>
             </div>
           </section>
@@ -1070,15 +1088,43 @@
                   Private
                 </label>
                 <label class="settings-modal__option">
-                  <input type="radio" name="sm-privacy" value="friends" />
-                  Friends only
-                </label>
-                <label class="settings-modal__option">
                   <input type="radio" name="sm-privacy" value="public" />
                   Public
                 </label>
               </div>
             </fieldset>
+
+            <!-- DELETE ACCOUNT. UI only for now: the button doesn't do
+                 anything yet. When it's wired up it should re-check the
+                 password, then delete the Firebase Auth account
+                 (onUserDeleted cloud function removes the rest). -->
+            <div
+              class="settings-modal__group settings-modal__danger"
+              role="group"
+              aria-labelledby="sm-delete-heading"
+            >
+              <h3 class="settings-modal__heading" id="sm-delete-heading">
+                Delete your account
+              </h3>
+              <p class="settings-modal__warning" id="sm-delete-warning">
+                This permanently deletes your profile, all of your media logs,
+                and your username. It can't be undone.
+              </p>
+              <label class="settings-modal__label" for="sm-delete-password">
+                Enter your password to confirm
+              </label>
+              <input
+                type="password"
+                class="settings-modal__field"
+                id="sm-delete-password"
+                autocomplete="current-password"
+                aria-describedby="sm-delete-warning"
+                placeholder="Password..."
+              />
+              <button type="button" class="settings-modal__delete-btn">
+                Delete account
+              </button>
+            </div>
           </section>
         </div>
       </div>

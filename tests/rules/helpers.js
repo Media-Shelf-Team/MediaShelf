@@ -47,8 +47,12 @@ export async function seedData(testEnv) {
       source: 'tmdb',
       externalId: '550',
       title: 'ClayFace',
+      creator: 'Mike Flanagan',
       coverImageUrl: 'https://image.tmdb.org/t/p/w500/clayface.jpg',
       status: 'planned',
+      rating: null, // not rated yet
+      date: '2026-01-01',
+      notes: '', // no notes
       createdAt: new Date('2026-01-01T00:00:00Z'),
     });
     await setDoc(doc(db, 'users/carol/mediaEntries/book_OL1W'), {
@@ -56,11 +60,26 @@ export async function seedData(testEnv) {
       source: 'openlibrary',
       externalId: 'OL1W',
       title: 'Dune',
+      creator: 'Frank Herbert',
       coverImageUrl: 'https://covers.openlibrary.org/b/id/1-L.jpg',
       status: 'in_progress',
+      rating: 4,
+      date: '2026-01-02',
+      notes: 'Great world-building.',
       createdAt: new Date('2026-01-01T00:00:00Z'),
     });
   });
+}
+
+/**
+ * A day counted from today in UTC, written YYYY-MM-DD the way logs store
+ * dates. utcDay(0) is today, utcDay(1) tomorrow, utcDay(-1) yesterday.
+ * @param {number} offsetDays How many days from today.
+ * @return {string} The date, e.g. '2026-11-15'.
+ */
+export function utcDay(offsetDays) {
+  const ms = Date.now() + offsetDays * 24 * 60 * 60 * 1000;
+  return new Date(ms).toISOString().slice(0, 10);
 }
 
 /**

@@ -1,4 +1,4 @@
-/* css/settingsModal.css */
+/* css/cust-and-settings.css: the Edit profile / Settings modal on main-page.html */
 
 .settings-modal {
   --primary-color: #e93d45;
@@ -236,6 +236,47 @@ textarea.settings-modal__field {
 }
 .settings-modal__option input:focus-visible {
   outline: 3px solid var(--primary-color);
+  outline-offset: 3px;
+}
+
+/* ---------- Delete account (Settings tab) ---------- */
+/* A red top border sets this section apart from the normal settings. */
+.settings-modal__danger {
+  padding-top: 1.5rem;
+  border-top: 3px solid var(--tertiary-color);
+}
+.settings-modal__danger .settings-modal__heading {
+  color: var(--tertiary-color);
+}
+.settings-modal__warning {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.settings-modal__label {
+  display: block;
+  margin: 0 0 0.4rem;
+  font-weight: 600;
+}
+/* Tertiary red with white text keeps the contrast above 4.5:1. */
+.settings-modal__delete-btn {
+  margin-top: 1rem;
+  min-height: 2.75rem;
+  padding: 0 1.5rem;
+  border: none;
+  border-radius: 10px;
+  background: var(--tertiary-color);
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.settings-modal__delete-btn:hover {
+  opacity: 0.85;
+}
+.settings-modal__delete-btn:focus-visible {
+  outline: 3px solid var(--header-text-color);
   outline-offset: 3px;
 }
 

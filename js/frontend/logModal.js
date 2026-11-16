@@ -3,7 +3,15 @@
 //
 // Saving is a placeholder too: the form closes itself on a valid submit
 // (method="dialog"). When the backend exists, read new FormData(form) in a
-// 'submit' listener.
+// 'submit' listener and send addMediaEntry:
+//   type    -> category ('movie', 'show', 'book', 'game', 'music')
+//   status  -> status ('completed', 'in_progress', 'planned')
+//   rating  -> rating (Number 1-5, or null when no star is picked)
+//   date    -> date ('YYYY-MM-DD')
+//   notes   -> notes (up to 500 characters, '' when empty)
+//
+// "Can't find it? Add manually" is hidden for the MVP (see main-page.html);
+// the code for it below is kept for later.
 
 (function () {
   const modal = document.getElementById('log-modal');
@@ -52,11 +60,16 @@
     updateType();
   }
 
-  /** Puts the form back to its starting state, then opens the modal. */
+  /**
+   * Puts the form back to its starting state, then opens the modal. The
+   * date starts as today, and max stops the user picking a future day.
+   */
   function openModal() {
+    const today = toInputDate(new Date());
     form.reset();
     setManual(false);
-    dateInput.value = toInputDate(new Date());
+    dateInput.value = today;
+    dateInput.max = today;
     modal.showModal();
   }
 

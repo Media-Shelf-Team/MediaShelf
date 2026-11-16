@@ -1,5 +1,4 @@
-// Open Library adapter: searches books. Audiobooks use the same search,
-// because Open Library has no reliable way to find only audiobooks.
+// Open Library adapter: searches books. The creator is the first author.
 // No API key needed.
 
 const {fetchJson} = require('../lib/http');
@@ -10,17 +9,17 @@ const COVER_URL = 'https://covers.openlibrary.org/b/id';
 
 /**
  * Searches Open Library by title.
- * @param {string} category 'book' or 'audiobook' (same search).
+ * @param {string} category 'book'.
  * @param {string} query The search text, already cleaned up.
  * @param {number} limit How many results to ask for.
  * @return {Promise<Array>} One entry per result: a search result, or null
  *     if Open Library's data was unusable.
  */
 async function search(category, query, limit) {
-  // 1. Build the URL. "fields" asks for only the three fields we use.
+  // 1. Build the URL. "fields" asks for only the four fields we use.
   const params = new URLSearchParams({
     title: query,
-    fields: 'key,title,cover_i',
+    fields: 'key,title,cover_i,author_name',
     limit: limit,
   });
   const url = `${SEARCH_URL}?${params}`;
@@ -28,7 +27,8 @@ async function search(category, query, limit) {
   // 2. Call Open Library.
   const body = await fetchJson('openlibrary', url);
 
-  // 3. Turn each result ("doc") into our {externalId, title, coverImageUrl}.
+  // 3. Turn each result ("doc") into our
+  //    {externalId, title, creator, coverImageUrl}.
   const docs = body.docs || [];
   return docs.map((doc) => {
     // The key looks like "/works/OL45804W"; we keep "OL45804W". Any other
@@ -38,7 +38,10 @@ async function search(category, query, limit) {
     const coverImageUrl = doc.cover_i
       ? `${COVER_URL}/${doc.cover_i}-L.jpg`
       : null;
-    return toMediaResult(externalId, doc.title, coverImageUrl);
+    // author_name is a list of names; we keep the first one.
+    const authors = Array.isArray(doc.author_name) ? doc.author_name : [];
+    const creator = authors.length > 0 ? authors[0] : null;
+    return toMediaResult(externalId, doc.title, coverImageUrl, creator);
   });
 }
 
