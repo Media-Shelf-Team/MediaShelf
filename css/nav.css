@@ -94,6 +94,12 @@
   text-decoration: none;
 }
 
+/* "Already have an account?" / "New here?" next to the nav button */
+.auth-nav-prompt {
+  color: var(--header-text-color);
+  font-size: 1.5rem;
+}
+
 /* Red Sign Up button */
 .auth-nav-signup {
   display: inline-block;

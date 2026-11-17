@@ -154,6 +154,10 @@ html[data-auth='pending'] {
   border-radius: var(--radius-sm);
 }
 
+#signup-error {
+  color: var(--secondary-color);
+}
+
 .signup-hint {
   margin: 0;
   font-size: 0.7rem;

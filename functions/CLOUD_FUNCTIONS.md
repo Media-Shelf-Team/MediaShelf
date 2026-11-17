@@ -398,8 +398,6 @@ Change them together, in the same pull request.
 
 ## Still to do on the client
 
-- `signup.js`: send the picked avatar (`avatar1`–`avatar4`) and call
-  `createUserProfile`; on `username-taken`, delete the new Auth user.
 - `js/media/search.js`: call `searchMedia`; show "No results found for
   '…'" on an empty array and the error message on `resource-exhausted` or
   `unavailable`.

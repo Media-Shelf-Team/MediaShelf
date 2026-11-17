@@ -10,6 +10,7 @@ Media Shelf is a web app for logging movies, TV shows, books, video games, and m
 - [x] App Check with reCAPTCHA Enterprise (see [App Check](#app-check)).
 - [x] Pages: `index`, `login`, `signup`, `forgot-password`, `main-page`, `social-page`, `contact`, and `about`, with styles in `css/`. Edit profile and Settings are modals on `main-page` (the old `settings-and-customization` page was removed).
 - [x] Email and password sign-up, log-in, log-out, and password reset (see [Authentication](#authentication)).
+- [x] MS-11: sign-up calls `createUserProfile` with the username and picked avatar (see [Authentication](#authentication)).
 - [x] MS-10: Firestore Security Rules (see [Security Rules](#security-rules)).
 - [x] MS-03: Security Rules tests with `npm test` (see [Testing](#testing)).
 - [x] Cloud Functions: `createUserProfile`, `searchMedia`, `addMediaEntry`, and `onUserDeleted` (see [Cloud Functions](#cloud-functions)), with tests run by `npm run test:functions`.
@@ -20,7 +21,7 @@ Media Shelf is a web app for logging movies, TV shows, books, video games, and m
 
 - [ ] Three `{todo: true}` tests in `users.test.js` expect listing to succeed, but the rules deny it. Decide for each: flip to `assertFails` or change the rules.
 - [ ] Avatars are `avatar1`–`avatar4` everywhere (rules, functions, `js/constants.js`, sign-up, Edit profile). The pictures for them come later.
-- [ ] The browser doesn't call the Cloud Functions yet: `signup.js` (`createUserProfile`), `js/media/` (`searchMedia`, `addMediaEntry`), and account deletion in Settings. Until sign-up calls `createUserProfile`, it doesn't save the username or create a profile.
+- [ ] The browser doesn't call `searchMedia` or `addMediaEntry` yet (`js/media/`), and account deletion in Settings isn't wired up.
 - [ ] The Delete account section in the Settings modal is UI only: the button doesn't do anything yet.
 - [ ] "Can't find it? Add manually" in the Log Media modal is hidden for the MVP.
 - [ ] The Social link in the `main-page.html` nav is commented out; Log Out sits in its place.
@@ -30,7 +31,6 @@ Media Shelf is a web app for logging movies, TV shows, books, video games, and m
 
 - [ ] MS-06: app shell.
 - [ ] Media entry tests in `mediaEntries.test.js`.
-- [ ] MS-11: call `createUserProfile` from sign-up.
 
 ## First-time setup
 
@@ -235,7 +235,7 @@ The test users are Alice (public profile), Carol (private profile), Bob (no prof
 
 ## Authentication
 
-- **Sign-up:** usernames are 3–30 lowercase letters, numbers, or underscores; passwords are at least 8 characters and must match.
+- **Sign-up:** usernames are 3–30 letters, numbers, or underscores (saved in lowercase); passwords are at least 8 characters and must match. After the Auth account is created, `signup.js` calls `createUserProfile` with the username and picked avatar. If that fails (for example, the username is taken), the new Auth account is deleted so the user can fix the form and reuse the same email.
 - **Login errors don't reveal accounts.** Wrong passwords and unknown emails show the same message, and so does the reset page.
 - **Redirects use `location.replace()`,** so Back doesn't return to a page you just left.
 
