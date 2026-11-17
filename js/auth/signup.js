@@ -6,11 +6,13 @@ import {
   showError,
 } from './auth.js';
 
-import {MIN_PASSWORD_LENGTH, HOME_PAGE} from '../constants.js';
+import {
+  MIN_PASSWORD_LENGTH,
+  HOME_PAGE,
+  USERNAME_PATTERN,
+} from '../constants.js';
 
 redirectIfSignedIn();
-
-const USERNAME_PATTERN = /^[a-z0-9_]{3,30}$/;
 
 const signUpForm = document.getElementById('signup-form');
 const errorElement = document.getElementById('signup-error');
