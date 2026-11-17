@@ -17,7 +17,7 @@ window.addEventListener('pageshow', (event) => {
 });
 
 // Get all logout buttons on the page
-const logoutButton = document.querySelectorAll('.logout-button');
+const logoutButton = document.querySelectorAll('#logout-button');
 
 // Add click event listeners to all logout buttons
 logoutButton.forEach((button) => {
