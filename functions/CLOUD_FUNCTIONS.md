@@ -88,7 +88,7 @@ Called by `js/media/search.js` when the user searches a category.
   - `query`: 1–100 characters after trimming, collapsing spaces and
     lowercasing
 - **Returns:**
-  `{results: [{externalId, title, creator, coverImageUrl}], fromCache}`, up
+  `{results: [{externalId, title, creator, year, coverImageUrl}], fromCache}`, up
   to 10 results. An empty array means "No results found". `creator` is the
   first author (books), developer (games) or artist (music), or `null`. It
   is always `null` for movies and shows, because TMDB's search doesn't
@@ -206,22 +206,23 @@ the shared setup:
 The server's copy of the Security Rules checks, plus cleanup of search text
 and API results. Values must match `js/constants.js` and `firestore.rules`.
 
-| Export                                                     | What it does                                                                                                                                                                                      |
-| ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `isValidUsername`                                          | String matching `^[a-z0-9_]{3,30}$`                                                                                                                                                               |
-| `isValidAvatarId`                                          | One of `avatar1`–`avatar4`                                                                                                                                                                        |
-| `isValidCategory`                                          | One of the five categories: `movie`, `show`, `book`, `game`, `music`                                                                                                                              |
-| `isValidStatus`                                            | `completed`, `in_progress` or `planned`                                                                                                                                                           |
-| `isValidRating`                                            | `null`, or a whole number 1–5                                                                                                                                                                     |
-| `isValidLogDate`                                           | A real day written `YYYY-MM-DD`, no later than one day past today's UTC date                                                                                                                      |
-| `isValidNotes`                                             | A string of up to 500 characters                                                                                                                                                                  |
-| `todayUtc()`                                               | Today's UTC date as `YYYY-MM-DD` (the default log date)                                                                                                                                           |
-| `cleanCreator(value)`                                      | Trims a creator name and cuts it to 300 characters; returns `null` if it's missing or blank                                                                                                       |
-| `isValidExternalId`                                        | String matching `^[A-Za-z0-9-]{1,64}$` (TMDB/IGDB numbers, Open Library `OL…W` keys, MusicBrainz UUIDs). It becomes part of a document ID, so nothing else is allowed.                            |
-| `hasOnlyKeys(value, allowed)`                              | Non-null object with no keys outside `allowed`                                                                                                                                                    |
-| `normalizeQuery(value)`                                    | Trims, collapses whitespace, lowercases; returns null unless 1–100 characters                                                                                                                     |
-| `toMediaResult(externalId, title, coverImageUrl, creator)` | Builds one `{externalId, title, creator, coverImageUrl}` result, or null if the ID is invalid or the title is empty. Titles are cut to 300 characters; a missing cover or creator becomes `null`. |
-| `MAX_QUERY_LENGTH`, `MAX_NOTES_LENGTH`                     | 100 and 500, used in error messages                                                                                                                                                               |
+| Export                                                           | What it does                                                                                                                                                                                                  |
+| ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `isValidUsername`                                                | String matching `^[a-z0-9_]{3,30}$`                                                                                                                                                                           |
+| `isValidAvatarId`                                                | One of `avatar1`–`avatar4`                                                                                                                                                                                    |
+| `isValidCategory`                                                | One of the five categories: `movie`, `show`, `book`, `game`, `music`                                                                                                                                          |
+| `isValidStatus`                                                  | `completed`, `in_progress` or `planned`                                                                                                                                                                       |
+| `isValidRating`                                                  | `null`, or a whole number 1–5                                                                                                                                                                                 |
+| `isValidLogDate`                                                 | A real day written `YYYY-MM-DD`, no later than one day past today's UTC date                                                                                                                                  |
+| `isValidNotes`                                                   | A string of up to 500 characters                                                                                                                                                                              |
+| `todayUtc()`                                                     | Today's UTC date as `YYYY-MM-DD` (the default log date)                                                                                                                                                       |
+| `cleanCreator(value)`                                            | Trims a creator name and cuts it to 300 characters; returns `null` if it's missing or blank                                                                                                                   |
+| `isValidExternalId`                                              | String matching `^[A-Za-z0-9-]{1,64}$` (TMDB/IGDB numbers, Open Library `OL…W` keys, MusicBrainz UUIDs). It becomes part of a document ID, so nothing else is allowed.                                        |
+| `hasOnlyKeys(value, allowed)`                                    | Non-null object with no keys outside `allowed`                                                                                                                                                                |
+| `normalizeQuery(value)`                                          | Trims, collapses whitespace, lowercases; returns null unless 1–100 characters                                                                                                                                 |
+| `cleanYear(value)`                                               | Reads the year from an API's release date (`'1999-03-30'`, `'1975'` or `1965`), or returns `null`.                                                                                                            |
+| `toMediaResult(externalId, title, coverImageUrl, creator, year)` | Builds one `{externalId, title, creator, year, coverImageUrl}` result, or null if the ID is invalid or the title is empty. Titles are cut to 300 characters; a missing cover, creator or year becomes `null`. |
+| `MAX_QUERY_LENGTH`, `MAX_NOTES_LENGTH`                           | 100 and 500, used in error messages                                                                                                                                                                           |
 
 ### `lib/http.js`
 
@@ -398,6 +399,8 @@ Change them together, in the same pull request.
 
 ## Still to do on the client
 
+- `signup.js`: send the picked avatar (`avatar1`–`avatar4`) and call
+  `createUserProfile`; on `username-taken`, delete the new Auth user.
 - `js/media/search.js`: call `searchMedia`; show "No results found for
   '…'" on an empty array and the error message on `resource-exhausted` or
   `unavailable`.

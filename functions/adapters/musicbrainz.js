@@ -51,18 +51,22 @@ async function search(category, query, limit) {
   // 2. Call MusicBrainz.
   const body = await fetchJson('musicbrainz', url);
 
-  // 3. Turn each track into our {externalId, title, creator, coverImageUrl}.
+  // 3. Turn each track into our
+  //    {externalId, title, creator, year, coverImageUrl}.
   const recordings = body.recordings || [];
   return recordings.map((recording) => {
     const release = newestRelease(recording.releases);
     const coverImageUrl = release
       ? `${COVER_URL}/${release.id}/front-250`
       : null;
+    // "first-release-date" is the track's earliest release, e.g.
+    // "1981-10-26" or just "1981".
     return toMediaResult(
       recording.id,
       recording.title,
       coverImageUrl,
       firstArtist(recording),
+      recording['first-release-date'],
     );
   });
 }

@@ -212,7 +212,8 @@ exports.createUserProfile = callable({}, async (uid, data) => {
  * for 30 days.
  *
  * Request data: {category, query}
- * Returns: {results: [{externalId, title, creator, coverImageUrl}], fromCache}
+ * Returns: {results: [{externalId, title, creator, year, coverImageUrl}],
+ *     fromCache}
  *   Up to 10 results. An empty list means "No results found".
  *   creator is filled in for books, games and music; it is null for movies
  *   and shows, because TMDB's search doesn't include it (addMediaEntry looks

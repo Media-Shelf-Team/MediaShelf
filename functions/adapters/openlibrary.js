@@ -16,10 +16,10 @@ const COVER_URL = 'https://covers.openlibrary.org/b/id';
  *     if Open Library's data was unusable.
  */
 async function search(category, query, limit) {
-  // 1. Build the URL. "fields" asks for only the four fields we use.
+  // 1. Build the URL. "fields" asks for only the five fields we use.
   const params = new URLSearchParams({
     title: query,
-    fields: 'key,title,cover_i,author_name',
+    fields: 'key,title,cover_i,author_name,first_publish_year',
     limit: limit,
   });
   const url = `${SEARCH_URL}?${params}`;
@@ -28,7 +28,7 @@ async function search(category, query, limit) {
   const body = await fetchJson('openlibrary', url);
 
   // 3. Turn each result ("doc") into our
-  //    {externalId, title, creator, coverImageUrl}.
+  //    {externalId, title, creator, year, coverImageUrl}.
   const docs = body.docs || [];
   return docs.map((doc) => {
     // The key looks like "/works/OL45804W"; we keep "OL45804W". Any other
@@ -41,7 +41,14 @@ async function search(category, query, limit) {
     // author_name is a list of names; we keep the first one.
     const authors = Array.isArray(doc.author_name) ? doc.author_name : [];
     const creator = authors.length > 0 ? authors[0] : null;
-    return toMediaResult(externalId, doc.title, coverImageUrl, creator);
+    // first_publish_year is a number, e.g. 1965.
+    return toMediaResult(
+      externalId,
+      doc.title,
+      coverImageUrl,
+      creator,
+      doc.first_publish_year,
+    );
   });
 }
 

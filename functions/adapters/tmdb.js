@@ -41,16 +41,18 @@ async function search(category, query, limit, secrets) {
   const body = await fetchJson('tmdb', url, {headers: authHeader(secrets)});
 
   // 3. Turn each TMDB result into our
-  //    {externalId, title, creator, coverImageUrl}.
+  //    {externalId, title, creator, year, coverImageUrl}.
   const items = body.results || [];
   return items.map((item) => {
     const externalId = String(item.id || '');
-    // Movies call it "title"; TV shows call it "name".
+    // Movies call it "title" and "release_date"; TV shows call them "name"
+    // and "first_air_date".
     const title = category === 'show' ? item.name : item.title;
+    const date = category === 'show' ? item.first_air_date : item.release_date;
     const coverImageUrl = item.poster_path
       ? IMAGE_URL + item.poster_path
       : null;
-    return toMediaResult(externalId, title, coverImageUrl, null);
+    return toMediaResult(externalId, title, coverImageUrl, null, date);
   });
 }
 

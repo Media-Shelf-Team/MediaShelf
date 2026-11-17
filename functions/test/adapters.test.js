@@ -46,7 +46,14 @@ afterEach(() => mock.restoreAll());
 describe('tmdb', () => {
   test('search uses /search/tv for shows and has no creator', async () => {
     const fetch = fakeFetch({
-      results: [{id: 1396, name: 'Breaking Bad', poster_path: '/bb.jpg'}],
+      results: [
+        {
+          id: 1396,
+          name: 'Breaking Bad',
+          poster_path: '/bb.jpg',
+          first_air_date: '2008-01-20',
+        },
+      ],
     });
     const results = await tmdb.search('show', 'breaking bad', 10, SECRETS);
 
@@ -56,9 +63,23 @@ describe('tmdb', () => {
         externalId: '1396',
         title: 'Breaking Bad',
         creator: null,
+        year: 2008,
         coverImageUrl: 'https://image.tmdb.org/t/p/w500/bb.jpg',
       },
     ]);
+  });
+
+  test("a movie's year comes from release_date", async () => {
+    fakeFetch({
+      results: [
+        {id: 603, title: 'The Matrix', release_date: '1999-03-30'},
+        {id: 1, title: 'No Date Yet', release_date: ''},
+      ],
+    });
+    const results = await tmdb.search('movie', 'matrix', 10, SECRETS);
+
+    assert.strictEqual(results[0].year, 1999);
+    assert.strictEqual(results[1].year, null);
   });
 
   test('lookupCreator finds the first director of a movie', async () => {
@@ -99,7 +120,7 @@ describe('tmdb', () => {
 });
 
 describe('openlibrary', () => {
-  test('the creator is the first author', async () => {
+  test('reads the first author and the publish year', async () => {
     const fetch = fakeFetch({
       docs: [
         {
@@ -107,32 +128,36 @@ describe('openlibrary', () => {
           title: 'Good Omens',
           cover_i: 7,
           author_name: ['Terry Pratchett', 'Neil Gaiman'],
+          first_publish_year: 1990,
         },
         {key: '/works/OL2W', title: 'No Author'},
       ],
     });
     const results = await openlibrary.search('book', 'good omens', 10);
 
-    // author_name is one of the fields we ask for.
+    // author_name and first_publish_year are among the fields we ask for.
     const url = new URL(fetch.mock.calls[0].arguments[0]);
-    assert.ok(
-      // fields='key,title,cover_i,author_name'
-      url.searchParams.get('fields').split(',').includes('author_name'),
-    );
+    // fields='key,title,cover_i,author_name,first_publish_year'
+    const fields = url.searchParams.get('fields').split(',');
+    assert.ok(fields.includes('author_name'));
+    assert.ok(fields.includes('first_publish_year'));
 
     assert.strictEqual(results[0].creator, 'Terry Pratchett');
     assert.strictEqual(results[1].creator, null);
+    assert.strictEqual(results[0].year, 1990);
+    assert.strictEqual(results[1].year, null);
   });
 });
 
 describe('igdb', () => {
-  test('the creator is the first developer, not the publisher', async () => {
+  test('reads the first developer (not the publisher) and the year', async () => {
     const fetch = fakeFetch(
       {access_token: 'token', expires_in: 3600}, // Twitch login
       [
         {
           id: 1942,
           name: 'The Witcher 3',
+          first_release_date: 1431993600, // 19 May 2015, in seconds
           involved_companies: [
             {developer: false, company: {name: 'Some Publisher'}},
             {developer: true, company: {name: 'CD Projekt RED'}},
@@ -147,19 +172,23 @@ describe('igdb', () => {
     const body = fetch.mock.calls[1].arguments[1].body;
     assert.ok(body.includes('involved_companies.company.name'));
     assert.ok(body.includes('involved_companies.developer'));
+    assert.ok(body.includes('first_release_date'));
 
     assert.strictEqual(results[0].creator, 'CD Projekt RED');
     assert.strictEqual(results[1].creator, null);
+    assert.strictEqual(results[0].year, 2015);
+    assert.strictEqual(results[1].year, null);
   });
 });
 
 describe('musicbrainz', () => {
-  test('the creator is the first credited artist', async () => {
+  test('reads the first credited artist and the year', async () => {
     fakeFetch({
       recordings: [
         {
           id: 'b1a9c0e9-d987-4042-ae91-78d6a3267d69',
           title: 'Under Pressure',
+          'first-release-date': '1981-10-26',
           'artist-credit': [
             {name: 'Queen', joinphrase: ' & '},
             {name: 'David Bowie'},
@@ -172,5 +201,7 @@ describe('musicbrainz', () => {
 
     assert.strictEqual(results[0].creator, 'Queen');
     assert.strictEqual(results[1].creator, null);
+    assert.strictEqual(results[0].year, 1981);
+    assert.strictEqual(results[1].year, null);
   });
 });

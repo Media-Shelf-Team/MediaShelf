@@ -203,6 +203,22 @@ function cleanCreator(value) {
 }
 
 /**
+ * Turns an API's release date into a year, or null if there isn't a usable
+ * one. APIs send dates as text ("1999-03-30", "1975") or as a plain year
+ * (1999), so only the first four digits are read.
+ * @param {*} value The date or year from the API.
+ * @return {?number} The year, e.g. 1999, or null.
+ */
+function cleanYear(value) {
+  if (typeof value !== 'string' && typeof value !== 'number') return null;
+
+  const match = /^\d{4}/.exec(String(value));
+  if (!match) return null;
+
+  return Number(match[0]);
+}
+
+/**
  * Builds one search result in Media Shelf's shape, or returns null if the
  * API gave us something unusable (a bad ID or an empty title). A missing
  * creator is fine: it becomes null.
@@ -210,10 +226,11 @@ function cleanCreator(value) {
  * @param {*} title The title.
  * @param {?string} coverImageUrl The cover URL, or null if there isn't one.
  * @param {*=} creator The creator's name, if the API gave one.
+ * @param {*=} year The release date or year, if the API gave one.
  * @return {?{externalId: string, title: string, creator: ?string,
- *     coverImageUrl: ?string}}
+ *     year: ?number, coverImageUrl: ?string}}
  */
-function toMediaResult(externalId, title, coverImageUrl, creator) {
+function toMediaResult(externalId, title, coverImageUrl, creator, year) {
   if (!isValidExternalId(externalId)) return null;
   if (typeof title !== 'string') return null;
 
@@ -224,6 +241,7 @@ function toMediaResult(externalId, title, coverImageUrl, creator) {
     externalId: externalId,
     title: cleanTitle,
     creator: cleanCreator(creator),
+    year: cleanYear(year),
     coverImageUrl: coverImageUrl || null,
   };
 }
@@ -243,5 +261,6 @@ module.exports = {
   todayUtc,
   normalizeQuery,
   cleanCreator,
+  cleanYear,
   toMediaResult,
 };
