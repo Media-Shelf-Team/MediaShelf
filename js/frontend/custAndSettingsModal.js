@@ -1,5 +1,7 @@
-// js/frontend/settingsModal.js
-// Opens the Customization / Settings modal. Placeholder only: nothing is saved.
+// js/frontend/custAndSettingsModal.js
+// Opens the Customization / Settings modal on main-page.html.
+// Placeholder only: nothing is saved, and the Delete account button in the
+// Settings tab doesn't do anything yet.
 
 (function () {
   const modal = document.getElementById('settings-modal');
@@ -62,7 +64,7 @@
     .addEventListener('click', closeModal);
   modal.addEventListener('cancel', (e) => e.preventDefault());
 
-  // ---- Character counters ("0 / 200") ----
+  // ---- Character counters ("0 / 155") ----
   modal.querySelectorAll('[data-counter-for]').forEach((counter) => {
     const field = document.getElementById(counter.dataset.counterFor);
     if (!field) return;
@@ -73,22 +75,3 @@
     update();
   });
 })();
-
-const items = document.querySelectorAll('.side-item');
-const panels = document.querySelectorAll('.panel');
-
-/**
- * Function for showing the panel based on the clicked item
- * @param {string} id - The id of the panel to show
- */
-function showPanel(id) {
-  items.forEach((i) => i.classList.toggle('active', i.dataset.panel === id));
-  panels.forEach((p) => p.classList.toggle('active', p.id === id));
-}
-
-/**
- * Add event listeners to each item to show the corresponding panel when clicked
- */
-items.forEach((item) => {
-  item.addEventListener('click', () => showPanel(item.dataset.panel));
-});

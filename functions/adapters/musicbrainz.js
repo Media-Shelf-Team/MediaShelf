@@ -1,4 +1,5 @@
 // MusicBrainz adapter: searches music tracks. No API key needed.
+// The creator is the first artist credited on the track.
 // Covers come from the Cover Art Archive, using the track's most recent
 // release. The cover URL isn't checked first, so if a release has no art
 // the image fails to load and the frontend shows a placeholder.
@@ -50,15 +51,31 @@ async function search(category, query, limit) {
   // 2. Call MusicBrainz.
   const body = await fetchJson('musicbrainz', url);
 
-  // 3. Turn each track into our {externalId, title, coverImageUrl}.
+  // 3. Turn each track into our {externalId, title, creator, coverImageUrl}.
   const recordings = body.recordings || [];
   return recordings.map((recording) => {
     const release = newestRelease(recording.releases);
     const coverImageUrl = release
       ? `${COVER_URL}/${release.id}/front-250`
       : null;
-    return toMediaResult(recording.id, recording.title, coverImageUrl);
+    return toMediaResult(
+      recording.id,
+      recording.title,
+      coverImageUrl,
+      firstArtist(recording),
+    );
   });
+}
+
+/**
+ * The name of the first artist credited on a track. "artist-credit" is a
+ * list, one entry per artist, each with the name used on that track.
+ * @param {Object} recording One track from MusicBrainz.
+ * @return {?string} The name, or null if there isn't one.
+ */
+function firstArtist(recording) {
+  const credits = recording['artist-credit'] || [];
+  return credits.length > 0 ? credits[0].name : null;
 }
 
 module.exports = {name: 'musicbrainz', search};

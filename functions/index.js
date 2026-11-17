@@ -19,17 +19,23 @@ const {getFirestore, FieldValue} = require('firebase-admin/firestore');
 
 const {
   MAX_QUERY_LENGTH,
+  MAX_NOTES_LENGTH,
   hasOnlyKeys,
   isValidUsername,
   isValidAvatarId,
   isValidCategory,
   isValidStatus,
+  isValidRating,
+  isValidLogDate,
+  isValidNotes,
   isValidExternalId,
+  todayUtc,
   normalizeQuery,
 } = require('./lib/validate');
 const {
   getCachedSearch,
   saveSearch,
+  saveCreator,
   apiCacheRef,
   isFresh,
 } = require('./lib/cache');
@@ -60,9 +66,8 @@ const IGDB_CLIENT_SECRET = defineSecret('IGDB_CLIENT_SECRET');
 // Which adapter searches each category.
 const ADAPTERS = {
   movie: tmdb,
-  tv: tmdb,
+  show: tmdb,
   book: openlibrary,
-  audiobook: openlibrary,
   game: igdb,
   music: musicbrainz,
 };
@@ -204,11 +209,14 @@ exports.createUserProfile = callable({}, async (uid, data) => {
  *
  * Searches one category by title. Returns cached results when it can;
  * otherwise calls the API (within the rate limit) and caches what it finds
- * for 30 days. Books and audiobooks share the same search and cache.
+ * for 30 days.
  *
  * Request data: {category, query}
- * Returns: {results: [{externalId, title, coverImageUrl}], fromCache}
+ * Returns: {results: [{externalId, title, creator, coverImageUrl}], fromCache}
  *   Up to 10 results. An empty list means "No results found".
+ *   creator is filled in for books, games and music; it is null for movies
+ *   and shows, because TMDB's search doesn't include it (addMediaEntry looks
+ *   it up instead).
  *
  * Errors (code):
  *   unauthenticated      not signed in
@@ -283,15 +291,61 @@ exports.searchMedia = callable(
 // ---------------------------------------------------------------------------
 
 /**
+ * Finds the creator for a movie or show the first time it's added, and
+ * saves it in apiCache so later adds of the same title can reuse it.
+ *
+ * This must never stop the add: if TMDB is down, the rate limit is used
+ * up, or anything else goes wrong, the log is saved with creator: null. A
+ * failed lookup isn't saved, so the next add of that title tries again.
+ * @param {string} category 'movie' or 'show'.
+ * @param {string} externalId The title's TMDB ID.
+ * @return {Promise<?string>} The creator's name, or null.
+ */
+async function lookUpTmdbCreator(category, externalId) {
+  let creator;
+  try {
+    await consumeRateLimit(db, tmdb.name);
+    creator = await tmdb.lookupCreator(category, externalId, {
+      tmdbReadToken: TMDB_READ_TOKEN.value(),
+    });
+  } catch (err) {
+    logger.warn('Creator lookup failed; saving the log without it', {
+      category: category,
+      externalId: externalId,
+      error: err.message,
+    });
+    return null;
+  }
+
+  // Saving to the cache is a bonus; the add still works if it fails.
+  try {
+    await saveCreator(db, category, externalId, creator);
+  } catch (err) {
+    logger.error('Failed to cache the creator', err);
+  }
+  return creator;
+}
+
+/**
  * addMediaEntry
  *
- * Adds a title to the user's collection. The title and cover come from
- * apiCache (saved there by searchMedia), never from the client, so users
- * can't make up their own titles or image links.
+ * Adds a title to the user's collection. The title, creator and cover come
+ * from apiCache (saved there by searchMedia), never from the client, so
+ * users can't make up their own titles, names or image links. For movies
+ * and shows, the creator (director / show creator) is looked up from TMDB
+ * the first time anyone adds the title, then reused from apiCache.
  *
- * Request data: {category, externalId, status}
+ * Request data: {category, externalId, status, rating?, date?, notes?}
+ *   status   'completed', 'in_progress' or 'planned'
+ *   rating   whole number 1-5, or null/left out for "not rated"
+ *   date     'YYYY-MM-DD', the day it was watched/read/played; not in the
+ *            future (up to one day past today's UTC date is allowed, for
+ *            time zones east of UTC). Left out = today's UTC date.
+ *   notes    up to 500 characters; left out = ''
+ *
  * Returns the new entry:
- *   {id, category, source, externalId, title, coverImageUrl, status}
+ *   {id, category, source, externalId, title, creator, coverImageUrl,
+ *    status, rating, date, notes}
  *
  * Errors (code / details.reason):
  *   unauthenticated                              not signed in
@@ -301,90 +355,155 @@ exports.searchMedia = callable(
  *   failed-precondition / 'search-again'         the title's cache entry is
  *                                                missing or expired
  */
-exports.addMediaEntry = callable({}, async (uid, data) => {
-  // 1. Check the request.
-  if (!hasOnlyKeys(data, ['category', 'externalId', 'status'])) {
-    throw error('invalid-argument', 'Invalid request.');
-  }
+exports.addMediaEntry = callable(
+  {secrets: [TMDB_READ_TOKEN]},
+  async (uid, data) => {
+    // 1. Check the request.
+    const allowedKeys = [
+      'category',
+      'externalId',
+      'status',
+      'rating',
+      'date',
+      'notes',
+    ];
+    if (!hasOnlyKeys(data, allowedKeys)) {
+      throw error('invalid-argument', 'Invalid request.');
+    }
 
-  const category = data.category;
-  const externalId = data.externalId;
-  const status = data.status;
+    const category = data.category;
+    const externalId = data.externalId;
+    const status = data.status;
+    // Optional fields get their default when they're left out.
+    const rating = data.rating === undefined ? null : data.rating;
+    const date = data.date === undefined ? todayUtc() : data.date;
+    const notes = data.notes === undefined ? '' : data.notes;
 
-  if (!isValidCategory(category)) {
-    throw error('invalid-argument', 'Unknown media category.');
-  }
-  if (!isValidExternalId(externalId)) {
-    throw error('invalid-argument', 'Invalid title ID.');
-  }
-  if (!isValidStatus(status)) {
-    throw error(
-      'invalid-argument',
-      'Status must be Planned, In Progress, or Completed.',
-    );
-  }
-
-  // 2. The documents this function reads and writes.
-  const entryId = `${category}_${externalId}`; // e.g. movie_603
-  const userRef = db.doc(`users/${uid}`);
-  const entryRef = db.doc(`users/${uid}/mediaEntries/${entryId}`);
-  const cacheRef = apiCacheRef(db, category, externalId);
-
-  // 3. Check and write in one transaction, so two clicks on Add can't both
-  //    create the entry.
-  return db.runTransaction(async (tx) => {
-    const [userDoc, entryDoc, cacheDoc] = await tx.getAll(
-      userRef,
-      entryRef,
-      cacheRef,
-    );
-
-    if (!userDoc.exists) {
+    if (!isValidCategory(category)) {
+      throw error('invalid-argument', 'Unknown media category.');
+    }
+    if (!isValidExternalId(externalId)) {
+      throw error('invalid-argument', 'Invalid title ID.');
+    }
+    if (!isValidStatus(status)) {
       throw error(
-        'failed-precondition',
-        'Your profile is not set up yet.',
-        'no-profile',
+        'invalid-argument',
+        'Status must be Completed, In progress, or Planned.',
+      );
+    }
+    if (!isValidRating(rating)) {
+      throw error(
+        'invalid-argument',
+        'Rating must be a whole number from 1 to 5.',
+      );
+    }
+    if (!isValidLogDate(date)) {
+      throw error(
+        'invalid-argument',
+        'Date must be a real day (YYYY-MM-DD) and not in the future.',
+      );
+    }
+    if (!isValidNotes(notes)) {
+      throw error(
+        'invalid-argument',
+        `Notes must be ${MAX_NOTES_LENGTH} characters or fewer.`,
       );
     }
 
-    // Checked before the cache, so a duplicate never asks the user to
-    // search again.
-    if (entryDoc.exists) {
-      throw error(
-        'already-exists',
-        'Already in your collection',
-        'already-in-collection',
+    // 2. The documents this function reads and writes.
+    const entryId = `${category}_${externalId}`; // e.g. movie_603
+    const userRef = db.doc(`users/${uid}`);
+    const entryRef = db.doc(`users/${uid}/mediaEntries/${entryId}`);
+    const cacheRef = apiCacheRef(db, category, externalId);
+
+    // 3. Movies and shows: if nobody has looked up this title's creator yet,
+    //    do it now. It happens before the transaction because a transaction
+    //    may run more than once, and we only want one TMDB call.
+    //    - A creator saved as null means "TMDB doesn't list one", so we only
+    //      look up when the field is missing altogether.
+    //    - These reads only skip a TMDB call that can't lead to a new log;
+    //      the transaction below still makes every check.
+    let lookedUpCreator;
+    if (ADAPTERS[category] === tmdb) {
+      const [userDoc, entryDoc, cacheDoc] = await db.getAll(
+        userRef,
+        entryRef,
+        cacheRef,
       );
+      const cached = cacheDoc.data();
+      const canAdd = userDoc.exists && !entryDoc.exists && isFresh(cached);
+      if (canAdd && cached.creator === undefined) {
+        lookedUpCreator = await lookUpTmdbCreator(category, externalId);
+      }
     }
 
-    const cached = cacheDoc.data();
-    if (!isFresh(cached)) {
-      throw error(
-        'failed-precondition',
-        'Please search for this title again.',
-        'search-again',
+    // 4. Check and write in one transaction, so two clicks on Add can't both
+    //    create the entry.
+    return db.runTransaction(async (tx) => {
+      const [userDoc, entryDoc, cacheDoc] = await tx.getAll(
+        userRef,
+        entryRef,
+        cacheRef,
       );
-    }
 
-    const entry = {
-      category: category,
-      source: ADAPTERS[category].name,
-      externalId: externalId,
-      title: cached.title,
-      coverImageUrl: cached.coverImageUrl,
-      status: status,
-    };
+      if (!userDoc.exists) {
+        throw error(
+          'failed-precondition',
+          'Your profile is not set up yet.',
+          'no-profile',
+        );
+      }
 
-    // createdAt is set by Firestore's clock when the write happens, so the
-    // client can't fake it.
-    tx.create(entryRef, {
-      ...entry,
-      createdAt: FieldValue.serverTimestamp(),
+      // Checked before the cache, so a duplicate never asks the user to
+      // search again.
+      if (entryDoc.exists) {
+        throw error(
+          'already-exists',
+          'Already in your collection',
+          'already-in-collection',
+        );
+      }
+
+      const cached = cacheDoc.data();
+      if (!isFresh(cached)) {
+        throw error(
+          'failed-precondition',
+          'Please search for this title again.',
+          'search-again',
+        );
+      }
+
+      // Use the creator we just looked up, otherwise the cached one, and
+      // null if there's neither.
+      let creator = cached.creator === undefined ? null : cached.creator;
+      if (lookedUpCreator !== undefined) {
+        creator = lookedUpCreator;
+      }
+
+      const entry = {
+        category: category,
+        source: ADAPTERS[category].name,
+        externalId: externalId,
+        title: cached.title,
+        creator: creator,
+        coverImageUrl: cached.coverImageUrl,
+        status: status,
+        rating: rating,
+        date: date,
+        notes: notes,
+      };
+
+      // createdAt is set by Firestore's clock when the write happens, so the
+      // client can't fake it.
+      tx.create(entryRef, {
+        ...entry,
+        createdAt: FieldValue.serverTimestamp(),
+      });
+
+      return {id: entryId, ...entry};
     });
-
-    return {id: entryId, ...entry};
-  });
-});
+  },
+);
 
 // ---------------------------------------------------------------------------
 // onUserDeleted

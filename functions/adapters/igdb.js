@@ -1,4 +1,5 @@
-// IGDB adapter: searches video games.
+// IGDB adapter: searches video games. The creator is the first company
+// IGDB lists as a developer of the game.
 // IGDB is run by Twitch, so it uses a Twitch login: we trade the client ID
 // and secret (secrets IGDB_CLIENT_ID and IGDB_CLIENT_SECRET) for an access
 // token, then send that token with each search.
@@ -58,7 +59,13 @@ async function search(category, query, limit, secrets) {
   //    Quotes and backslashes are removed so the search text can't end the
   //    "..." early and add its own commands.
   const safeQuery = query.replace(/["\\]/g, '');
-  const requestBody = `search "${safeQuery}"; fields name,cover.image_id; limit ${limit};`;
+  const fields = [
+    'name',
+    'cover.image_id',
+    'involved_companies.company.name',
+    'involved_companies.developer',
+  ].join(',');
+  const requestBody = `search "${safeQuery}"; fields ${fields}; limit ${limit};`;
 
   // 2. Call IGDB with the client ID and token.
   let games;
@@ -78,14 +85,31 @@ async function search(category, query, limit, secrets) {
     throw err;
   }
 
-  // 3. Turn each game into our {externalId, title, coverImageUrl}.
+  // 3. Turn each game into our {externalId, title, creator, coverImageUrl}.
   return games.map((game) => {
     const externalId = String(game.id || '');
     const coverImageUrl = game.cover
       ? `${COVER_URL}/${game.cover.image_id}.jpg`
       : null;
-    return toMediaResult(externalId, game.name, coverImageUrl);
+    return toMediaResult(
+      externalId,
+      game.name,
+      coverImageUrl,
+      firstDeveloper(game),
+    );
   });
+}
+
+/**
+ * The name of the first company IGDB lists as the game's developer.
+ * @param {Object} game One game from IGDB.
+ * @return {?string} The name, or null if there isn't one.
+ */
+function firstDeveloper(game) {
+  const companies = game.involved_companies || [];
+  const developer = companies.find((item) => item.developer === true);
+  if (!developer || !developer.company) return null;
+  return developer.company.name;
 }
 
 module.exports = {name: 'igdb', search};

@@ -1,6 +1,6 @@
 # Media Shelf (work in progress)
 
-Media Shelf is a web app for logging movies, TV shows, books, audiobooks, video games, and music in one place. It's built with plain HTML, CSS, and JavaScript ES modules (no bundler), hosted on GitHub Pages, and uses Firebase Authentication, Cloud Firestore, and Cloud Functions.
+Media Shelf is a web app for logging movies, TV shows, books, video games, and music in one place. It's built with plain HTML, CSS, and JavaScript ES modules (no bundler), hosted on GitHub Pages, and uses Firebase Authentication, Cloud Firestore, and Cloud Functions.
 
 ## Current status
 
@@ -8,7 +8,7 @@ Media Shelf is a web app for logging movies, TV shows, books, audiobooks, video 
 
 - [x] Firebase project setup (`.firebaserc`, `firebase.json`) and one shared browser setup in `js/firebase-config.js`, which uses the local emulators on localhost.
 - [x] App Check with reCAPTCHA Enterprise (see [App Check](#app-check)).
-- [x] Pages: `index`, `login`, `signup`, `forgot-password`, `main-page`, `social-page`, `settings-and-customization`, `contact`, and `about`, with styles in `css/`.
+- [x] Pages: `index`, `login`, `signup`, `forgot-password`, `main-page`, `social-page`, `contact`, and `about`, with styles in `css/`. Edit profile and Settings are modals on `main-page` (the old `settings-and-customization` page was removed).
 - [x] Email and password sign-up, log-in, log-out, and password reset (see [Authentication](#authentication)).
 - [x] MS-10: Firestore Security Rules (see [Security Rules](#security-rules)).
 - [x] MS-03: Security Rules tests with `npm test` (see [Testing](#testing)).
@@ -19,9 +19,10 @@ Media Shelf is a web app for logging movies, TV shows, books, audiobooks, video 
 ### In progress
 
 - [ ] Three `{todo: true}` tests in `users.test.js` expect listing to succeed, but the rules deny it. Decide for each: flip to `assertFails` or change the rules.
-- [ ] The two avatar tests are skipped until the avatar list is final (#97). `AVATAR_IDS` in `js/constants.js` is still empty; the rules accept `avatar1`–`avatar3`.
-- [ ] `mediaEntries.test.js` has only one test.
+- [ ] Avatars are `avatar1`–`avatar4` everywhere (rules, functions, `js/constants.js`, sign-up, Edit profile). The pictures for them come later.
 - [ ] The browser doesn't call the Cloud Functions yet: `signup.js` (`createUserProfile`), `js/media/` (`searchMedia`, `addMediaEntry`), and account deletion in Settings. Until sign-up calls `createUserProfile`, it doesn't save the username or create a profile.
+- [ ] The Delete account section in the Settings modal is UI only: the button doesn't do anything yet.
+- [ ] "Can't find it? Add manually" in the Log Media modal is hidden for the MVP.
 - [ ] The Social link in the `main-page.html` nav is commented out; Log Out sits in its place.
 - [ ] Placeholders: `js/database/` and `firestore.indexes.json` are empty; `assets/avatars/` and `assets/credits/` don't exist yet.
 
@@ -164,19 +165,40 @@ Deploy with `firebase deploy --only functions`.
 
 `firestore.rules` controls what the browser can read and write. Anything not listed is denied, and signed-out users can't do anything. Cloud Functions bypass the rules, so "Cloud Functions only" means the browser is denied and the server does it after its own checks.
 
-| Path                                                 | Read                                                                         | Write                                                                      |
-| ---------------------------------------------------- | ---------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| `users/{uid}`                                        | Any signed-in user can get one document; no listing.                         | Owner updates. Create and delete: Cloud Functions only.                    |
-| `users/{uid}/profile/details`                        | Owner, or anyone signed in if the profile is public.                         | Owner updates `bio` only. Create and delete: Cloud Functions only.         |
-| `users/{uid}/mediaEntries/{entryId}`                 | Owner, or anyone signed in if public. Queries need `limit()` of 100 or less. | Owner updates `status` only, and can delete. Create: Cloud Functions only. |
-| `users/{uid}/private/account`                        | Owner only.                                                                  | Cloud Functions only.                                                      |
-| `usernames`, `apiCache`, `searchCache`, `rateLimits` | No browser access.                                                           | Cloud Functions only.                                                      |
+| Path                                                 | Read                                                                         | Write                                                                                                    |
+| ---------------------------------------------------- | ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `users/{uid}`                                        | Any signed-in user can get one document; no listing.                         | Owner updates. Create and delete: Cloud Functions only.                                                  |
+| `users/{uid}/profile/details`                        | Owner, or anyone signed in if the profile is public.                         | Owner updates `bio` only. Create and delete: Cloud Functions only.                                       |
+| `users/{uid}/mediaEntries/{entryId}`                 | Owner, or anyone signed in if public. Queries need `limit()` of 100 or less. | Owner updates `status`, `rating`, `date` and `notes` only, and can delete. Create: Cloud Functions only. |
+| `users/{uid}/private/account`                        | Owner only.                                                                  | Cloud Functions only.                                                                                    |
+| `usernames`, `apiCache`, `searchCache`, `rateLimits` | No browser access.                                                           | Cloud Functions only.                                                                                    |
 
 **Valid values:**
 
-- `users/{uid}` has exactly `displayName` (2–30 characters, no leading or trailing spaces), `avatarId` (`avatar1`–`avatar3`), and `isPublic` (`true` or `false`). Updates must send all three.
+- `users/{uid}` has exactly `displayName` (2–30 characters, no leading or trailing spaces), `avatarId` (`avatar1`–`avatar4`), and `isPublic` (`true` or `false`). Updates must send all three.
 - `profile/details` has only `bio`, up to 155 characters.
-- `mediaEntries` updates may only set `status` to `planned`, `in_progress`, or `completed`. Entry IDs look like `movie_603`.
+- `mediaEntries` updates may only change these four fields, and all four must stay valid:
+  - `status`: `completed` ("Completed"), `in_progress` ("In progress") or `planned` ("Planned").
+  - `rating`: a whole number 1–5, or `null` when not rated.
+  - `date`: the day it was watched/read/played, as `YYYY-MM-DD`. It must be a real day and not in the future. Rules only know UTC time, so up to one day past today's UTC date is allowed, so users east of UTC can log their own "today".
+  - `notes`: a string of 0–500 characters (`''` when empty).
+- Everything else on a log (`category`, `source`, `externalId`, `title`, `creator`, `coverImageUrl`, `createdAt`) is set by `addMediaEntry` and can't change. Entry IDs look like `movie_603` or `show_1396`.
+
+**Media log fields** (one document per title in `users/{uid}/mediaEntries/{category}_{externalId}`):
+
+| Field           | Set by          | Value                                                                          |
+| --------------- | --------------- | ------------------------------------------------------------------------------ |
+| `category`      | Server          | `movie`, `show`, `book`, `game` or `music`                                     |
+| `source`        | Server          | `tmdb`, `openlibrary`, `igdb` or `musicbrainz`                                 |
+| `externalId`    | Server          | The title's ID in the source API                                               |
+| `title`         | Server          | Title from the API                                                             |
+| `creator`       | Server          | Director (movie), show creator, author, developer or artist; `null` if unknown |
+| `coverImageUrl` | Server          | Cover URL from the API, or `null`                                              |
+| `status`        | User (editable) | `completed`, `in_progress` or `planned`                                        |
+| `rating`        | User (editable) | Whole number 1–5, or `null` when not rated                                     |
+| `date`          | User (editable) | `YYYY-MM-DD`; defaults to today; not in the future                             |
+| `notes`         | User (editable) | 0–500 characters; `''` when empty                                              |
+| `createdAt`     | Server          | Server time when the log was added; never changes                              |
 
 **Always query media entries with `limit()` of 100 or less** (paginate with `startAfter()`), or the query fails with `Missing or insufficient permissions`:
 
@@ -184,7 +206,7 @@ Deploy with `firebase deploy --only functions`.
 query(collection(db, 'users', uid, 'mediaEntries'), limit(50));
 ```
 
-**Keep these values in sync.** They're written in both `js/constants.js` and `firestore.rules`, so change both (and the tests) in the same pull request: display name length, bio length, avatar IDs, and log statuses.
+**Keep these values in sync.** They're written in `js/constants.js`, `firestore.rules` and `functions/lib/validate.js`, so change all three (and the tests) in the same pull request: display name length, bio length, avatar IDs, categories, log statuses, rating range, date rule, and notes length.
 
 Deploy rule changes with `firebase deploy --only firestore:rules`.
 

@@ -44,8 +44,7 @@ after(async () => {
 //   {todo: true}. They still run, but node:test reports their failures as
 //   "todo" instead of "fail". Remove the todo marks once
 //   the real rules are in.
-//  Tests marked {skip: '...'} don't run at all. The avatar tests are skipped
-//   until we define the list of bundled avatars.
+//  The bundled avatars are avatar1-avatar4 (pictures come later).
 
 // ===========================================================================
 // users/{uid}: Public Card. Requests that should be DENIED
@@ -109,6 +108,18 @@ test('alice cannot end her display name with a space', async () => {
 test('alice cannot use an avatar that is not bundled', async () => {
   const ref = doc(aliceDb(testEnv), 'users/alice');
   await assertFails(updateDoc(ref, {avatarId: '999'}));
+});
+
+// alice using avatar5 (the bundled avatars stop at avatar4)
+test('alice cannot use avatar5', async () => {
+  const ref = doc(aliceDb(testEnv), 'users/alice');
+  await assertFails(updateDoc(ref, {avatarId: 'avatar5'}));
+});
+
+// alice using just the number instead of the avatar ID
+test('alice cannot use 2 as her avatar', async () => {
+  const ref = doc(aliceDb(testEnv), 'users/alice');
+  await assertFails(updateDoc(ref, {avatarId: '2'}));
 });
 
 // --- Updating: wrong types ---
@@ -203,7 +214,7 @@ test('bob cannot make alices profile private', async () => {
 test('bob cannot create his own card', async () => {
   const ref = doc(bobDb(testEnv), 'users/bob');
   await assertFails(
-    setDoc(ref, {displayName: 'Bob', avatarId: '1', isPublic: true}),
+    setDoc(ref, {displayName: 'Bob', avatarId: 'avatar1', isPublic: true}),
   );
 });
 
@@ -211,7 +222,7 @@ test('bob cannot create his own card', async () => {
 test('alice cannot create a second card', async () => {
   const ref = doc(aliceDb(testEnv), 'users/alice2');
   await assertFails(
-    setDoc(ref, {displayName: 'Alice', avatarId: '1', isPublic: true}),
+    setDoc(ref, {displayName: 'Alice', avatarId: 'avatar1', isPublic: true}),
   );
 });
 
@@ -219,7 +230,7 @@ test('alice cannot create a second card', async () => {
 test('signed out user cannot create a card', async () => {
   const ref = doc(signedOutDb(testEnv), 'users/someone');
   await assertFails(
-    setDoc(ref, {displayName: 'Someone', avatarId: '1', isPublic: true}),
+    setDoc(ref, {displayName: 'Someone', avatarId: 'avatar1', isPublic: true}),
   );
 });
 
@@ -308,29 +319,31 @@ test('carol can set her profile to public', async () => {
   await assertSucceeds(updateDoc(ref, {isPublic: true}));
 });
 
-// --- Avatar (waiting on #97 for the list of bundled avatars) ---
+// --- Avatar (avatar1-avatar4) ---
 
 // alice changing her avatarId to another bundled avatar
-test(
-  'alice can update her avatar',
-  {skip: 'waiting on #97 for the avatar list'},
-  async () => {
-    const ref = doc(aliceDb(testEnv), 'users/alice');
-    await assertSucceeds(updateDoc(ref, {avatarId: '2'}));
-  },
-);
+test('alice can update her avatar', async () => {
+  const ref = doc(aliceDb(testEnv), 'users/alice');
+  await assertSucceeds(updateDoc(ref, {avatarId: 'avatar2'}));
+});
+
+// alice choosing avatar4, the last bundled avatar
+test('alice can use avatar4', async () => {
+  const ref = doc(aliceDb(testEnv), 'users/alice');
+  await assertSucceeds(updateDoc(ref, {avatarId: 'avatar4'}));
+});
 
 // alice changing displayName, avatarId and isPublic in one update
-test(
-  'alice can update all three card fields together',
-  {skip: 'waiting on #97 for the avatar list'},
-  async () => {
-    const ref = doc(aliceDb(testEnv), 'users/alice');
-    await assertSucceeds(
-      updateDoc(ref, {displayName: 'Alicia', avatarId: '2', isPublic: false}),
-    );
-  },
-);
+test('alice can update all three card fields together', async () => {
+  const ref = doc(aliceDb(testEnv), 'users/alice');
+  await assertSucceeds(
+    updateDoc(ref, {
+      displayName: 'Alicia',
+      avatarId: 'avatar3',
+      isPublic: false,
+    }),
+  );
+});
 
 // ===========================================================================
 // users/{uid}/profile/details: Requests that should be DENIED

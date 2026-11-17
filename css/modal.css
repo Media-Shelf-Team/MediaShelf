@@ -450,6 +450,8 @@ li:nth-child(3) > .log-result .log-result__thumb {
 .log-modal__actions {
   display: flex;
   gap: 10px;
+  /* Keeps Cancel / Save on the right while "Add manually" is hidden. */
+  margin-left: auto;
 }
 
 .log-modal__btn {
@@ -525,5 +527,6 @@ li:nth-child(3) > .log-result .log-result__thumb {
   .log-modal__actions {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    margin-left: 0;
   }
 }

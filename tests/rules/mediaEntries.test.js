@@ -20,6 +20,7 @@ import {
   bobDb,
   carolDb,
   signedOutDb,
+  utcDay,
 } from './helpers.js';
 
 let testEnv;
@@ -123,6 +124,82 @@ test('carol can set her status to planned', async () => {
   await assertSucceeds(updateDoc(ref, {status: 'planned'}));
 });
 
+// --- Updating rating (whole number 1-5, or null) ---
+
+// alice rating her log 5 stars (the maximum)
+test('alice can rate her log 5', async () => {
+  const ref = doc(aliceDb(testEnv), 'users/alice/mediaEntries/movie_550');
+  await assertSucceeds(updateDoc(ref, {rating: 5}));
+});
+
+// alice rating her log 1 star (the minimum)
+test('alice can rate her log 1', async () => {
+  const ref = doc(aliceDb(testEnv), 'users/alice/mediaEntries/movie_550');
+  await assertSucceeds(updateDoc(ref, {rating: 1}));
+});
+
+// carol removing her rating (carol starts at 4; null means "not rated")
+test('carol can clear her rating', async () => {
+  const ref = doc(carolDb(testEnv), 'users/carol/mediaEntries/book_OL1W');
+  await assertSucceeds(updateDoc(ref, {rating: null}));
+});
+
+// --- Updating date (YYYY-MM-DD, not in the future) ---
+
+// alice changing the date to a day in the past
+test('alice can change her date to a past day', async () => {
+  const ref = doc(aliceDb(testEnv), 'users/alice/mediaEntries/movie_550');
+  await assertSucceeds(updateDoc(ref, {date: '2025-12-24'}));
+});
+
+// alice setting the date to today (UTC)
+test('alice can change her date to today', async () => {
+  const ref = doc(aliceDb(testEnv), 'users/alice/mediaEntries/movie_550');
+  await assertSucceeds(updateDoc(ref, {date: utcDay(0)}));
+});
+
+// alice setting the date to tomorrow in UTC, which is still "today" for
+// users in time zones ahead of UTC
+test('alice can change her date to tomorrow in UTC', async () => {
+  const ref = doc(aliceDb(testEnv), 'users/alice/mediaEntries/movie_550');
+  await assertSucceeds(updateDoc(ref, {date: utcDay(1)}));
+});
+
+// alice setting the date to Feb 29 in a leap year (a real day)
+test('alice can use Feb 29 in a leap year', async () => {
+  const ref = doc(aliceDb(testEnv), 'users/alice/mediaEntries/movie_550');
+  await assertSucceeds(updateDoc(ref, {date: '2024-02-29'}));
+});
+
+// --- Updating notes (0-500 characters) ---
+
+// alice writing notes of exactly 500 characters (the maximum)
+test('alice can write 500 characters of notes', async () => {
+  const ref = doc(aliceDb(testEnv), 'users/alice/mediaEntries/movie_550');
+  await assertSucceeds(updateDoc(ref, {notes: 'a'.repeat(500)}));
+});
+
+// carol clearing her notes
+test('carol can clear her notes', async () => {
+  const ref = doc(carolDb(testEnv), 'users/carol/mediaEntries/book_OL1W');
+  await assertSucceeds(updateDoc(ref, {notes: ''}));
+});
+
+// --- Updating all four editable fields at once ---
+
+// alice editing status, rating, date and notes in one update
+test('alice can update status, rating, date and notes together', async () => {
+  const ref = doc(aliceDb(testEnv), 'users/alice/mediaEntries/movie_550');
+  await assertSucceeds(
+    updateDoc(ref, {
+      status: 'completed',
+      rating: 4,
+      date: '2026-01-05',
+      notes: 'Rewatched it.',
+    }),
+  );
+});
+
 // --- Deleting (owner only) ---
 
 // alice deleting her own log
@@ -224,6 +301,12 @@ test('alice cannot set her status to Completed with a capital C', async () => {
   await assertFails(updateDoc(ref, {status: 'Completed'}));
 });
 
+// alice using the old Log Media modal value
+test('alice cannot set her status to finished', async () => {
+  const ref = doc(aliceDb(testEnv), 'users/alice/mediaEntries/movie_550');
+  await assertFails(updateDoc(ref, {status: 'finished'}));
+});
+
 // alice setting status to empty
 test('alice cannot set her status to empty', async () => {
   const ref = doc(aliceDb(testEnv), 'users/alice/mediaEntries/movie_550');
@@ -248,7 +331,115 @@ test('alice cannot remove her status', async () => {
   await assertFails(updateDoc(ref, {status: deleteField()}));
 });
 
-// --- Updating: locked fields (only status can change) ---
+// --- Updating rating: values that are not allowed ---
+
+// alice rating her log 0 (minimum is 1)
+test('alice cannot rate her log 0', async () => {
+  const ref = doc(aliceDb(testEnv), 'users/alice/mediaEntries/movie_550');
+  await assertFails(updateDoc(ref, {rating: 0}));
+});
+
+// alice rating her log 6 (maximum is 5)
+test('alice cannot rate her log 6', async () => {
+  const ref = doc(aliceDb(testEnv), 'users/alice/mediaEntries/movie_550');
+  await assertFails(updateDoc(ref, {rating: 6}));
+});
+
+// alice using half a star (must be a whole number)
+test('alice cannot rate her log 4.5', async () => {
+  const ref = doc(aliceDb(testEnv), 'users/alice/mediaEntries/movie_550');
+  await assertFails(updateDoc(ref, {rating: 4.5}));
+});
+
+// alice using text instead of a number
+test('alice cannot rate her log with the text 5', async () => {
+  const ref = doc(aliceDb(testEnv), 'users/alice/mediaEntries/movie_550');
+  await assertFails(updateDoc(ref, {rating: '5'}));
+});
+
+// carol removing the rating field (use null for "not rated" instead)
+test('carol cannot remove her rating field', async () => {
+  const ref = doc(carolDb(testEnv), 'users/carol/mediaEntries/book_OL1W');
+  await assertFails(updateDoc(ref, {rating: deleteField()}));
+});
+
+// --- Updating date: values that are not allowed ---
+
+// alice setting the date two days ahead in UTC (in the future everywhere)
+test('alice cannot set her date in the future', async () => {
+  const ref = doc(aliceDb(testEnv), 'users/alice/mediaEntries/movie_550');
+  await assertFails(updateDoc(ref, {date: utcDay(2)}));
+});
+
+// alice setting a day that doesn't exist
+test('alice cannot set her date to Feb 30', async () => {
+  const ref = doc(aliceDb(testEnv), 'users/alice/mediaEntries/movie_550');
+  await assertFails(updateDoc(ref, {date: '2026-02-30'}));
+});
+
+// alice setting Feb 29 in a year that isn't a leap year
+test('alice cannot use Feb 29 in 2025', async () => {
+  const ref = doc(aliceDb(testEnv), 'users/alice/mediaEntries/movie_550');
+  await assertFails(updateDoc(ref, {date: '2025-02-29'}));
+});
+
+// alice setting month 13
+test('alice cannot set her date to month 13', async () => {
+  const ref = doc(aliceDb(testEnv), 'users/alice/mediaEntries/movie_550');
+  await assertFails(updateDoc(ref, {date: '2026-13-01'}));
+});
+
+// alice writing the date in another format
+test('alice cannot write her date as MM/DD/YYYY', async () => {
+  const ref = doc(aliceDb(testEnv), 'users/alice/mediaEntries/movie_550');
+  await assertFails(updateDoc(ref, {date: '01/05/2026'}));
+});
+
+// alice storing a timestamp instead of a YYYY-MM-DD string
+test('alice cannot set her date to a timestamp', async () => {
+  const ref = doc(aliceDb(testEnv), 'users/alice/mediaEntries/movie_550');
+  await assertFails(updateDoc(ref, {date: new Date('2026-01-05')}));
+});
+
+// alice setting the date to null
+test('alice cannot set her date to null', async () => {
+  const ref = doc(aliceDb(testEnv), 'users/alice/mediaEntries/movie_550');
+  await assertFails(updateDoc(ref, {date: null}));
+});
+
+// alice removing the date
+test('alice cannot remove her date', async () => {
+  const ref = doc(aliceDb(testEnv), 'users/alice/mediaEntries/movie_550');
+  await assertFails(updateDoc(ref, {date: deleteField()}));
+});
+
+// --- Updating notes: values that are not allowed ---
+
+// alice writing 501 characters of notes (maximum is 500)
+test('alice cannot write 501 characters of notes', async () => {
+  const ref = doc(aliceDb(testEnv), 'users/alice/mediaEntries/movie_550');
+  await assertFails(updateDoc(ref, {notes: 'a'.repeat(501)}));
+});
+
+// alice setting notes to a number
+test('alice cannot set her notes to a number', async () => {
+  const ref = doc(aliceDb(testEnv), 'users/alice/mediaEntries/movie_550');
+  await assertFails(updateDoc(ref, {notes: 42}));
+});
+
+// alice setting notes to null (empty notes are '')
+test('alice cannot set her notes to null', async () => {
+  const ref = doc(aliceDb(testEnv), 'users/alice/mediaEntries/movie_550');
+  await assertFails(updateDoc(ref, {notes: null}));
+});
+
+// carol removing the notes field
+test('carol cannot remove her notes field', async () => {
+  const ref = doc(carolDb(testEnv), 'users/carol/mediaEntries/book_OL1W');
+  await assertFails(updateDoc(ref, {notes: deleteField()}));
+});
+
+// --- Updating: locked fields (only status, rating, date, notes change) ---
 
 // alice changing the title of her log
 test('alice cannot change her title', async () => {
@@ -282,6 +473,24 @@ test('alice cannot change her externalId', async () => {
   await assertFails(updateDoc(ref, {externalId: '999'}));
 });
 
+// alice changing the creator (set by the server only)
+test('alice cannot change her creator', async () => {
+  const ref = doc(aliceDb(testEnv), 'users/alice/mediaEntries/movie_550');
+  await assertFails(updateDoc(ref, {creator: 'Someone Else'}));
+});
+
+// alice removing the creator
+test('alice cannot remove her creator', async () => {
+  const ref = doc(aliceDb(testEnv), 'users/alice/mediaEntries/movie_550');
+  await assertFails(updateDoc(ref, {creator: deleteField()}));
+});
+
+// alice changing the creator together with a field she may edit
+test('alice cannot change her rating and creator together', async () => {
+  const ref = doc(aliceDb(testEnv), 'users/alice/mediaEntries/movie_550');
+  await assertFails(updateDoc(ref, {rating: 5, creator: 'Someone Else'}));
+});
+
 // alice changing the date her log was added
 test('alice cannot change her createdAt', async () => {
   const ref = doc(aliceDb(testEnv), 'users/alice/mediaEntries/movie_550');
@@ -299,7 +508,7 @@ test('alice cannot change her status and title together', async () => {
 // alice adding a field that is not part of a log
 test('alice cannot add an extra field to her log', async () => {
   const ref = doc(aliceDb(testEnv), 'users/alice/mediaEntries/movie_550');
-  await assertFails(updateDoc(ref, {rating: 5}));
+  await assertFails(updateDoc(ref, {favorite: true}));
 });
 
 // --- Updating: not the owner ---
@@ -322,6 +531,18 @@ test('carol cannot update alices log', async () => {
   await assertFails(updateDoc(ref, {status: 'completed'}));
 });
 
+// bob rating alice's log (alice's profile is public)
+test('bob cannot rate alices log', async () => {
+  const ref = doc(bobDb(testEnv), 'users/alice/mediaEntries/movie_550');
+  await assertFails(updateDoc(ref, {rating: 1}));
+});
+
+// bob writing notes on alice's log (alice's profile is public)
+test('bob cannot change alices notes', async () => {
+  const ref = doc(bobDb(testEnv), 'users/alice/mediaEntries/movie_550');
+  await assertFails(updateDoc(ref, {notes: 'hacked'}));
+});
+
 // a signed out user changing the status of alice's log
 test('signed out user cannot update alices log', async () => {
   const ref = doc(signedOutDb(testEnv), 'users/alice/mediaEntries/movie_550');
@@ -340,8 +561,12 @@ test('alice cannot create her own log', async () => {
       source: 'tmdb',
       externalId: '603',
       title: 'Chainsaw Man',
+      creator: 'Someone',
       coverImageUrl: 'https://image.tmdb.org/t/p/w500/chainsawman.jpg',
       status: 'planned',
+      rating: null,
+      date: '2026-01-01',
+      notes: '',
       createdAt: new Date(),
     }),
   );
@@ -356,8 +581,12 @@ test('carol cannot create her own log', async () => {
       source: 'igdb',
       externalId: '1942',
       title: 'Metal Gear Solid: Peace Walker',
+      creator: 'Someone',
       coverImageUrl: 'https://images.igdb.com/peacewalker.jpg',
       status: 'planned',
+      rating: null,
+      date: '2026-01-01',
+      notes: '',
       createdAt: new Date(),
     }),
   );
@@ -372,8 +601,12 @@ test('bob cannot create a log on alices shelf', async () => {
       source: 'tmdb',
       externalId: '603',
       title: 'Godzilla',
+      creator: 'Someone',
       coverImageUrl: 'https://image.tmdb.org/t/p/w500/Godzilla.jpg',
       status: 'planned',
+      rating: null,
+      date: '2026-01-01',
+      notes: '',
       createdAt: new Date(),
     }),
   );
@@ -388,8 +621,12 @@ test('signed out user cannot create a log', async () => {
       source: 'tmdb',
       externalId: '603',
       title: 'Home Alone',
+      creator: 'Someone',
       coverImageUrl: 'https://image.tmdb.org/t/p/w500/homealone.jpg',
       status: 'planned',
+      rating: null,
+      date: '2026-01-01',
+      notes: '',
       createdAt: new Date(),
     }),
   );

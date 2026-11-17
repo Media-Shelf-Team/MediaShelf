@@ -61,18 +61,28 @@
 
             <fieldset class="avatar-picker">
               <legend class="signup-label">Pick an avatar</legend>
+              <!-- Values match AVATAR_IDS in js/constants.js. The final
+                   pictures come later; avatar4 is a blank placeholder. -->
               <div class="avatar-options">
                 <label class="avatar-option">
-                  <input type="radio" name="avatar" value="bookworm" checked />
-                  <img src="assets/img/bookworm.png" alt="Bookworm" />
+                  <input type="radio" name="avatar" value="avatar1" checked />
+                  <img src="assets/img/bookworm.png" alt="Avatar 1" />
                 </label>
                 <label class="avatar-option">
-                  <input type="radio" name="avatar" value="songbird" />
-                  <img src="assets/img/songbird.png" alt="Songbird" />
+                  <input type="radio" name="avatar" value="avatar2" />
+                  <img src="assets/img/songbird.png" alt="Avatar 2" />
                 </label>
                 <label class="avatar-option">
-                  <input type="radio" name="avatar" value="cat" />
-                  <img src="assets/img/cinemacat.png" alt="Cat" />
+                  <input type="radio" name="avatar" value="avatar3" />
+                  <img src="assets/img/cinemacat.png" alt="Avatar 3" />
+                </label>
+                <label class="avatar-option">
+                  <input type="radio" name="avatar" value="avatar4" />
+                  <span
+                    class="avatar-option__placeholder"
+                    role="img"
+                    aria-label="Avatar 4"
+                  ></span>
                 </label>
               </div>
             </fieldset>
