@@ -12,10 +12,10 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@800&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="css/theme.css" />
     <link rel="stylesheet" href="css/main-page.css" />
     <link rel="stylesheet" href="css/modal.css" />
     <link rel="stylesheet" href="css/cust-and-settings.css" />
-    <link rel="stylesheet" href="css/auth.css" />
 
     <title>MediaShelf | My Shelf Page</title>
   </head>
@@ -30,7 +30,7 @@
 
         <nav class="site-nav" aria-label="Main">
           <a class="site-nav__link" href="#" aria-current="page">My Shelf</a>
-          <a class="site-nav__link" href="socialPage.html">Social</a>
+          <a class="site-nav__link" href="social-page.html" hidden>Social</a>
         </nav>
 
         <div class="user-menu">
@@ -70,9 +70,13 @@
               Settings
             </button>
             <hr class="user-menu__rule" />
-            <a class="user-menu__item user-menu__item--danger" href="index.html"
-              >Log out</a
+            <!-- js/auth/signedInPage.js signs out on any .logout-button -->
+            <button
+              type="button"
+              class="user-menu__item user-menu__item--danger logout-button"
             >
+              Log out
+            </button>
           </div>
         </div>
       </div>
@@ -107,7 +111,7 @@
                 <span class="stats__num">00</span>
                 <span class="stats__label">Logged</span>
               </li>
-              <li>
+              <li hidden>
                 <span class="stats__num">00</span>
                 <span class="stats__label">Friends</span>
               </li>
@@ -560,9 +564,8 @@
           <button type="button" class="btn btn--outline">Load more</button>
         </div>
       </section>
-
       <!-- SIDEBAR -->
-      <aside class="sidebar" aria-label="Friends">
+      <!-- <aside class="sidebar" aria-label="Friends" hidden>
         <section class="side-card" aria-labelledby="requests-title">
           <h2 class="side-card__title" id="requests-title">
             Friend requests <span class="count-badge">2</span>
@@ -679,7 +682,7 @@
           </ul>
           <a class="see-all" href="#">See all friends &rarr;</a>
         </section>
-      </aside>
+      </aside> -->
     </main>
 
     <footer class="site-footer">
@@ -874,30 +877,30 @@
             <fieldset class="log-field">
               <legend class="log-label">Rating</legend>
               <div class="log-stars">
-                <input type="radio" name="rating" id="log-star-5" value="5" />
-                <label for="log-star-5"
+                <input type="radio" name="rating" id="log-star-1" value="1" />
+                <label for="log-star-1"
                   ><span aria-hidden="true">&#9733;</span
-                  ><span class="log-sr">5 stars</span></label
-                >
-                <input type="radio" name="rating" id="log-star-4" value="4" />
-                <label for="log-star-4"
-                  ><span aria-hidden="true">&#9733;</span
-                  ><span class="log-sr">4 stars</span></label
-                >
-                <input type="radio" name="rating" id="log-star-3" value="3" />
-                <label for="log-star-3"
-                  ><span aria-hidden="true">&#9733;</span
-                  ><span class="log-sr">3 stars</span></label
+                  ><span class="log-sr">1 star</span></label
                 >
                 <input type="radio" name="rating" id="log-star-2" value="2" />
                 <label for="log-star-2"
                   ><span aria-hidden="true">&#9733;</span
                   ><span class="log-sr">2 stars</span></label
                 >
-                <input type="radio" name="rating" id="log-star-1" value="1" />
-                <label for="log-star-1"
+                <input type="radio" name="rating" id="log-star-3" value="3" />
+                <label for="log-star-3"
                   ><span aria-hidden="true">&#9733;</span
-                  ><span class="log-sr">1 star</span></label
+                  ><span class="log-sr">3 stars</span></label
+                >
+                <input type="radio" name="rating" id="log-star-4" value="4" />
+                <label for="log-star-4"
+                  ><span aria-hidden="true">&#9733;</span
+                  ><span class="log-sr">4 stars</span></label
+                >
+                <input type="radio" name="rating" id="log-star-5" value="5" />
+                <label for="log-star-5"
+                  ><span aria-hidden="true">&#9733;</span
+                  ><span class="log-sr">5 stars</span></label
                 >
               </div>
             </fieldset>
@@ -1130,7 +1133,7 @@
       </div>
     </dialog>
 
-    <script src="js/frontend/mainpage.js"></script>
+    <script src="js/frontend/mainPage.js"></script>
     <script src="js/frontend/logModal.js"></script>
     <script src="js/frontend/custAndSettingsModal.js"></script>
     <script type="module" src="js/auth/signedInPage.js"></script>

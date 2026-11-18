@@ -178,17 +178,45 @@ describe('cleanCreator', () => {
   });
 });
 
+describe('cleanYear', () => {
+  test('reads the year from a date, a year, or a number', () => {
+    assert.strictEqual(validate.cleanYear('1999-03-30'), 1999);
+    assert.strictEqual(validate.cleanYear('1975'), 1975);
+    assert.strictEqual(validate.cleanYear(1965), 1965);
+  });
+
+  test('anything else is null', () => {
+    assert.strictEqual(validate.cleanYear(undefined), null);
+    assert.strictEqual(validate.cleanYear(null), null);
+    assert.strictEqual(validate.cleanYear(''), null); // TMDB with no date
+    assert.strictEqual(validate.cleanYear('soon'), null);
+    assert.strictEqual(validate.cleanYear(['1999']), null);
+  });
+});
+
 describe('toMediaResult', () => {
   test('builds a clean result', () => {
     assert.deepStrictEqual(
-      validate.toMediaResult('603', '  The Matrix ', null, ' Lana Wachowski '),
+      validate.toMediaResult(
+        '603',
+        '  The Matrix ',
+        null,
+        ' Lana Wachowski ',
+        '1999-03-30',
+      ),
       {
         externalId: '603',
         title: 'The Matrix',
         creator: 'Lana Wachowski',
+        year: 1999,
         coverImageUrl: null,
       },
     );
+  });
+
+  test('a missing year becomes null', () => {
+    const r = validate.toMediaResult('603', 'The Matrix', null, 'Someone');
+    assert.strictEqual(r.year, null);
   });
 
   test('a missing creator becomes null', () => {

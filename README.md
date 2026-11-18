@@ -8,8 +8,9 @@ Media Shelf is a web app for logging movies, TV shows, books, video games, and m
 
 - [x] Firebase project setup (`.firebaserc`, `firebase.json`) and one shared browser setup in `js/firebase-config.js`, which uses the local emulators on localhost.
 - [x] App Check with reCAPTCHA Enterprise (see [App Check](#app-check)).
-- [x] Pages: `index`, `login`, `signup`, `forgot-password`, `main-page`, `social-page`, `contact`, and `about`, with styles in `css/`. Edit profile and Settings are modals on `main-page` (the old `settings-and-customization` page was removed).
+- [x] Pages: `index`, `login`, `signup`, `forgot-password`, `main-page`, and `about`, with styles in `css/`. Every page shares one look from `css/theme.css` (see [Styles](#styles)). Edit profile and Settings are modals on `main-page` (the old `settings-and-customization` page was removed).
 - [x] Email and password sign-up, log-in, log-out, and password reset (see [Authentication](#authentication)).
+- [x] MS-11: sign-up calls `createUserProfile` with the username and picked avatar (see [Authentication](#authentication)).
 - [x] MS-10: Firestore Security Rules (see [Security Rules](#security-rules)).
 - [x] MS-03: Security Rules tests with `npm test` (see [Testing](#testing)).
 - [x] Cloud Functions: `createUserProfile`, `searchMedia`, `addMediaEntry`, and `onUserDeleted` (see [Cloud Functions](#cloud-functions)), with tests run by `npm run test:functions`.
@@ -18,19 +19,16 @@ Media Shelf is a web app for logging movies, TV shows, books, video games, and m
 
 ### In progress
 
-- [ ] Three `{todo: true}` tests in `users.test.js` expect listing to succeed, but the rules deny it. Decide for each: flip to `assertFails` or change the rules.
-- [ ] Avatars are `avatar1`–`avatar4` everywhere (rules, functions, `js/constants.js`, sign-up, Edit profile). The pictures for them come later.
-- [ ] The browser doesn't call the Cloud Functions yet: `signup.js` (`createUserProfile`), `js/media/` (`searchMedia`, `addMediaEntry`), and account deletion in Settings. Until sign-up calls `createUserProfile`, it doesn't save the username or create a profile.
+- [ ] Avatars are `avatar1`–`avatar4` everywhere (rules, functions, `js/constants.js`, sign-up, Edit profile), with pictures in `assets/avatar/avatar1.png`–`avatar4.png`. `avatar1`, `avatar2` and `avatar4` are plain grey placeholders until the real pictures are added, and the Edit profile modal still shows blank circles instead of the pictures.
+- [ ] The browser doesn't call `searchMedia` or `addMediaEntry` yet (`js/media/`), and account deletion in Settings isn't wired up.
 - [ ] The Delete account section in the Settings modal is UI only: the button doesn't do anything yet.
 - [ ] "Can't find it? Add manually" in the Log Media modal is hidden for the MVP.
-- [ ] The Social link in the `main-page.html` nav is commented out; Log Out sits in its place.
-- [ ] Placeholders: `js/database/` and `firestore.indexes.json` are empty; `assets/avatars/` and `assets/credits/` don't exist yet.
+- [ ] The Social and Contact pages were removed for the MVP. The Social link in the `main-page.html` nav is kept but `hidden`. Log Out is in the avatar menu on My Shelf.
+- [ ] Placeholders: `js/database/`, `js/media/` and `firestore.indexes.json` are empty, and `assets/credits/` doesn't exist yet.
 
 ### Next up
 
 - [ ] MS-06: app shell.
-- [ ] Media entry tests in `mediaEntries.test.js`.
-- [ ] MS-11: call `createUserProfile` from sign-up.
 
 ## First-time setup
 
@@ -88,7 +86,7 @@ App Check proves requests come from the real Media Shelf site. It's set up in `j
 reCAPTCHA doesn't run on localhost, so local development uses a debug token:
 
 1. Run the app locally and open a page that loads Firebase.
-2. In the browser console, copy the value from `AppCheck debug token: "..."`.
+2. In the browser console, copy the value from `Firebase App Check debug token: ...`.
 3. In the Firebase console, go to **App Check > Apps > ⋮ > Manage debug tokens**, and add the token with your name and browser (for example, "YourName – laptop Chrome").
 4. Reload the page.
 
@@ -139,14 +137,14 @@ To scan locally with [gitleaks](https://github.com/gitleaks/gitleaks#installing)
 
 ## Cloud Functions
 
-The browser can't be trusted with API keys or with creating profiles and media entries, so that work runs in `functions/`. Every callable function requires App Check and a signed-in user. See [`functions/CLOUD_FUNCTIONS.md`](functions/CLOUD_FUNCTIONS.md) for each function's request, response, and errors.
+The browser can't be trusted with API keys or with creating profiles and media entries, so that work runs in `functions/`. Every callable function requires App Check and a signed-in user. Each function's request, response, and errors are described in the comment above it in [`functions/index.js`](functions/index.js).
 
-| Function            | Called by                       | What it does                                                                      |
-| ------------------- | ------------------------------- | --------------------------------------------------------------------------------- |
-| `createUserProfile` | Sign-up, after the Auth account | Reserves the username and creates the profile documents.                          |
-| `searchMedia`       | Search                          | Searches one category. Uses the 30-day cache, else calls the API (45 per minute). |
-| `addMediaEntry`     | "Add" on a search result        | Adds a title using the cached title and cover. Rejects duplicates.                |
-| `onUserDeleted`     | Firebase, automatically         | Deletes the user's data and frees their username when the account is deleted.     |
+| Function            | Called by                       | What it does                                                                                                                        |
+| ------------------- | ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `createUserProfile` | Sign-up, after the Auth account | Reserves the username and creates the profile documents.                                                                            |
+| `searchMedia`       | Search                          | Searches one category. Each result has a title, creator, year and cover. Uses the 30-day cache, else calls the API (45 per minute). |
+| `addMediaEntry`     | "Add" on a search result        | Adds a title using the cached title and cover. Rejects duplicates.                                                                  |
+| `onUserDeleted`     | Firebase, automatically         | Deletes the user's data and frees their username when the account is deleted.                                                       |
 
 **API keys** are Firebase secrets, never in the code:
 
@@ -175,7 +173,7 @@ Deploy with `firebase deploy --only functions`.
 
 **Valid values:**
 
-- `users/{uid}` has exactly `displayName` (2–30 characters, no leading or trailing spaces), `avatarId` (`avatar1`–`avatar4`), and `isPublic` (`true` or `false`). Updates must send all three.
+- `users/{uid}` has exactly `displayName` (2–30 characters, no leading or trailing spaces), `avatarId` (`avatar1`–`avatar4`), and `isPublic` (`true` or `false`). An update can change any of them, but the whole document must stay valid.
 - `profile/details` has only `bio`, up to 155 characters.
 - `mediaEntries` updates may only change these four fields, and all four must stay valid:
   - `status`: `completed` ("Completed"), `in_progress` ("In progress") or `planned` ("Planned").
@@ -206,7 +204,11 @@ Deploy with `firebase deploy --only functions`.
 query(collection(db, 'users', uid, 'mediaEntries'), limit(50));
 ```
 
-**Keep these values in sync.** They're written in `js/constants.js`, `firestore.rules` and `functions/lib/validate.js`, so change all three (and the tests) in the same pull request: display name length, bio length, avatar IDs, categories, log statuses, rating range, date rule, and notes length.
+**Keep these values in sync.** Change every copy (and the tests) in the same pull request:
+
+- In `js/constants.js`, `firestore.rules` and `functions/lib/validate.js`: avatar IDs, log statuses, rating range, date rule, and notes length.
+- In `js/constants.js` and `firestore.rules`: display name length and bio length.
+- In `js/constants.js` and `functions/lib/validate.js`: the username pattern and categories.
 
 Deploy rule changes with `firebase deploy --only firestore:rules`.
 
@@ -223,7 +225,7 @@ It starts a Firestore emulator under the fake project `demo-mediashelf` (so it c
 | File                   | Tests                                                            |
 | ---------------------- | ---------------------------------------------------------------- |
 | `users.test.js`        | `users/{uid}`, `profile/details`, `private/account`              |
-| `mediaEntries.test.js` | `mediaEntries` (one test so far)                                 |
+| `mediaEntries.test.js` | `users/{uid}/mediaEntries`                                       |
 | `serverOnly.test.js`   | Server-only collections and paths with no rule                   |
 | `helpers.js`           | Loads the rules, seeds test data, and connects as each test user |
 
@@ -235,38 +237,54 @@ The test users are Alice (public profile), Carol (private profile), Bob (no prof
 
 ## Authentication
 
-- **Sign-up:** usernames are 3–30 lowercase letters, numbers, or underscores; passwords are at least 8 characters and must match.
+- **Sign-up:** usernames are 3–30 letters, numbers, or underscores (saved in lowercase); passwords are at least 8 characters and must match. After the Auth account is created, `signup.js` calls `createUserProfile` with the username and picked avatar. If that fails (for example, the username is taken), the new Auth account is deleted so the user can fix the form and reuse the same email.
 - **Login errors don't reveal accounts.** Wrong passwords and unknown emails show the same message, and so does the reset page.
 - **Redirects use `location.replace()`,** so Back doesn't return to a page you just left.
 
 **Adding a signed-in page:**
 
-1. Add `data-auth="pending"` to the `<html>` tag and link `css/auth.css`. This hides the page until the user is confirmed.
+1. Add `data-auth="pending"` to the `<html>` tag (and link `css/theme.css`, like every page). This hides the page until the user is confirmed.
 2. Load the guard before `</body>`: `<script type="module" src="js/auth/signedInPage.js"></script>`
 3. For a Log Out button, use `<button class="logout-button" type="button">Log Out</button>`.
 
 **Testing auth locally:** accounts go to the Auth emulator and are deleted when it stops. The emulator doesn't send emails; the password reset link is printed in the `firebase emulators:start` terminal.
+
+## Styles
+
+Every page looks like My Shelf (`main-page.html`): the cream background, white rounded cards, red buttons, and uppercase Inter Tight headings.
+
+- `css/theme.css` holds everything shared: colors, fonts, buttons (`btn`, `btn--primary`, `btn--outline`), the header (`site-header`, `logo`, `site-nav`), the footer (`site-footer`), cards (`card`), headings (`display-title`), chips, badges and form fields (`field-label`, `field-input`, `field-hint`). Link it first on every page.
+- Each page then links its own stylesheet for its layout only (`main-page.css` and `modal.css`/`cust-and-settings.css` for its modals, `auth.css` for log-in, sign-up and forgot password, `landing.css`, `about.css`). Don't redefine colors or fonts there; use the variables from `theme.css`, such as `var(--primary-color)`.
+- Every page loads the same fonts with this link in `<head>`:
+
+  ```html
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@800&display=swap"
+    rel="stylesheet"
+  />
+  ```
 
 ## Where things go
 
 ```text
 .
 ├── *.html                    # Pages
-├── css/                      # Page styles
-├── assets/img/               # Images
+├── css/                      # theme.css (shared look) + one stylesheet per page
+├── assets/
+│   ├── avatar/               # avatar1.png–avatar4.png, named after the avatar IDs
+│   └── img/                  # Other images
 ├── js/
 │   ├── firebase-config.js    # The one shared Firebase and App Check setup
 │   ├── constants.js          # Shared constants (limits, categories, statuses, avatar IDs)
 │   ├── auth/                 # Sign-up, log-in, log-out, password reset, signed-in page guard
 │   ├── database/             # Firestore reads and writes (not built yet)
-│   ├── frontend/             # Browser behavior (nav, carousel, settings tabs)
+│   ├── frontend/             # My Shelf page behavior (avatar menu, Log Media modal, Edit profile/Settings modal)
 │   └── media/                # Media search, adding, status changes, deletion
 ├── functions/
 │   ├── index.js              # The four Cloud Functions
 │   ├── adapters/             # One module per external API (TMDB, IGDB, Open Library, MusicBrainz)
 │   ├── lib/                  # Shared helpers (validation, API requests, rate limit, cache)
-│   ├── test/                 # Cloud Functions tests
-│   └── CLOUD_FUNCTIONS.md    # What each function and file does
+│   └── test/                 # Cloud Functions tests
 ├── tests/rules/              # Security Rules tests
 ├── firestore.rules           # Security Rules
 ├── .github/workflows/        # CI and the secret scan

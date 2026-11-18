@@ -21,8 +21,6 @@ export const LANDING_PAGE = 'index.html';
 export const HOME_PAGE = 'main-page.html';
 export const SIGNUP_PAGE = 'signup.html';
 export const FORGOT_PASSWORD_PAGE = 'forgot-password.html';
-export const SOCIAL_PAGE = 'social-page.html';
-export const CONTACT_PAGE = 'contact.html';
 
 // media categories (Make sure these match functions/lib/validate.js)
 // The first part of a log's ID, e.g. movie_603 or show_1396.

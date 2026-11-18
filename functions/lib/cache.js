@@ -77,7 +77,7 @@ async function getCachedSearch(db, category, query) {
  * @param {string} category A media category.
  * @param {string} source The API's name, e.g. 'tmdb'.
  * @param {string} query The cleaned-up search text.
- * @param {Array} results [{externalId, title, creator, coverImageUrl}]
+ * @param {Array} results [{externalId, title, creator, year, coverImageUrl}]
  * @return {Promise<void>}
  */
 async function saveSearch(db, category, source, query, results) {

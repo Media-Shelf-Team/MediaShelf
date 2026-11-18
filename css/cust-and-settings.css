@@ -1,14 +1,7 @@
 /* css/cust-and-settings.css: the Edit profile / Settings modal on main-page.html */
 
 .settings-modal {
-  --primary-color: #e93d45;
-  --secondary-color: #f2eae1;
-  --tertiary-color: #bf373e;
-  --header-text-color: #15282f;
-  --font-color: #f2eae1;
-  --surface-color: #fff;
-  --placeholder-color: #8a8479;
-
+  /* Colors come from css/theme.css. */
   margin: auto;
   padding: 0;
   border: none;

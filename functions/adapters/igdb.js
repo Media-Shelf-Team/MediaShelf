@@ -62,6 +62,7 @@ async function search(category, query, limit, secrets) {
   const fields = [
     'name',
     'cover.image_id',
+    'first_release_date',
     'involved_companies.company.name',
     'involved_companies.developer',
   ].join(',');
@@ -85,7 +86,8 @@ async function search(category, query, limit, secrets) {
     throw err;
   }
 
-  // 3. Turn each game into our {externalId, title, creator, coverImageUrl}.
+  // 3. Turn each game into our
+  //    {externalId, title, creator, year, coverImageUrl}.
   return games.map((game) => {
     const externalId = String(game.id || '');
     const coverImageUrl = game.cover
@@ -96,8 +98,20 @@ async function search(category, query, limit, secrets) {
       game.name,
       coverImageUrl,
       firstDeveloper(game),
+      releaseYear(game),
     );
   });
+}
+
+/**
+ * The year a game first came out. IGDB gives first_release_date in seconds
+ * since 1970 (a Unix timestamp), not as a date.
+ * @param {Object} game One game from IGDB.
+ * @return {?number} The year, or null if IGDB doesn't have the date.
+ */
+function releaseYear(game) {
+  if (typeof game.first_release_date !== 'number') return null;
+  return new Date(game.first_release_date * 1000).getUTCFullYear();
 }
 
 /**
