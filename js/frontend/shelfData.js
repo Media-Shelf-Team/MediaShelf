@@ -8,7 +8,7 @@ import {getBio, getUserCard, getUsername} from '../database/profile.js';
 import {countEntries} from '../database/entries.js';
 import {avatarSrc} from './display.js';
 import {todayLocal} from '../media/validate.js';
-import {SHELF_CHANGED_EVENT} from '../constants.js';
+import {PROFILE_CHANGED_EVENT, SHELF_CHANGED_EVENT} from '../constants.js';
 
 /**
  * Sets the text of every element matching a selector.
@@ -124,6 +124,15 @@ if (signedInUser) {
       console.error(`My Shelf: ${load.name} failed`, error);
     });
   }
+
+  // Show the new name, avatar and bio after Settings saves them.
+  document.addEventListener(PROFILE_CHANGED_EVENT, () => {
+    for (const load of [loadCard, loadBio]) {
+      load(uid).catch((error) => {
+        console.error(`My Shelf: ${load.name} failed`, error);
+      });
+    }
+  });
 
   // Keep the stats current after a log is added, edited or deleted.
   document.addEventListener(SHELF_CHANGED_EVENT, () => {

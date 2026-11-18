@@ -6,6 +6,9 @@ import {
   onAuthStateChanged,
   sendPasswordResetEmail,
   deleteUser,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  updatePassword,
 } from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js';
 import {auth} from '../firebase-config.js';
 
@@ -79,6 +82,59 @@ export function getProfileErrorMessage(error) {
  */
 export function deleteCurrentUser() {
   return deleteUser(auth.currentUser);
+}
+
+/**
+ * Checks the signed-in user's password again. Firebase requires this before
+ * changing the password or deleting the account.
+ * @param {string} password The user's current password.
+ * @return {Promise<void>} Rejects with auth/invalid-credential if it's wrong.
+ */
+async function reauthenticate(password) {
+  const user = auth.currentUser;
+  const credential = EmailAuthProvider.credential(user.email, password);
+  await reauthenticateWithCredential(user, credential);
+}
+
+/**
+ * Changes the signed-in user's password.
+ * @param {string} currentPassword Their current password.
+ * @param {string} newPassword The new password.
+ * @return {Promise<void>}
+ */
+export async function changePassword(currentPassword, newPassword) {
+  await reauthenticate(currentPassword);
+  await updatePassword(auth.currentUser, newPassword);
+}
+
+/**
+ * Deletes the signed-in user's account after checking their password. The
+ * onUserDeleted Cloud Function then deletes their username and everything
+ * under users/{uid}.
+ * @param {string} password Their current password.
+ * @return {Promise<void>}
+ */
+export async function deleteAccount(password) {
+  await reauthenticate(password);
+  await deleteUser(auth.currentUser);
+}
+
+/**
+ * Like getAuthErrorMessage, but for forms that only ask for a password
+ * (change password, delete account), where "email or password" would be
+ * confusing.
+ * @param {Object} error The Firebase auth error.
+ * @return {string}
+ */
+export function getPasswordErrorMessage(error) {
+  const wrongPassword = ['auth/invalid-credential', 'auth/wrong-password'];
+  if (error && wrongPassword.includes(error.code)) {
+    return 'Incorrect password.';
+  }
+  if (error && error.code === 'auth/too-many-requests') {
+    return 'Too many tries. Please wait a few minutes and try again.';
+  }
+  return getAuthErrorMessage(error);
 }
 
 /**

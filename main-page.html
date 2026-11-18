@@ -709,23 +709,54 @@
       </form>
     </dialog>
 
-    <!-- SETTINGS MODAL (Edit profile / Settings) -->
+    <!-- SETTINGS MODAL: Profile / Privacy / Security tabs
+         (js/frontend/custAndSettingsModal.js). Uses the Log Media modal's
+         frame, fields and buttons, so it matches the other dialogs. Each tab
+         is its own form with its own Save button. -->
     <dialog
-      class="settings-modal"
+      class="log-modal settings-modal"
       id="settings-modal"
       aria-labelledby="sm-title"
     >
-      <button type="button" class="settings-modal__close" aria-label="Close">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <line x1="3" y1="3" x2="21" y2="21"></line>
-          <line x1="21" y1="3" x2="3" y2="21"></line>
-        </svg>
-      </button>
+      <header class="log-modal__header">
+        <h2 class="log-modal__title" id="sm-title">Settings</h2>
+        <button
+          type="button"
+          class="log-modal__close"
+          aria-label="Close"
+          data-settings-close
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <line x1="5" y1="5" x2="19" y2="19" />
+            <line x1="19" y1="5" x2="5" y2="19" />
+          </svg>
+        </button>
+      </header>
 
-      <h2 class="settings-modal__sr" id="sm-title">Profile settings</h2>
+      <!-- Shown when closing with unsaved changes. -->
+      <div class="settings-modal__discard" role="alert" hidden>
+        <p>You have unsaved changes. Discard them?</p>
+        <div class="log-modal__actions">
+          <button
+            type="button"
+            class="log-modal__btn log-modal__btn--cancel"
+            data-settings-keep
+          >
+            Keep editing
+          </button>
+          <button
+            type="button"
+            class="log-modal__btn log-modal__btn--danger-solid"
+            data-settings-discard
+          >
+            Discard
+          </button>
+        </div>
+      </div>
 
       <div class="settings-modal__layout">
-        <!-- Left side: section tabs -->
+        <!-- Left side: section tabs. data-tab values are what
+             data-open-settings="..." buttons open. -->
         <div
           class="settings-modal__tabs"
           role="tablist"
@@ -740,7 +771,7 @@
             aria-selected="true"
             data-tab="customization"
           >
-            Customization
+            Profile
           </button>
           <button
             type="button"
@@ -751,63 +782,64 @@
             aria-selected="false"
             data-tab="settings"
           >
-            Settings
+            Privacy
+          </button>
+          <button
+            type="button"
+            class="settings-modal__tab"
+            role="tab"
+            id="sm-tab-security"
+            aria-controls="sm-panel-security"
+            aria-selected="false"
+            data-tab="security"
+          >
+            Security
           </button>
         </div>
 
-        <!-- Right side: section content -->
-        <div class="settings-modal__panels">
-          <!-- CUSTOMIZATION -->
-          <section
-            class="settings-modal__panel"
-            role="tabpanel"
-            id="sm-panel-customization"
-            aria-labelledby="sm-tab-customization"
-            data-panel="customization"
-          >
-            <fieldset class="settings-modal__group">
-              <legend class="settings-modal__heading">
-                Change your avatar
-              </legend>
+        <!-- PROFILE: avatar, display name, bio -->
+        <form
+          class="settings-modal__panel"
+          role="tabpanel"
+          id="sm-panel-customization"
+          aria-labelledby="sm-tab-customization"
+          data-panel="customization"
+          novalidate
+        >
+          <div class="log-modal__body">
+            <fieldset class="log-field">
+              <legend class="log-label">Avatar</legend>
+              <!-- Values match AVATAR_IDS in js/constants.js. -->
               <div class="settings-modal__avatars">
-                <!-- Values match AVATAR_IDS in js/constants.js.
-                     Swap each placeholder span's contents for <img src="..." alt=""> later -->
                 <label class="settings-modal__avatar">
-                  <input
-                    type="radio"
-                    name="sm-avatar"
-                    value="avatar1"
-                    checked
-                  />
-                  <span class="settings-modal__avatar-img"></span>
-                  <span class="settings-modal__sr">Avatar 1</span>
+                  <input type="radio" name="sm-avatar" value="avatar1" />
+                  <img src="assets/avatar/avatar1.png" alt="Avatar 1" />
                 </label>
                 <label class="settings-modal__avatar">
                   <input type="radio" name="sm-avatar" value="avatar2" />
-                  <span class="settings-modal__avatar-img"></span>
-                  <span class="settings-modal__sr">Avatar 2</span>
+                  <img src="assets/avatar/avatar2.png" alt="Avatar 2" />
                 </label>
                 <label class="settings-modal__avatar">
                   <input type="radio" name="sm-avatar" value="avatar3" />
-                  <span class="settings-modal__avatar-img"></span>
-                  <span class="settings-modal__sr">Avatar 3</span>
+                  <img src="assets/avatar/avatar3.png" alt="Avatar 3" />
                 </label>
                 <label class="settings-modal__avatar">
                   <input type="radio" name="sm-avatar" value="avatar4" />
-                  <span class="settings-modal__avatar-img"></span>
-                  <span class="settings-modal__sr">Avatar 4</span>
+                  <img src="assets/avatar/avatar4.png" alt="Avatar 4" />
                 </label>
               </div>
             </fieldset>
 
-            <div class="settings-modal__group">
-              <label class="settings-modal__heading" for="sm-display-name">
-                Change your display name
-              </label>
+            <div class="log-field">
+              <label class="log-label" for="sm-display-name"
+                >Display name</label
+              >
               <input
                 type="text"
-                class="settings-modal__field"
+                class="log-input"
                 id="sm-display-name"
+                name="displayName"
+                minlength="2"
                 maxlength="30"
                 placeholder="Display name..."
                 autocomplete="off"
@@ -815,96 +847,210 @@
               <p
                 class="settings-modal__counter"
                 data-counter-for="sm-display-name"
-              >
-                0 / 30
-              </p>
+              ></p>
             </div>
 
-            <div class="settings-modal__group">
-              <label class="settings-modal__heading" for="sm-bio">
-                Change your bio
-              </label>
+            <div class="log-field">
+              <label class="log-label" for="sm-bio">Bio</label>
               <textarea
-                class="settings-modal__field"
+                class="log-input log-input--area"
                 id="sm-bio"
+                name="bio"
+                rows="3"
                 maxlength="155"
-                placeholder="Bio..."
+                placeholder="What are you into?"
               ></textarea>
-              <p class="settings-modal__counter" data-counter-for="sm-bio">
-                0 / 155
-              </p>
+              <p class="settings-modal__counter" data-counter-for="sm-bio"></p>
             </div>
-          </section>
+          </div>
 
-          <!-- SETTINGS -->
-          <section
-            class="settings-modal__panel"
-            role="tabpanel"
-            id="sm-panel-settings"
-            aria-labelledby="sm-tab-settings"
-            data-panel="settings"
-            hidden
-          >
-            <fieldset class="settings-modal__group">
-              <legend class="settings-modal__heading">
-                Change your privacy settings
-              </legend>
-              <div class="settings-modal__options">
-                <label class="settings-modal__option">
-                  <input
-                    type="radio"
-                    name="sm-privacy"
-                    value="private"
-                    checked
-                  />
-                  Private
+          <footer class="log-modal__footer">
+            <p
+              class="status-line settings-modal__status"
+              id="sm-profile-status"
+              role="status"
+              hidden
+            ></p>
+            <div class="log-modal__actions">
+              <button type="submit" class="log-modal__btn log-modal__btn--save">
+                Save profile
+              </button>
+            </div>
+          </footer>
+        </form>
+
+        <!-- PRIVACY -->
+        <form
+          class="settings-modal__panel"
+          role="tabpanel"
+          id="sm-panel-settings"
+          aria-labelledby="sm-tab-settings"
+          data-panel="settings"
+          novalidate
+          hidden
+        >
+          <div class="log-modal__body">
+            <fieldset class="log-field">
+              <legend class="log-label">Who can see your shelf</legend>
+              <div class="log-segmented">
+                <label>
+                  <input type="radio" name="sm-privacy" value="private" />
+                  <span>Private</span>
                 </label>
-                <label class="settings-modal__option">
+                <label>
                   <input type="radio" name="sm-privacy" value="public" />
-                  Public
+                  <span>Public</span>
                 </label>
               </div>
+              <p class="settings-modal__hint">
+                Private: only you can see your logs and bio. Public: anyone
+                signed in can. Your name and avatar are always visible to
+                signed-in users.
+              </p>
             </fieldset>
+          </div>
 
-            <!-- DELETE ACCOUNT. UI only for now: the button doesn't do
-                 anything yet. When it's wired up it should re-check the
-                 password, then delete the Firebase Auth account
-                 (onUserDeleted cloud function removes the rest). -->
-            <div
-              class="settings-modal__group settings-modal__danger"
-              role="group"
+          <footer class="log-modal__footer">
+            <p
+              class="status-line settings-modal__status"
+              id="sm-privacy-status"
+              role="status"
+              hidden
+            ></p>
+            <div class="log-modal__actions">
+              <button type="submit" class="log-modal__btn log-modal__btn--save">
+                Save privacy
+              </button>
+            </div>
+          </footer>
+        </form>
+
+        <!-- SECURITY: change password, delete account. Two forms in one
+             panel, each with its own button and message. -->
+        <div
+          class="settings-modal__panel"
+          role="tabpanel"
+          id="sm-panel-security"
+          aria-labelledby="sm-tab-security"
+          data-panel="security"
+          hidden
+        >
+          <div class="log-modal__body">
+            <form
+              class="settings-modal__section"
+              id="sm-password-form"
+              novalidate
+            >
+              <h3 class="settings-modal__heading">Change password</h3>
+              <div class="log-field">
+                <label class="log-label" for="sm-current-password"
+                  >Current password</label
+                >
+                <input
+                  type="password"
+                  class="log-input"
+                  id="sm-current-password"
+                  name="currentPassword"
+                  autocomplete="current-password"
+                  maxlength="128"
+                />
+              </div>
+              <div class="log-row">
+                <div class="log-field">
+                  <label class="log-label" for="sm-new-password"
+                    >New password</label
+                  >
+                  <input
+                    type="password"
+                    class="log-input"
+                    id="sm-new-password"
+                    name="newPassword"
+                    autocomplete="new-password"
+                    minlength="8"
+                    maxlength="128"
+                  />
+                </div>
+                <div class="log-field">
+                  <label class="log-label" for="sm-confirm-password"
+                    >Confirm new password</label
+                  >
+                  <input
+                    type="password"
+                    class="log-input"
+                    id="sm-confirm-password"
+                    name="confirmPassword"
+                    autocomplete="new-password"
+                    minlength="8"
+                    maxlength="128"
+                  />
+                </div>
+              </div>
+              <div class="settings-modal__section-actions">
+                <p
+                  class="status-line settings-modal__status"
+                  id="sm-password-status"
+                  role="status"
+                  hidden
+                ></p>
+                <button
+                  type="submit"
+                  class="log-modal__btn log-modal__btn--save"
+                >
+                  Change password
+                </button>
+              </div>
+            </form>
+
+            <form
+              class="settings-modal__section settings-modal__danger"
+              id="sm-delete-form"
               aria-labelledby="sm-delete-heading"
+              novalidate
             >
               <h3 class="settings-modal__heading" id="sm-delete-heading">
                 Delete your account
               </h3>
-              <p class="settings-modal__warning" id="sm-delete-warning">
+              <p class="settings-modal__hint" id="sm-delete-warning">
                 This permanently deletes your profile, all of your media logs,
                 and your username. It can't be undone.
               </p>
-              <label class="settings-modal__label" for="sm-delete-password">
-                Enter your password to confirm
-              </label>
-              <input
-                type="password"
-                class="settings-modal__field"
-                id="sm-delete-password"
-                autocomplete="current-password"
-                aria-describedby="sm-delete-warning"
-                placeholder="Password..."
-              />
-              <button type="button" class="settings-modal__delete-btn">
-                Delete account
-              </button>
-            </div>
-          </section>
+              <div class="log-field">
+                <label class="log-label" for="sm-delete-password"
+                  >Enter your password to confirm</label
+                >
+                <input
+                  type="password"
+                  class="log-input"
+                  id="sm-delete-password"
+                  name="password"
+                  autocomplete="current-password"
+                  aria-describedby="sm-delete-warning"
+                  maxlength="128"
+                />
+              </div>
+              <div class="settings-modal__section-actions">
+                <p
+                  class="status-line settings-modal__status"
+                  id="sm-delete-status"
+                  role="status"
+                  hidden
+                ></p>
+                <button
+                  type="submit"
+                  class="log-modal__btn log-modal__btn--danger-solid"
+                >
+                  Delete account
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </dialog>
 
     <script src="js/frontend/mainPage.js"></script>
     <script type="module" src="js/frontend/logModal.js"></script>
-    <script src="js/frontend/custAndSettingsModal.js"></script>
+    <script type="module" src="js/frontend/custAndSettingsModal.js"></script>
     <script type="module" src="js/auth/signedInPage.js"></script>
     <script type="module" src="js/frontend/shelfData.js"></script>
     <!-- shelf.js also loads editModal.js -->

@@ -52,6 +52,10 @@ export const CATEGORY_LABELS = Object.freeze({
 //   document.dispatchEvent(new Event(SHELF_CHANGED_EVENT));
 export const SHELF_CHANGED_EVENT = 'shelf-changed';
 
+// Fired on document after the profile (name, avatar, privacy or bio) is
+// saved, so the header, menu and profile card can update.
+export const PROFILE_CHANGED_EVENT = 'profile-changed';
+
 // The most documents one mediaEntries query may ask for. Queries without
 // limit() of this or less are denied. (Make sure this matches
 // firestore.rules)
