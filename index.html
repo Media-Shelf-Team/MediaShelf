@@ -9,74 +9,67 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Bungee&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Protest+Guerrilla&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@800&display=swap"
       rel="stylesheet"
     />
 
-    <link rel="stylesheet" href="css/base.css" />
-    <link rel="stylesheet" href="css/nav.css" />
+    <link rel="stylesheet" href="css/theme.css" />
     <link rel="stylesheet" href="css/landing.css" />
-    <link rel="stylesheet" href="css/hero.css" />
-    <link rel="stylesheet" href="css/intro.css" />
-    <link rel="stylesheet" href="css/footer.css" />
     <title>MediaShelf</title>
   </head>
   <body>
-    <header>
-      <nav class="nav">
-        <a class="nav-logo" href="index.html">MEDIA SHELF</a>
-
-        <button
-          class="nav-menu-btn"
-          type="button"
-          id="menu-btn"
-          aria-label="Toggle menu"
-        >
-          MENU
-        </button>
-      </nav>
-
-      <div class="hero">
-        <img
-          class="hero-img"
-          src="assets/img/mediashelfbgidea1.png"
-          alt="Color splash"
-        />
-      </div>
-
-      <div class="landing-btn-container">
-        <a class="landing-btn" href="signup.html">Sign up</a>
-        <a class="landing-btn" href="login.html">Log in</a>
-        <a class="landing-btn" href="about.html">About Us</a>
+    <header class="site-header">
+      <div class="site-header__inner container">
+        <a class="logo" href="index.html">Media Shelf</a>
+        <div class="site-header__actions">
+          <a class="btn btn--outline" href="login.html">Log in</a>
+          <a class="btn btn--primary" href="signup.html">Sign up</a>
+        </div>
       </div>
     </header>
 
-    <main>
-      <section class="intro">
-        <div class="intro-content">
-          <div class="intro-info">
-            <h1 class="intro-title">What is MEDIA SHELF?</h1>
-            <p class="intro-text">
-              Media Shelf is your personal space to track, organize, and
-              discover the entertainment you love. Keep all your favorite
-              movies, TV shows, books, video games, and music together in one
-              convenient place.
-            </p>
-            <p class="intro-text">
-              Build your collection, keep track of what you've enjoyed, and
-              explore new favorites. As Media Shelf grows, you'll also be able
-              to connect with friends and discover what they're watching,
-              reading, playing, and listening to.
-            </p>
+    <main class="landing container">
+      <section class="landing-hero card" aria-labelledby="landing-title">
+        <div class="landing-hero__text">
+          <h1 class="display-title" id="landing-title">What is Media Shelf?</h1>
+          <p>
+            Media Shelf is your personal space to track, organize, and discover
+            the entertainment you love. Keep all your favorite movies, TV shows,
+            books, video games, and music together in one convenient place.
+          </p>
+          <p>
+            Build your collection, keep track of what you've enjoyed, and
+            explore new favorites. As Media Shelf grows, you'll also be able to
+            connect with friends and discover what they're watching, reading,
+            playing, and listening to.
+          </p>
+          <ul class="landing-hero__tags" aria-label="Media categories">
+            <li class="chip">Movies</li>
+            <li class="chip">TV shows</li>
+            <li class="chip">Books</li>
+            <li class="chip">Video games</li>
+            <li class="chip">Music</li>
+          </ul>
+          <div class="landing-hero__actions">
+            <a class="btn btn--primary" href="signup.html">Create your shelf</a>
+            <a class="btn btn--outline" href="about.html">About us</a>
           </div>
         </div>
+        <img
+          class="landing-hero__img"
+          src="assets/img/mediashelfbgidea1.png"
+          alt=""
+        />
       </section>
     </main>
 
-    <footer class="footer">
-      <p class="footer-copy">
-        &copy; 2026 The Media Shelf Team - All rights reserved.
-      </p>
+    <footer class="site-footer">
+      <div class="site-footer__inner container">
+        <p><strong>Media Shelf</strong> &copy; 2026</p>
+        <ul class="site-footer__links">
+          <li><a href="about.html">About</a></li>
+        </ul>
+      </div>
     </footer>
   </body>
 </html>

@@ -8,7 +8,7 @@ Media Shelf is a web app for logging movies, TV shows, books, video games, and m
 
 - [x] Firebase project setup (`.firebaserc`, `firebase.json`) and one shared browser setup in `js/firebase-config.js`, which uses the local emulators on localhost.
 - [x] App Check with reCAPTCHA Enterprise (see [App Check](#app-check)).
-- [x] Pages: `index`, `login`, `signup`, `forgot-password`, `main-page`, `social-page`, `contact`, and `about`, with styles in `css/`. Edit profile and Settings are modals on `main-page` (the old `settings-and-customization` page was removed).
+- [x] Pages: `index`, `login`, `signup`, `forgot-password`, `main-page`, `social-page`, `contact`, and `about`, with styles in `css/`. Every page shares one look from `css/theme.css` (see [Styles](#styles)). Edit profile and Settings are modals on `main-page` (the old `settings-and-customization` page was removed).
 - [x] Email and password sign-up, log-in, log-out, and password reset (see [Authentication](#authentication)).
 - [x] MS-11: sign-up calls `createUserProfile` with the username and picked avatar (see [Authentication](#authentication)).
 - [x] MS-10: Firestore Security Rules (see [Security Rules](#security-rules)).
@@ -241,18 +241,33 @@ The test users are Alice (public profile), Carol (private profile), Bob (no prof
 
 **Adding a signed-in page:**
 
-1. Add `data-auth="pending"` to the `<html>` tag and link `css/auth.css`. This hides the page until the user is confirmed.
+1. Add `data-auth="pending"` to the `<html>` tag (and link `css/theme.css`, like every page). This hides the page until the user is confirmed.
 2. Load the guard before `</body>`: `<script type="module" src="js/auth/signedInPage.js"></script>`
 3. For a Log Out button, use `<button class="logout-button" type="button">Log Out</button>`.
 
 **Testing auth locally:** accounts go to the Auth emulator and are deleted when it stops. The emulator doesn't send emails; the password reset link is printed in the `firebase emulators:start` terminal.
+
+## Styles
+
+Every page looks like My Shelf (`main-page.html`): the cream background, white rounded cards, red buttons, and uppercase Inter Tight headings.
+
+- `css/theme.css` holds everything shared: colors, fonts, buttons (`btn`, `btn--primary`, `btn--outline`), the header (`site-header`, `logo`, `site-nav`), the footer (`site-footer`), cards (`card`), headings (`display-title`), chips, badges and form fields (`field-label`, `field-input`, `field-hint`). Link it first on every page.
+- Each page then links its own stylesheet for its layout only (`main-page.css`, `auth.css`, `landing.css`, `about.css`, `social-page.css`). Don't redefine colors or fonts there; use the variables from `theme.css`, such as `var(--primary-color)`.
+- Every page loads the same fonts with this link in `<head>`:
+
+  ```html
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@800&display=swap"
+    rel="stylesheet"
+  />
+  ```
 
 ## Where things go
 
 ```text
 .
 ├── *.html                    # Pages
-├── css/                      # Page styles
+├── css/                      # theme.css (shared look) + one stylesheet per page
 ├── assets/img/               # Images
 ├── js/
 │   ├── firebase-config.js    # The one shared Firebase and App Check setup

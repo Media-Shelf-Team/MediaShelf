@@ -1,99 +1,109 @@
-.scroll-container {
-  display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  overflow-y: hidden;
-  margin: 30px;
-  margin-bottom: 50px;
-  gap: 40px;
-  padding: 20px;
-  background-color: var(--tertiary-color);
-  border-radius: 25px;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
+/* css/social-page.css
+ * The Social page: friends' latest logs. Colors, fonts, buttons, cards,
+ * badges, the header and the footer come from css/theme.css, which must be
+ * loaded first.
+ */
+
+.social {
+  flex: 1 0 auto;
+  padding-block: 34px 56px;
 }
 
-.card {
-  flex: 0 0 300px;
-  height: 600px;
-  background-color: var(--secondary-color);
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  scroll-snap-align: start;
-  align-items: center;
-  justify-content: center;
+/* Same style as the month titles on My Shelf. */
+.social__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 18px;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.social__subtitle {
+  color: var(--placeholder-color);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.feed-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+/* One friend's log. */
+.feed-card {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  gap: 10px;
+  min-width: 0;
+  padding: 16px;
+  border-radius: 20px;
 }
 
-.social-avatar {
-  margin-bottom: -19px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid var(--primary-color);
-  width: 23%;
-  height: auto;
-}
-
-.username {
-  margin-left: 25px;
-  margin-bottom: 30px;
-  text-align: left;
-  justify-content: center;
-  padding-left: 6px;
-  color: var(--primary-color);
-  font-size: clamp(0.5rem, 2vw, 1rem);
-  line-height: 1.7;
-}
-
-.cover-img {
-  border-radius: 12px;
-  margin: 5px;
-  width: 70%;
-  min-width: 20%;
-  height: auto;
-  object-fit: cover;
-}
-
-.metadata {
-  text-align: center;
-  margin-top: 8px;
-  padding-left: 6px;
-  color: var(--primary-color);
-  font-size: clamp(0.5rem, 2vw, 1rem);
-  line-height: 1.7;
-}
-
-.scroll-container::-webkit-scrollbar {
-  height: 8px;
-}
-
-.scroll-container::-webkit-scrollbar-track {
-  background: #e0e0e0;
-  border-radius: 10px;
-}
-
-.scroll-container::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 10px;
-}
-
-.scroll-container::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-.social-header {
+.feed-card__user {
   display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 14px;
-  color: var(--header-text-color);
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
 }
 
-/*For "Your Shelf" when in desktop.*/
-#social-desktop-title {
-  margin-left: 10px;
-  font-weight: normal;
-  font-size: clamp(1rem, 2vw, 2rem);
+.feed-card__name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.feed-card__avatar {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.feed-card__cover {
+  position: relative;
+}
+
+.feed-card__cover img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.feed-card__title {
+  margin: 0;
+  overflow: hidden;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.feed-card__meta {
+  color: var(--placeholder-color);
+  font-size: 0.8rem;
+}
+
+@media (max-width: 640px) {
+  .social {
+    padding-block: 20px 40px;
+  }
+
+  .feed-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 14px;
+  }
 }

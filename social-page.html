@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="swapped-colors" data-auth="pending">
+<html lang="en" data-auth="pending">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,528 +9,430 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Bungee&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Protest+Guerrilla&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@800&display=swap"
       rel="stylesheet"
     />
 
-    <link rel="stylesheet" href="css/base.css" />
-    <link rel="stylesheet" href="css/nav.css" />
-    <link rel="stylesheet" href="css/footer.css" />
-    <link rel="stylesheet" href="css/main-page.css" />
+    <link rel="stylesheet" href="css/theme.css" />
     <link rel="stylesheet" href="css/social-page.css" />
-    <link rel="stylesheet" href="css/auth.css" />
     <title>MediaShelf | Social Page</title>
   </head>
   <body id="social-page">
-    <header>
-      <nav class="nav-main">
-        <a class="nav-logo" href="index.html">MEDIA SHELF</a>
-        <form class="search" role="search">
-          <input
-            type="search"
-            placeholder="SEARCH FOR A CATEGORY OR TITLE..."
-            aria-label="Search"
-          />
-        </form>
+    <header class="site-header">
+      <div class="site-header__inner container">
+        <a class="logo" href="index.html">Media Shelf</a>
 
-        <button class="nav-toggle" aria-expanded="false" aria-controls="nav">
-          MENU
+        <nav class="site-nav" aria-label="Main">
+          <a class="site-nav__link" href="main-page.html">My Shelf</a>
+          <a class="site-nav__link" href="#" aria-current="page">Social</a>
+        </nav>
+
+        <button class="btn btn--outline logout-button" type="button">
+          Log Out
         </button>
-        <ul class="nav-mobile-links" id="nav">
-          <li><a href="main-page.html" class="nav-mobile-item">My Shelf</a></li>
-          <li><a href="#" class="nav-mobile-item active">Social</a></li>
-        </ul>
-
-        <div class="nav-links">
-          <ul class="nav-style">
-            <li><a href="main-page.html" class="nav-item"> My Shelf</a></li>
-            <li><a href="#" class="nav-item-active">Social</a></li>
-          </ul>
-        </div>
-      </nav>
+      </div>
     </header>
 
-    <div class="social-header">
-      <h2 id="social-title">
-        <span id="social-desktop-title">
-          Your Friends' Shelves, at a glance...</span
-        >
-      </h2>
-    </div>
+    <main class="social container">
+      <h1 class="social__title">
+        Your friends' shelves
+        <span class="social__subtitle">at a glance</span>
+      </h1>
 
-    <div class="scroll-container">
-      <div class="card">
-        <p class="username">
-          <span>
+      <!-- Placeholder cards: the backend will fill this list. -->
+      <div class="feed-grid">
+        <article class="feed-card card">
+          <p class="feed-card__user">
             <img
+              class="feed-card__avatar"
               src="assets/img/dustyicon1.png"
-              alt="profile image"
-              class="social-avatar"
+              alt=""
             />
-            @SergeantSwag</span
-          >
-        </p>
-        <img
-          src="assets/img/starwars.jpg"
-          alt="placeholder"
-          class="cover-img"
-        />
-        <p class="metadata">
-          <span>Book</span>
-          <span>Star Wars: Heir To The Empire</span>
-          <span>October 18, 2026</span>
-          <span>Currently Reading</span>
-        </p>
-      </div>
-      <div class="card">
-        <p class="username">
-          <span>
+            <span class="feed-card__name">@SergeantSwag</span>
+          </p>
+          <div class="feed-card__cover">
             <img
-              src="assets/img/dustyicon1.png"
-              alt="profile image"
-              class="social-avatar"
+              src="assets/img/starwars.jpg"
+              alt="Cover of Star Wars: Heir to the Empire"
             />
-            @SergeantSwag</span
-          >
-        </p>
-        <img
-          src="assets/img/starwars.jpg"
-          alt="placeholder"
-          class="cover-img"
-        />
-        <p class="metadata">
-          <span>Book</span>
-          <span>Star Wars: Heir To The Empire</span>
-          <span>October 18, 2026</span>
-          <span>Currently Reading</span>
-        </p>
-      </div>
-      <div class="card">
-        <p class="username">
-          <span>
+            <span class="badge">Book</span>
+          </div>
+          <h3 class="feed-card__title">Star Wars: Heir to the Empire</h3>
+          <p class="feed-card__meta">In progress &middot; Oct 18, 2026</p>
+        </article>
+        <article class="feed-card card">
+          <p class="feed-card__user">
             <img
+              class="feed-card__avatar"
               src="assets/img/dustyicon1.png"
-              alt="profile image"
-              class="social-avatar"
+              alt=""
             />
-            @SergeantSwag</span
-          >
-        </p>
-        <img
-          src="assets/img/starwars.jpg"
-          alt="placeholder"
-          class="cover-img"
-        />
-        <p class="metadata">
-          <span>Book</span>
-          <span>Star Wars: Heir To The Empire</span>
-          <span>October 18, 2026</span>
-          <span>Currently Reading</span>
-        </p>
-      </div>
-      <div class="card">
-        <p class="username">
-          <span>
+            <span class="feed-card__name">@SergeantSwag</span>
+          </p>
+          <div class="feed-card__cover">
             <img
-              src="assets/img/dustyicon1.png"
-              alt="profile image"
-              class="social-avatar"
+              src="assets/img/starwars.jpg"
+              alt="Cover of Star Wars: Heir to the Empire"
             />
-            @SergeantSwag</span
-          >
-        </p>
-        <img
-          src="assets/img/starwars.jpg"
-          alt="placeholder"
-          class="cover-img"
-        />
-        <p class="metadata">
-          <span>Book</span>
-          <span>Star Wars: Heir To The Empire</span>
-          <span>October 18, 2026</span>
-          <span>Currently Reading</span>
-        </p>
-      </div>
-      <div class="card">
-        <p class="username">
-          <span>
+            <span class="badge">Book</span>
+          </div>
+          <h3 class="feed-card__title">Star Wars: Heir to the Empire</h3>
+          <p class="feed-card__meta">In progress &middot; Oct 18, 2026</p>
+        </article>
+        <article class="feed-card card">
+          <p class="feed-card__user">
             <img
+              class="feed-card__avatar"
               src="assets/img/dustyicon1.png"
-              alt="profile image"
-              class="social-avatar"
+              alt=""
             />
-            @SergeantSwag</span
-          >
-        </p>
-        <img
-          src="assets/img/starwars.jpg"
-          alt="placeholder"
-          class="cover-img"
-        />
-        <p class="metadata">
-          <span>Book</span>
-          <span>Star Wars: Heir To The Empire</span>
-          <span>October 18, 2026</span>
-          <span>Currently Reading</span>
-        </p>
-      </div>
-      <div class="card">
-        <p class="username">
-          <span>
+            <span class="feed-card__name">@SergeantSwag</span>
+          </p>
+          <div class="feed-card__cover">
             <img
-              src="assets/img/dustyicon1.png"
-              alt="profile image"
-              class="social-avatar"
+              src="assets/img/starwars.jpg"
+              alt="Cover of Star Wars: Heir to the Empire"
             />
-            @SergeantSwag</span
-          >
-        </p>
-        <img
-          src="assets/img/starwars.jpg"
-          alt="placeholder"
-          class="cover-img"
-        />
-        <p class="metadata">
-          <span>Book</span>
-          <span>Star Wars: Heir To The Empire</span>
-          <span>October 18, 2026</span>
-          <span>Currently Reading</span>
-        </p>
-      </div>
-      <div class="card">
-        <p class="username">
-          <span>
+            <span class="badge">Book</span>
+          </div>
+          <h3 class="feed-card__title">Star Wars: Heir to the Empire</h3>
+          <p class="feed-card__meta">In progress &middot; Oct 18, 2026</p>
+        </article>
+        <article class="feed-card card">
+          <p class="feed-card__user">
             <img
+              class="feed-card__avatar"
               src="assets/img/dustyicon1.png"
-              alt="profile image"
-              class="social-avatar"
+              alt=""
             />
-            @SergeantSwag</span
-          >
-        </p>
-        <img
-          src="assets/img/starwars.jpg"
-          alt="placeholder"
-          class="cover-img"
-        />
-        <p class="metadata">
-          <span>Book</span>
-          <span>Star Wars: Heir To The Empire</span>
-          <span>October 18, 2026</span>
-          <span>Currently Reading</span>
-        </p>
-      </div>
-      <div class="card">
-        <p class="username">
-          <span>
+            <span class="feed-card__name">@SergeantSwag</span>
+          </p>
+          <div class="feed-card__cover">
             <img
-              src="assets/img/dustyicon1.png"
-              alt="profile image"
-              class="social-avatar"
+              src="assets/img/starwars.jpg"
+              alt="Cover of Star Wars: Heir to the Empire"
             />
-            @SergeantSwag</span
-          >
-        </p>
-        <img
-          src="assets/img/starwars.jpg"
-          alt="placeholder"
-          class="cover-img"
-        />
-        <p class="metadata">
-          <span>Book</span>
-          <span>Star Wars: Heir To The Empire</span>
-          <span>October 18, 2026</span>
-          <span>Currently Reading</span>
-        </p>
-      </div>
-      <div class="card">
-        <p class="username">
-          <span>
+            <span class="badge">Book</span>
+          </div>
+          <h3 class="feed-card__title">Star Wars: Heir to the Empire</h3>
+          <p class="feed-card__meta">In progress &middot; Oct 18, 2026</p>
+        </article>
+        <article class="feed-card card">
+          <p class="feed-card__user">
             <img
+              class="feed-card__avatar"
               src="assets/img/dustyicon1.png"
-              alt="profile image"
-              class="social-avatar"
+              alt=""
             />
-            @SergeantSwag</span
-          >
-        </p>
-        <img
-          src="assets/img/starwars.jpg"
-          alt="placeholder"
-          class="cover-img"
-        />
-        <p class="metadata">
-          <span>Book</span>
-          <span>Star Wars: Heir To The Empire</span>
-          <span>October 18, 2026</span>
-          <span>Currently Reading</span>
-        </p>
-      </div>
-      <div class="card">
-        <p class="username">
-          <span>
+            <span class="feed-card__name">@SergeantSwag</span>
+          </p>
+          <div class="feed-card__cover">
             <img
-              src="assets/img/dustyicon1.png"
-              alt="profile image"
-              class="social-avatar"
+              src="assets/img/starwars.jpg"
+              alt="Cover of Star Wars: Heir to the Empire"
             />
-            @SergeantSwag</span
-          >
-        </p>
-        <img
-          src="assets/img/starwars.jpg"
-          alt="placeholder"
-          class="cover-img"
-        />
-        <p class="metadata">
-          <span>Book</span>
-          <span>Star Wars: Heir To The Empire</span>
-          <span>October 18, 2026</span>
-          <span>Currently Reading</span>
-        </p>
+            <span class="badge">Book</span>
+          </div>
+          <h3 class="feed-card__title">Star Wars: Heir to the Empire</h3>
+          <p class="feed-card__meta">In progress &middot; Oct 18, 2026</p>
+        </article>
+        <article class="feed-card card">
+          <p class="feed-card__user">
+            <img
+              class="feed-card__avatar"
+              src="assets/img/dustyicon1.png"
+              alt=""
+            />
+            <span class="feed-card__name">@SergeantSwag</span>
+          </p>
+          <div class="feed-card__cover">
+            <img
+              src="assets/img/starwars.jpg"
+              alt="Cover of Star Wars: Heir to the Empire"
+            />
+            <span class="badge">Book</span>
+          </div>
+          <h3 class="feed-card__title">Star Wars: Heir to the Empire</h3>
+          <p class="feed-card__meta">In progress &middot; Oct 18, 2026</p>
+        </article>
+        <article class="feed-card card">
+          <p class="feed-card__user">
+            <img
+              class="feed-card__avatar"
+              src="assets/img/dustyicon1.png"
+              alt=""
+            />
+            <span class="feed-card__name">@SergeantSwag</span>
+          </p>
+          <div class="feed-card__cover">
+            <img
+              src="assets/img/starwars.jpg"
+              alt="Cover of Star Wars: Heir to the Empire"
+            />
+            <span class="badge">Book</span>
+          </div>
+          <h3 class="feed-card__title">Star Wars: Heir to the Empire</h3>
+          <p class="feed-card__meta">In progress &middot; Oct 18, 2026</p>
+        </article>
+        <article class="feed-card card">
+          <p class="feed-card__user">
+            <img
+              class="feed-card__avatar"
+              src="assets/img/dustyicon1.png"
+              alt=""
+            />
+            <span class="feed-card__name">@SergeantSwag</span>
+          </p>
+          <div class="feed-card__cover">
+            <img
+              src="assets/img/starwars.jpg"
+              alt="Cover of Star Wars: Heir to the Empire"
+            />
+            <span class="badge">Book</span>
+          </div>
+          <h3 class="feed-card__title">Star Wars: Heir to the Empire</h3>
+          <p class="feed-card__meta">In progress &middot; Oct 18, 2026</p>
+        </article>
+        <article class="feed-card card">
+          <p class="feed-card__user">
+            <img
+              class="feed-card__avatar"
+              src="assets/img/dustyicon1.png"
+              alt=""
+            />
+            <span class="feed-card__name">@SergeantSwag</span>
+          </p>
+          <div class="feed-card__cover">
+            <img
+              src="assets/img/starwars.jpg"
+              alt="Cover of Star Wars: Heir to the Empire"
+            />
+            <span class="badge">Book</span>
+          </div>
+          <h3 class="feed-card__title">Star Wars: Heir to the Empire</h3>
+          <p class="feed-card__meta">In progress &middot; Oct 18, 2026</p>
+        </article>
+        <article class="feed-card card">
+          <p class="feed-card__user">
+            <img
+              class="feed-card__avatar"
+              src="assets/img/dustyicon1.png"
+              alt=""
+            />
+            <span class="feed-card__name">@SergeantSwag</span>
+          </p>
+          <div class="feed-card__cover">
+            <img
+              src="assets/img/starwars.jpg"
+              alt="Cover of Star Wars: Heir to the Empire"
+            />
+            <span class="badge">Book</span>
+          </div>
+          <h3 class="feed-card__title">Star Wars: Heir to the Empire</h3>
+          <p class="feed-card__meta">In progress &middot; Oct 18, 2026</p>
+        </article>
+        <article class="feed-card card">
+          <p class="feed-card__user">
+            <img
+              class="feed-card__avatar"
+              src="assets/img/dustyicon1.png"
+              alt=""
+            />
+            <span class="feed-card__name">@SergeantSwag</span>
+          </p>
+          <div class="feed-card__cover">
+            <img
+              src="assets/img/starwars.jpg"
+              alt="Cover of Star Wars: Heir to the Empire"
+            />
+            <span class="badge">Book</span>
+          </div>
+          <h3 class="feed-card__title">Star Wars: Heir to the Empire</h3>
+          <p class="feed-card__meta">In progress &middot; Oct 18, 2026</p>
+        </article>
+        <article class="feed-card card">
+          <p class="feed-card__user">
+            <img
+              class="feed-card__avatar"
+              src="assets/img/dustyicon1.png"
+              alt=""
+            />
+            <span class="feed-card__name">@SergeantSwag</span>
+          </p>
+          <div class="feed-card__cover">
+            <img
+              src="assets/img/starwars.jpg"
+              alt="Cover of Star Wars: Heir to the Empire"
+            />
+            <span class="badge">Book</span>
+          </div>
+          <h3 class="feed-card__title">Star Wars: Heir to the Empire</h3>
+          <p class="feed-card__meta">In progress &middot; Oct 18, 2026</p>
+        </article>
+        <article class="feed-card card">
+          <p class="feed-card__user">
+            <img
+              class="feed-card__avatar"
+              src="assets/img/dustyicon1.png"
+              alt=""
+            />
+            <span class="feed-card__name">@SergeantSwag</span>
+          </p>
+          <div class="feed-card__cover">
+            <img
+              src="assets/img/starwars.jpg"
+              alt="Cover of Star Wars: Heir to the Empire"
+            />
+            <span class="badge">Book</span>
+          </div>
+          <h3 class="feed-card__title">Star Wars: Heir to the Empire</h3>
+          <p class="feed-card__meta">In progress &middot; Oct 18, 2026</p>
+        </article>
+        <article class="feed-card card">
+          <p class="feed-card__user">
+            <img
+              class="feed-card__avatar"
+              src="assets/img/dustyicon1.png"
+              alt=""
+            />
+            <span class="feed-card__name">@SergeantSwag</span>
+          </p>
+          <div class="feed-card__cover">
+            <img
+              src="assets/img/starwars.jpg"
+              alt="Cover of Star Wars: Heir to the Empire"
+            />
+            <span class="badge">Book</span>
+          </div>
+          <h3 class="feed-card__title">Star Wars: Heir to the Empire</h3>
+          <p class="feed-card__meta">In progress &middot; Oct 18, 2026</p>
+        </article>
+        <article class="feed-card card">
+          <p class="feed-card__user">
+            <img
+              class="feed-card__avatar"
+              src="assets/img/dustyicon1.png"
+              alt=""
+            />
+            <span class="feed-card__name">@SergeantSwag</span>
+          </p>
+          <div class="feed-card__cover">
+            <img
+              src="assets/img/starwars.jpg"
+              alt="Cover of Star Wars: Heir to the Empire"
+            />
+            <span class="badge">Book</span>
+          </div>
+          <h3 class="feed-card__title">Star Wars: Heir to the Empire</h3>
+          <p class="feed-card__meta">In progress &middot; Oct 18, 2026</p>
+        </article>
+        <article class="feed-card card">
+          <p class="feed-card__user">
+            <img
+              class="feed-card__avatar"
+              src="assets/img/dustyicon1.png"
+              alt=""
+            />
+            <span class="feed-card__name">@SergeantSwag</span>
+          </p>
+          <div class="feed-card__cover">
+            <img
+              src="assets/img/starwars.jpg"
+              alt="Cover of Star Wars: Heir to the Empire"
+            />
+            <span class="badge">Book</span>
+          </div>
+          <h3 class="feed-card__title">Star Wars: Heir to the Empire</h3>
+          <p class="feed-card__meta">In progress &middot; Oct 18, 2026</p>
+        </article>
+        <article class="feed-card card">
+          <p class="feed-card__user">
+            <img
+              class="feed-card__avatar"
+              src="assets/img/dustyicon1.png"
+              alt=""
+            />
+            <span class="feed-card__name">@SergeantSwag</span>
+          </p>
+          <div class="feed-card__cover">
+            <img
+              src="assets/img/starwars.jpg"
+              alt="Cover of Star Wars: Heir to the Empire"
+            />
+            <span class="badge">Book</span>
+          </div>
+          <h3 class="feed-card__title">Star Wars: Heir to the Empire</h3>
+          <p class="feed-card__meta">In progress &middot; Oct 18, 2026</p>
+        </article>
+        <article class="feed-card card">
+          <p class="feed-card__user">
+            <img
+              class="feed-card__avatar"
+              src="assets/img/dustyicon1.png"
+              alt=""
+            />
+            <span class="feed-card__name">@SergeantSwag</span>
+          </p>
+          <div class="feed-card__cover">
+            <img
+              src="assets/img/starwars.jpg"
+              alt="Cover of Star Wars: Heir to the Empire"
+            />
+            <span class="badge">Book</span>
+          </div>
+          <h3 class="feed-card__title">Star Wars: Heir to the Empire</h3>
+          <p class="feed-card__meta">In progress &middot; Oct 18, 2026</p>
+        </article>
+        <article class="feed-card card">
+          <p class="feed-card__user">
+            <img
+              class="feed-card__avatar"
+              src="assets/img/dustyicon1.png"
+              alt=""
+            />
+            <span class="feed-card__name">@SergeantSwag</span>
+          </p>
+          <div class="feed-card__cover">
+            <img
+              src="assets/img/starwars.jpg"
+              alt="Cover of Star Wars: Heir to the Empire"
+            />
+            <span class="badge">Book</span>
+          </div>
+          <h3 class="feed-card__title">Star Wars: Heir to the Empire</h3>
+          <p class="feed-card__meta">In progress &middot; Oct 18, 2026</p>
+        </article>
+        <article class="feed-card card">
+          <p class="feed-card__user">
+            <img
+              class="feed-card__avatar"
+              src="assets/img/dustyicon1.png"
+              alt=""
+            />
+            <span class="feed-card__name">@SergeantSwag</span>
+          </p>
+          <div class="feed-card__cover">
+            <img
+              src="assets/img/starwars.jpg"
+              alt="Cover of Star Wars: Heir to the Empire"
+            />
+            <span class="badge">Book</span>
+          </div>
+          <h3 class="feed-card__title">Star Wars: Heir to the Empire</h3>
+          <p class="feed-card__meta">In progress &middot; Oct 18, 2026</p>
+        </article>
       </div>
-    </div>
+    </main>
 
-    <div class="scroll-container">
-      <div class="card">
-        <p class="username">
-          <span>
-            <img
-              src="assets/img/dustyicon1.png"
-              alt="profile image"
-              class="social-avatar"
-            />
-            @SergeantSwag</span
-          >
-        </p>
-        <img
-          src="assets/img/starwars.jpg"
-          alt="placeholder"
-          class="cover-img"
-        />
-        <p class="metadata">
-          <span>Book</span>
-          <span>Star Wars: Heir To The Empire</span>
-          <span>October 18, 2026</span>
-          <span>Currently Reading</span>
-        </p>
+    <footer class="site-footer">
+      <div class="site-footer__inner container">
+        <p><strong>Media Shelf</strong> &copy; 2026</p>
+        <ul class="site-footer__links">
+          <li><a href="about.html">About</a></li>
+        </ul>
       </div>
-      <div class="card">
-        <p class="username">
-          <span>
-            <img
-              src="assets/img/dustyicon1.png"
-              alt="profile image"
-              class="social-avatar"
-            />
-            @SergeantSwag</span
-          >
-        </p>
-        <img
-          src="assets/img/starwars.jpg"
-          alt="placeholder"
-          class="cover-img"
-        />
-        <p class="metadata">
-          <span>Book</span>
-          <span>Star Wars: Heir To The Empire</span>
-          <span>October 18, 2026</span>
-          <span>Currently Reading</span>
-        </p>
-      </div>
-      <div class="card">
-        <p class="username">
-          <span>
-            <img
-              src="assets/img/dustyicon1.png"
-              alt="profile image"
-              class="social-avatar"
-            />
-            @SergeantSwag</span
-          >
-        </p>
-        <img
-          src="assets/img/starwars.jpg"
-          alt="placeholder"
-          class="cover-img"
-        />
-        <p class="metadata">
-          <span>Book</span>
-          <span>Star Wars: Heir To The Empire</span>
-          <span>October 18, 2026</span>
-          <span>Currently Reading</span>
-        </p>
-      </div>
-      <div class="card">
-        <p class="username">
-          <span>
-            <img
-              src="assets/img/dustyicon1.png"
-              alt="profile image"
-              class="social-avatar"
-            />
-            @SergeantSwag</span
-          >
-        </p>
-        <img
-          src="assets/img/starwars.jpg"
-          alt="placeholder"
-          class="cover-img"
-        />
-        <p class="metadata">
-          <span>Book</span>
-          <span>Star Wars: Heir To The Empire</span>
-          <span>October 18, 2026</span>
-          <span>Currently Reading</span>
-        </p>
-      </div>
-      <div class="card">
-        <p class="username">
-          <span>
-            <img
-              src="assets/img/dustyicon1.png"
-              alt="profile image"
-              class="social-avatar"
-            />
-            @SergeantSwag</span
-          >
-        </p>
-        <img
-          src="assets/img/starwars.jpg"
-          alt="placeholder"
-          class="cover-img"
-        />
-        <p class="metadata">
-          <span>Book</span>
-          <span>Star Wars: Heir To The Empire</span>
-          <span>October 18, 2026</span>
-          <span>Currently Reading</span>
-        </p>
-      </div>
-      <div class="card">
-        <p class="username">
-          <span>
-            <img
-              src="assets/img/dustyicon1.png"
-              alt="profile image"
-              class="social-avatar"
-            />
-            @SergeantSwag</span
-          >
-        </p>
-        <img
-          src="assets/img/starwars.jpg"
-          alt="placeholder"
-          class="cover-img"
-        />
-        <p class="metadata">
-          <span>Book</span>
-          <span>Star Wars: Heir To The Empire</span>
-          <span>October 18, 2026</span>
-          <span>Currently Reading</span>
-        </p>
-      </div>
-      <div class="card">
-        <p class="username">
-          <span>
-            <img
-              src="assets/img/dustyicon1.png"
-              alt="profile image"
-              class="social-avatar"
-            />
-            @SergeantSwag</span
-          >
-        </p>
-        <img
-          src="assets/img/starwars.jpg"
-          alt="placeholder"
-          class="cover-img"
-        />
-        <p class="metadata">
-          <span>Book</span>
-          <span>Star Wars: Heir To The Empire</span>
-          <span>October 18, 2026</span>
-          <span>Currently Reading</span>
-        </p>
-      </div>
-      <div class="card">
-        <p class="username">
-          <span>
-            <img
-              src="assets/img/dustyicon1.png"
-              alt="profile image"
-              class="social-avatar"
-            />
-            @SergeantSwag</span
-          >
-        </p>
-        <img
-          src="assets/img/starwars.jpg"
-          alt="placeholder"
-          class="cover-img"
-        />
-        <p class="metadata">
-          <span>Book</span>
-          <span>Star Wars: Heir To The Empire</span>
-          <span>October 18, 2026</span>
-          <span>Currently Reading</span>
-        </p>
-      </div>
-      <div class="card">
-        <p class="username">
-          <span>
-            <img
-              src="assets/img/dustyicon1.png"
-              alt="profile image"
-              class="social-avatar"
-            />
-            @SergeantSwag</span
-          >
-        </p>
-        <img
-          src="assets/img/starwars.jpg"
-          alt="placeholder"
-          class="cover-img"
-        />
-        <p class="metadata">
-          <span>Book</span>
-          <span>Star Wars: Heir To The Empire</span>
-          <span>October 18, 2026</span>
-          <span>Currently Reading</span>
-        </p>
-      </div>
-      <div class="card">
-        <p class="username">
-          <span>
-            <img
-              src="assets/img/dustyicon1.png"
-              alt="profile image"
-              class="social-avatar"
-            />
-            @SergeantSwag</span
-          >
-        </p>
-        <img
-          src="assets/img/starwars.jpg"
-          alt="placeholder"
-          class="cover-img"
-        />
-        <p class="metadata">
-          <span>Book</span>
-          <span>Star Wars: Heir To The Empire</span>
-          <span>October 18, 2026</span>
-          <span>Currently Reading</span>
-        </p>
-      </div>
-    </div>
-
-    <footer class="footer">
-      <p class="footer-copy">
-        &copy; 2026 The Media Shelf Team - All rights reserved.
-      </p>
     </footer>
 
-    <script src="js/frontend/nav.js"></script>
     <script type="module" src="js/auth/signedInPage.js"></script>
   </body>
 </html>

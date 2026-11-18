@@ -12,10 +12,10 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@800&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="css/theme.css" />
     <link rel="stylesheet" href="css/main-page.css" />
     <link rel="stylesheet" href="css/modal.css" />
     <link rel="stylesheet" href="css/cust-and-settings.css" />
-    <link rel="stylesheet" href="css/auth.css" />
 
     <title>MediaShelf | My Shelf Page</title>
   </head>
@@ -30,7 +30,7 @@
 
         <nav class="site-nav" aria-label="Main">
           <a class="site-nav__link" href="#" aria-current="page">My Shelf</a>
-          <a class="site-nav__link" href="socialPage.html" hidden>Social</a>
+          <a class="site-nav__link" href="socialPage.html">Social</a>
         </nav>
 
         <div class="user-menu">
@@ -70,10 +70,7 @@
               Settings
             </button>
             <hr class="user-menu__rule" />
-            <a
-              class="user-menu__item user-menu__item--danger"
-              id="logout-button"
-              href="index.html"
+            <a class="user-menu__item user-menu__item--danger" href="index.html"
               >Log out</a
             >
           </div>
@@ -1133,7 +1130,7 @@
       </div>
     </dialog>
 
-    <script src="js/frontend/mainPage.js"></script>
+    <script src="js/frontend/mainpage.js"></script>
     <script src="js/frontend/logModal.js"></script>
     <script src="js/frontend/custAndSettingsModal.js"></script>
     <script type="module" src="js/auth/signedInPage.js"></script>
