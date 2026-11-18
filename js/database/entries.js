@@ -97,19 +97,29 @@ export async function listEntries(uid, options = {}) {
 }
 
 /**
- * How many logs a user has, optionally in one category.
+ * How many logs a user has, optionally only in one category or only dated
+ * on or after a given day.
  *
  * The rules deny any list without limit() <= 100, and a plain count query
  * has no limit, so this counts at most MAX_QUERY_LIMIT logs. When `capped`
  * is true, show it as "100+".
+ *
+ * Use one filter at a time: category and since together would need another
+ * composite index.
  * @param {string} uid The shelf owner's ID.
- * @param {{category: (string|undefined)}=} options
+ * @param {{category: (string|undefined), since: (string|undefined)}=}
+ *     options
+ *     category  one of CATEGORIES.
+ *     since     'YYYY-MM-DD'; only logs dated this day or later count.
  * @return {Promise<{count: number, capped: boolean}>}
  */
 export async function countEntries(uid, options = {}) {
   const constraints = [];
   if (options.category) {
     constraints.push(where('category', '==', options.category));
+  }
+  if (options.since) {
+    constraints.push(where('date', '>=', options.since));
   }
   constraints.push(limit(MAX_QUERY_LIMIT));
 

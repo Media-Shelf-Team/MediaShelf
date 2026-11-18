@@ -42,16 +42,17 @@
             aria-expanded="false"
             aria-controls="user-menu-panel"
           >
-            <span class="avatar-btn__img" aria-hidden="true"></span>
+            <img class="avatar-btn__img" alt="" />
             <span class="avatar-btn__caret" aria-hidden="true"></span>
           </button>
 
           <div class="user-menu__panel" id="user-menu-panel" hidden>
             <div class="user-menu__header">
-              <span class="user-menu__avatar" aria-hidden="true"></span>
+              <img class="user-menu__avatar" alt="" />
               <div>
-                <p class="user-menu__name">Username</p>
-                <p class="user-menu__handle">@username</p>
+                <!-- Filled in by js/frontend/shelfData.js -->
+                <p class="user-menu__name"></p>
+                <p class="user-menu__handle"></p>
               </div>
             </div>
             <hr class="user-menu__rule" />
@@ -85,38 +86,30 @@
     <main class="page container">
       <!-- PROFILE -->
       <section class="profile" aria-label="Profile">
-        <div class="profile__banner">
-          <span aria-hidden="true">Banner / cover image</span>
-        </div>
+        <!-- Decorative only: there's no banner field in the profile. -->
+        <div class="profile__banner" aria-hidden="true"></div>
 
         <div class="profile__body">
-          <div
-            class="profile__avatar"
-            role="img"
-            aria-label="Profile picture"
-          ></div>
+          <img class="profile__avatar" alt="Profile picture" />
 
+          <!-- Filled in by js/frontend/shelfData.js -->
           <div class="profile__info">
-            <h1 class="profile__name">Username</h1>
-            <p class="profile__handle">@username &middot; Joined 2026</p>
-            <p class="profile__bio">
-              Short bio goes here &mdash; what you're into, what you're
-              watching, reading or playing.
+            <h1 class="profile__name"></h1>
+            <p class="profile__handle">
+              <span class="profile__username"></span>
+              <span class="profile__joined"></span>
             </p>
+            <p class="profile__bio"></p>
           </div>
 
           <div class="profile__side">
             <ul class="stats" aria-label="Shelf stats">
               <li>
-                <span class="stats__num">00</span>
+                <span class="stats__num" id="stat-logged">&ndash;</span>
                 <span class="stats__label">Logged</span>
               </li>
-              <li hidden>
-                <span class="stats__num">00</span>
-                <span class="stats__label">Friends</span>
-              </li>
               <li>
-                <span class="stats__num">00</span>
+                <span class="stats__num" id="stat-this-month">&ndash;</span>
                 <span class="stats__label">This month</span>
               </li>
             </ul>
@@ -564,125 +557,6 @@
           <button type="button" class="btn btn--outline">Load more</button>
         </div>
       </section>
-      <!-- SIDEBAR -->
-      <!-- <aside class="sidebar" aria-label="Friends" hidden>
-        <section class="side-card" aria-labelledby="requests-title">
-          <h2 class="side-card__title" id="requests-title">
-            Friend requests <span class="count-badge">2</span>
-          </h2>
-          <ul class="request-list">
-            <li class="request">
-              <span class="request__avatar" aria-hidden="true"></span>
-              <div class="request__text">
-                <a class="request__name" href="#">Username</a>
-                <p class="request__mutual">00 mutual friends</p>
-              </div>
-              <button
-                type="button"
-                class="icon-btn icon-btn--accept"
-                aria-label="Accept request from Username"
-              >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M4 12.5l5 5L20 6.5" />
-                </svg>
-              </button>
-              <button
-                type="button"
-                class="icon-btn"
-                aria-label="Decline request from Username"
-              >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                </svg>
-              </button>
-            </li>
-            <li class="request">
-              <span class="request__avatar" aria-hidden="true"></span>
-              <div class="request__text">
-                <a class="request__name" href="#">Username</a>
-                <p class="request__mutual">00 mutual friends</p>
-              </div>
-              <button
-                type="button"
-                class="icon-btn icon-btn--accept"
-                aria-label="Accept request from Username"
-              >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M4 12.5l5 5L20 6.5" />
-                </svg>
-              </button>
-              <button
-                type="button"
-                class="icon-btn"
-                aria-label="Decline request from Username"
-              >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                </svg>
-              </button>
-            </li>
-          </ul>
-        </section>
-
-        <section class="side-card" aria-labelledby="friends-title">
-          <h2 class="side-card__title" id="friends-title">
-            Friends <span class="side-card__count">00</span>
-          </h2>
-          <ul class="friend-grid">
-            <li>
-              <a class="friend" href="#"
-                ><span class="friend__avatar" aria-hidden="true"></span
-                ><span>User</span></a
-              >
-            </li>
-            <li>
-              <a class="friend" href="#"
-                ><span class="friend__avatar" aria-hidden="true"></span
-                ><span>User</span></a
-              >
-            </li>
-            <li>
-              <a class="friend" href="#"
-                ><span class="friend__avatar" aria-hidden="true"></span
-                ><span>User</span></a
-              >
-            </li>
-            <li>
-              <a class="friend" href="#"
-                ><span class="friend__avatar" aria-hidden="true"></span
-                ><span>User</span></a
-              >
-            </li>
-            <li>
-              <a class="friend" href="#"
-                ><span class="friend__avatar" aria-hidden="true"></span
-                ><span>User</span></a
-              >
-            </li>
-            <li>
-              <a class="friend" href="#"
-                ><span class="friend__avatar" aria-hidden="true"></span
-                ><span>User</span></a
-              >
-            </li>
-            <li>
-              <a class="friend" href="#"
-                ><span class="friend__avatar" aria-hidden="true"></span
-                ><span>User</span></a
-              >
-            </li>
-            <li>
-              <a class="friend" href="#"
-                ><span class="friend__avatar" aria-hidden="true"></span
-                ><span>User</span></a
-              >
-            </li>
-          </ul>
-          <a class="see-all" href="#">See all friends &rarr;</a>
-        </section>
-      </aside> -->
     </main>
 
     <footer class="site-footer">
@@ -1137,5 +1011,6 @@
     <script src="js/frontend/logModal.js"></script>
     <script src="js/frontend/custAndSettingsModal.js"></script>
     <script type="module" src="js/auth/signedInPage.js"></script>
+    <script type="module" src="js/frontend/shelfData.js"></script>
   </body>
 </html>

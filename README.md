@@ -244,7 +244,7 @@ The test users are Alice (public profile), Carol (private profile), Bob (no prof
 **Adding a signed-in page:**
 
 1. Add `data-auth="pending"` to the `<html>` tag (and link `css/theme.css`, like every page). This hides the page until the user is confirmed.
-2. Load the guard before `</body>`: `<script type="module" src="js/auth/signedInPage.js"></script>`. It sends signed-out visitors to log in, and users with no profile to `finish-signup.html`.
+2. Load the guard before `</body>`: `<script type="module" src="js/auth/signedInPage.js"></script>`. It sends signed-out visitors to log in, and users with no profile to `finish-signup.html`. Page scripts that need the user import `signedInUser` from it (see `js/frontend/shelfData.js`).
 3. For a Log Out button, use `<button class="logout-button" type="button">Log Out</button>`.
 
 **Testing auth locally:** accounts go to the Auth emulator and are deleted when it stops. The emulator doesn't send emails; the password reset link is printed in the `firebase emulators:start` terminal.
@@ -279,7 +279,7 @@ Every page looks like My Shelf (`main-page.html`): the cream background, white r
 │   ├── functions.js          # Wrappers for the callable Cloud Functions
 │   ├── auth/                 # Sign-up, finish sign-up, log-in, log-out, password reset, signed-in page guard
 │   ├── database/             # Firestore reads and writes (profile, media logs)
-│   ├── frontend/             # My Shelf page behavior (avatar menu, Log Media modal, Edit profile/Settings modal)
+│   ├── frontend/             # My Shelf page behavior (profile data, avatar menu, Log Media modal, Edit profile/Settings modal)
 │   └── media/                # Media search, adding, status changes, deletion
 ├── functions/
 │   ├── index.js              # The four Cloud Functions

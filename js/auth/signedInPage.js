@@ -4,6 +4,9 @@
 //    page. This happens if sign-up couldn't clean up after a failed
 //    createUserProfile; without a profile, nothing else on the page works.
 // 3. Shows the page and wires up the Log Out buttons.
+//
+// Page scripts that need the user import `signedInUser` from here. Because
+// this module waits for the checks above, they run only after it's done.
 
 import {logout, requireSignedInUser} from './auth.js';
 import {getUserCard} from '../database/profile.js';
@@ -25,10 +28,18 @@ async function hasProfile(uid) {
   }
 }
 
+/**
+ * The signed-in user once the page is shown, or null if the visitor is
+ * being sent somewhere else.
+ * @type {?Object}
+ */
+export let signedInUser = null;
+
 const user = await requireSignedInUser();
 
 if (user) {
   if (await hasProfile(user.uid)) {
+    signedInUser = user;
     // Remove 'data-auth' to show the page.
     document.documentElement.removeAttribute('data-auth');
   } else {

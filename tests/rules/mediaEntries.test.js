@@ -135,6 +135,13 @@ test('alice can count her logs with a limit of 100', async () => {
   await assertSucceeds(getCountFromServer(query(ref, limit(100))));
 });
 
+// alice counting this month's logs (how My Shelf's "This month" counts)
+test('alice can count her logs since a date with a limit of 100', async () => {
+  const ref = collection(aliceDb(testEnv), 'users/alice/mediaEntries');
+  const q = query(ref, where('date', '>=', '2026-01-01'), limit(100));
+  await assertSucceeds(getCountFromServer(q));
+});
+
 // bob counting alice's movies (public profile), with a limit
 test('bob can count alices movies with a limit of 100', async () => {
   const ref = collection(bobDb(testEnv), 'users/alice/mediaEntries');

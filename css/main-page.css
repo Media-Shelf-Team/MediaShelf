@@ -19,11 +19,13 @@
 }
 
 .avatar-btn__img {
+  display: block;
   width: 44px;
   height: 44px;
   border: 1.5px solid var(--header-text-color);
   border-radius: 50%;
   background: var(--placeholder-color);
+  object-fit: cover;
 }
 
 .avatar-btn__caret {
@@ -64,6 +66,7 @@
   height: 40px;
   border-radius: 50%;
   background: var(--placeholder-color);
+  object-fit: cover;
 }
 
 .user-menu__name {
@@ -152,6 +155,7 @@
   border-radius: 50%;
   background: var(--placeholder-color);
   box-shadow: 0 0 0 6px var(--surface-color);
+  object-fit: cover;
 }
 
 .profile__name {
@@ -173,6 +177,27 @@
   max-width: 620px;
   margin-top: 10px;
   font-size: 1.05rem;
+}
+
+/* "@username · Joined Nov 2026": the dot only shows once the date is in. */
+.profile__joined:not(:empty)::before {
+  content: '· ';
+}
+
+/* Shown in place of an empty bio; opens Edit profile. */
+.profile__bio-prompt {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--primary-color);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.profile__bio-prompt:hover {
+  color: var(--tertiary-color);
+  text-decoration: underline;
 }
 
 .profile__side {
