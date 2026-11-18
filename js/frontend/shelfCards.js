@@ -82,8 +82,15 @@ export function buildCard(entry) {
   cover.append(make('span', 'badge', categoryLabel(entry.category)));
   setCover(cover, entry.coverImageUrl);
 
+  // The title is a button; CSS stretches its click area over the whole
+  // card. shelf.js opens the Edit log dialog when it's clicked.
+  const open = make('button', 'media-item__open', entry.title);
+  open.type = 'button';
+  const title = make('p', 'media-item__title');
+  title.append(open);
+
   const body = make('div', 'media-item__body');
-  body.append(make('p', 'media-item__title', entry.title));
+  body.append(title);
   if (entry.creator) {
     body.append(make('p', 'media-item__creator', entry.creator));
   }

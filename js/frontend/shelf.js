@@ -9,14 +9,20 @@
 //   - sorting by title or rating
 //   - the rating filter
 //
+// Clicking a card opens the Edit log dialog (editModal.js).
+//
 // After a log is added, edited or deleted, any script can refresh the
 // shelf, chip counts and stats without reloading the page:
 //   document.dispatchEvent(new Event(SHELF_CHANGED_EVENT));
+// An edit or delete passes what changed ({updated: entry} or
+// {deleted: entryId}), so only that card changes and the logs loaded with
+// "Load more" stay.
 import {signedInUser} from '../auth/signedInPage.js';
 import {countEntries, listEntries} from '../database/entries.js';
 import {CATEGORY_LABELS, SHELF_CHANGED_EVENT} from '../constants.js';
 import {createStatusLine} from './display.js';
 import {buildEmptyState, buildSection, monthTitle} from './shelfCards.js';
+import {openEditModal} from './editModal.js';
 
 const PAGE_SIZE = 24;
 
@@ -204,10 +210,38 @@ function selectChip(chip) {
 }
 
 /**
- * Reloads the logs and chip counts, e.g. after an add, edit or delete.
+ * Puts logs in the same order Firestore returns them: newest date first,
+ * then by ID (newest-first order breaks ties by ID, descending).
+ * @param {Object} a A log.
+ * @param {Object} b Another log.
+ * @return {number}
  */
-function refresh() {
-  loadEntries(true);
+function newestFirst(a, b) {
+  if (a.date !== b.date) return a.date < b.date ? 1 : -1;
+  return a.id < b.id ? 1 : -1;
+}
+
+/**
+ * Updates the shelf after a change, then reloads the chip counts.
+ * @param {Event} event SHELF_CHANGED_EVENT. Its detail may say which log
+ *     was updated or deleted; otherwise (e.g. a new log) everything reloads.
+ */
+function refresh(event) {
+  const detail = (event && event.detail) || {};
+
+  if (detail.updated) {
+    // Swap in the edited log. Its date may have changed, so re-sort.
+    state.entries = state.entries
+      .map((entry) => (entry.id === detail.updated.id ? detail.updated : entry))
+      .sort(newestFirst);
+    render();
+  } else if (detail.deleted) {
+    state.entries = state.entries.filter((e) => e.id !== detail.deleted);
+    render();
+  } else {
+    loadEntries(true);
+  }
+
   loadChipCounts().catch((error) => {
     console.error('Could not load the chip counts', error);
   });
@@ -228,6 +262,15 @@ if (signedInUser) {
   sortSelect.addEventListener('change', render);
   ratingSelect.addEventListener('change', render);
   loadMoreButton.addEventListener('click', () => loadEntries(false));
+
+  // Clicking a card's title button (which covers the card) opens it.
+  monthsEl.addEventListener('click', (e) => {
+    const button = e.target.closest('.media-item__open');
+    if (!button) return;
+    const id = button.closest('.media-item').dataset.entryId;
+    const entry = state.entries.find((e) => e.id === id);
+    if (entry) openEditModal(entry);
+  });
   document.addEventListener(SHELF_CHANGED_EVENT, refresh);
 
   refresh();

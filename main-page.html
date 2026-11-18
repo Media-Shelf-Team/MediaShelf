@@ -487,6 +487,228 @@
       </form>
     </dialog>
 
+    <!-- LOG DETAILS MODAL: opened by clicking a card on the shelf
+         (js/frontend/editModal.js). Uses the Log Media modal's styles.
+         It opens in view mode (fields disabled); Edit turns them on. -->
+    <dialog
+      class="log-modal edit-modal"
+      id="edit-modal"
+      aria-labelledby="edit-modal-title"
+    >
+      <form class="log-modal__form" method="dialog">
+        <header class="log-modal__header">
+          <div class="edit-modal__heading">
+            <h2 class="log-modal__title" id="edit-modal-title"></h2>
+            <p class="edit-modal__subtitle"></p>
+          </div>
+          <button
+            type="button"
+            class="log-modal__close"
+            aria-label="Close"
+            data-edit-close
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <line x1="5" y1="5" x2="19" y2="19" />
+              <line x1="19" y1="5" x2="5" y2="19" />
+            </svg>
+          </button>
+        </header>
+
+        <div class="log-modal__body edit-modal__layout">
+          <!-- Large cover on the left; the colored box shows when there's
+               none. -->
+          <span class="cover edit-modal__cover" aria-hidden="true"></span>
+
+          <!-- Disabled in view mode, so the values show but can't change. -->
+          <fieldset class="edit-modal__fields" disabled>
+            <div class="log-row">
+              <!-- Values match LOG_STATUS in js/constants.js. -->
+              <fieldset class="log-field">
+                <legend class="log-label">Status</legend>
+                <div class="log-segmented">
+                  <label>
+                    <input
+                      type="radio"
+                      name="status"
+                      value="completed"
+                      checked
+                    />
+                    <span>Completed</span>
+                  </label>
+                  <label>
+                    <input type="radio" name="status" value="in_progress" />
+                    <span>In progress</span>
+                  </label>
+                  <label>
+                    <input type="radio" name="status" value="planned" />
+                    <span>Planned</span>
+                  </label>
+                </div>
+              </fieldset>
+
+              <!-- The day it was watched/read/played. editModal.js stops future days (max). -->
+              <div class="log-field">
+                <label class="log-label" for="edit-date">Date</label>
+                <input
+                  class="log-input"
+                  id="edit-date"
+                  name="date"
+                  type="date"
+                  required
+                />
+              </div>
+            </div>
+
+            <!-- Optional: no star picked means "not rated" (rating: null). -->
+            <div class="log-row log-row--end">
+              <fieldset class="log-field">
+                <legend class="log-label">Rating</legend>
+                <div class="log-stars">
+                  <input
+                    type="radio"
+                    name="rating"
+                    id="edit-star-1"
+                    value="1"
+                  />
+                  <label for="edit-star-1"
+                    ><span aria-hidden="true">&#9733;</span
+                    ><span class="log-sr">1 star</span></label
+                  >
+                  <input
+                    type="radio"
+                    name="rating"
+                    id="edit-star-2"
+                    value="2"
+                  />
+                  <label for="edit-star-2"
+                    ><span aria-hidden="true">&#9733;</span
+                    ><span class="log-sr">2 stars</span></label
+                  >
+                  <input
+                    type="radio"
+                    name="rating"
+                    id="edit-star-3"
+                    value="3"
+                  />
+                  <label for="edit-star-3"
+                    ><span aria-hidden="true">&#9733;</span
+                    ><span class="log-sr">3 stars</span></label
+                  >
+                  <input
+                    type="radio"
+                    name="rating"
+                    id="edit-star-4"
+                    value="4"
+                  />
+                  <label for="edit-star-4"
+                    ><span aria-hidden="true">&#9733;</span
+                    ><span class="log-sr">4 stars</span></label
+                  >
+                  <input
+                    type="radio"
+                    name="rating"
+                    id="edit-star-5"
+                    value="5"
+                  />
+                  <label for="edit-star-5"
+                    ><span aria-hidden="true">&#9733;</span
+                    ><span class="log-sr">5 stars</span></label
+                  >
+                </div>
+              </fieldset>
+            </div>
+
+            <div class="log-field">
+              <label class="log-label" for="edit-notes">Notes (optional)</label>
+              <textarea
+                class="log-input log-input--area"
+                id="edit-notes"
+                name="notes"
+                rows="3"
+                maxlength="500"
+                placeholder="What did you think?"
+              ></textarea>
+            </div>
+          </fieldset>
+        </div>
+
+        <p
+          id="edit-status"
+          class="status-line log-modal__save-status"
+          role="status"
+          hidden
+        ></p>
+
+        <footer class="log-modal__footer">
+          <!-- View mode -->
+          <div class="edit-modal__actions" data-edit-step="view">
+            <button
+              type="button"
+              class="log-modal__btn log-modal__btn--danger"
+              data-edit-delete
+            >
+              Delete
+            </button>
+            <div class="log-modal__actions">
+              <button
+                type="button"
+                class="log-modal__btn log-modal__btn--cancel"
+                data-edit-close
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                class="log-modal__btn log-modal__btn--save"
+                data-edit-start
+              >
+                Edit
+              </button>
+            </div>
+          </div>
+
+          <!-- Edit mode -->
+          <div class="edit-modal__actions" data-edit-step="edit" hidden>
+            <div class="log-modal__actions">
+              <button
+                type="button"
+                class="log-modal__btn log-modal__btn--cancel"
+                data-edit-cancel
+              >
+                Cancel
+              </button>
+              <button type="submit" class="log-modal__btn log-modal__btn--save">
+                Save changes
+              </button>
+            </div>
+          </div>
+
+          <!-- Shown after Delete is clicked -->
+          <div class="edit-modal__actions" data-edit-step="confirm" hidden>
+            <p class="edit-modal__confirm-text">
+              Delete this log? This can't be undone.
+            </p>
+            <div class="log-modal__actions">
+              <button
+                type="button"
+                class="log-modal__btn log-modal__btn--cancel"
+                data-edit-keep
+              >
+                Keep it
+              </button>
+              <button
+                type="button"
+                class="log-modal__btn log-modal__btn--danger-solid"
+                data-edit-confirm-delete
+              >
+                Yes, delete
+              </button>
+            </div>
+          </div>
+        </footer>
+      </form>
+    </dialog>
+
     <!-- SETTINGS MODAL (Edit profile / Settings) -->
     <dialog
       class="settings-modal"
@@ -685,6 +907,7 @@
     <script src="js/frontend/custAndSettingsModal.js"></script>
     <script type="module" src="js/auth/signedInPage.js"></script>
     <script type="module" src="js/frontend/shelfData.js"></script>
+    <!-- shelf.js also loads editModal.js -->
     <script type="module" src="js/frontend/shelf.js"></script>
   </body>
 </html>

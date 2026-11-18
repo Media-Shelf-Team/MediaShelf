@@ -512,6 +512,105 @@ li:nth-child(3) > .log-result .log-result__thumb {
   background: var(--lm-accent-dark);
 }
 
+/* Edit log: Delete (outline) and Yes, delete (solid). */
+.log-modal__btn--danger {
+  border-color: var(--lm-accent);
+  background: transparent;
+  color: var(--lm-accent);
+}
+
+.log-modal__btn--danger:hover,
+.log-modal__btn--danger-solid {
+  background: var(--lm-accent);
+  color: #fff;
+}
+
+.log-modal__btn--danger-solid:hover {
+  background: var(--lm-accent-dark);
+}
+
+.log-modal__btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* ---------- Log details modal (view / edit / confirm) ---------- */
+/* A bit wider than Log Media, to fit the cover beside the fields. */
+.edit-modal {
+  width: min(880px, calc(100vw - 2rem));
+}
+
+/* Cover on the left, fields on the right. */
+.edit-modal__layout {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.edit-modal__cover {
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(21, 40, 47, 0.18);
+  --cover: #3f4d8c;
+}
+
+/* The fields column is narrower here, so status and date stack. */
+.edit-modal .log-row {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.edit-modal__heading {
+  flex: 1;
+  min-width: 0;
+}
+
+.edit-modal__fields {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* View mode: the fieldset is disabled. Show the values plainly, not as
+   greyed-out controls, and don't light up stars or options on hover. */
+.edit-modal__fields:disabled .log-segmented,
+.edit-modal__fields:disabled .log-stars,
+.edit-modal__fields:disabled input[type='date'] {
+  pointer-events: none;
+}
+
+.edit-modal__fields:disabled .log-input {
+  opacity: 1;
+  color: var(--lm-ink);
+  -webkit-text-fill-color: var(--lm-ink);
+}
+
+/* "No notes." stays muted so it doesn't look like real notes. */
+.edit-modal__fields:disabled .log-input::placeholder {
+  color: var(--lm-muted);
+  -webkit-text-fill-color: var(--lm-muted);
+}
+
+.edit-modal__subtitle {
+  margin: 8px 0 0;
+  color: var(--lm-muted);
+  font-size: 0.95rem;
+}
+
+/* One row of footer buttons: Delete on the left, the rest on the right. */
+.edit-modal__actions {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.edit-modal__confirm-text {
+  margin: 0;
+  font-weight: 700;
+}
+
 /* ---------- Mobile: full-screen sheet ---------- */
 @media (max-width: 640px) {
   .log-modal {
@@ -545,6 +644,15 @@ li:nth-child(3) > .log-result .log-result__thumb {
 
   .log-modal__save-status {
     padding: 8px 18px;
+  }
+
+  .edit-modal__layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  .edit-modal__cover {
+    width: 140px;
   }
 
   .log-modal__footer {

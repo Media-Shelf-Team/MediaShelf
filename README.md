@@ -21,6 +21,7 @@ Media Shelf is a web app for logging movies, TV shows, books, video games, and m
 
 - [ ] Avatars are `avatar1`–`avatar4` everywhere (rules, functions, `js/constants.js`, sign-up, Edit profile), with pictures in `assets/avatar/avatar1.png`–`avatar4.png`. `avatar1`, `avatar2` and `avatar4` are plain grey placeholders until the real pictures are added, and the Edit profile modal still shows blank circles instead of the pictures.
 - [x] My Shelf shows the profile and the shelf from Firestore, and the Log Media modal searches (`searchMedia`) and saves (`addMediaEntry`).
+- [x] Clicking a card on the shelf opens the log's details, where it can be edited (status, rating, date, notes) or deleted.
 - [ ] The Delete account section in the Settings modal is UI only: the button doesn't do anything yet.
 - [ ] "Can't find it? Add manually" in the Log Media modal is hidden for the MVP: `addMediaEntry` only accepts titles from a search, so it needs a new Cloud Function, rules and tests.
 - [ ] The Social and Contact pages were removed for the MVP. The Social link in the `main-page.html` nav is kept but `hidden`. Log Out is in the avatar menu on My Shelf.
