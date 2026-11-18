@@ -25,7 +25,7 @@ Media Shelf is a web app for logging movies, TV shows, books, video games, and m
 - [ ] The Delete account section in the Settings modal is UI only: the button doesn't do anything yet.
 - [ ] "Can't find it? Add manually" in the Log Media modal is hidden for the MVP.
 - [ ] The Social link in the `main-page.html` nav is commented out; Log Out sits in its place.
-- [ ] Placeholders: `js/database/` and `firestore.indexes.json` are empty; `assets/avatars/` and `assets/credits/` don't exist yet.
+- [ ] Placeholders: `js/database/` and `firestore.indexes.json` are empty; `assets/credits/` doesn't exist yet. Avatar pictures are `assets/avatar/avatar1.png`–`avatar4.png`, named after their avatar IDs; `avatar1`, `avatar2` and `avatar4` are plain grey placeholders until the real pictures are added.
 
 ### Next up
 
