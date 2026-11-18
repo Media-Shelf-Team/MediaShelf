@@ -244,7 +244,7 @@ The test users are Alice (public profile), Carol (private profile), Bob (no prof
 **Adding a signed-in page:**
 
 1. Add `data-auth="pending"` to the `<html>` tag (and link `css/theme.css`, like every page). This hides the page until the user is confirmed.
-2. Load the guard before `</body>`: `<script type="module" src="js/auth/signedInPage.js"></script>`
+2. Load the guard before `</body>`: `<script type="module" src="js/auth/signedInPage.js"></script>`. It sends signed-out visitors to log in, and users with no profile to `finish-signup.html`.
 3. For a Log Out button, use `<button class="logout-button" type="button">Log Out</button>`.
 
 **Testing auth locally:** accounts go to the Auth emulator and are deleted when it stops. The emulator doesn't send emails; the password reset link is printed in the `firebase emulators:start` terminal.
@@ -276,8 +276,9 @@ Every page looks like My Shelf (`main-page.html`): the cream background, white r
 ├── js/
 │   ├── firebase-config.js    # The one shared Firebase and App Check setup
 │   ├── constants.js          # Shared constants (limits, categories, statuses, avatar IDs)
-│   ├── auth/                 # Sign-up, log-in, log-out, password reset, signed-in page guard
-│   ├── database/             # Firestore reads and writes (not built yet)
+│   ├── functions.js          # Wrappers for the callable Cloud Functions
+│   ├── auth/                 # Sign-up, finish sign-up, log-in, log-out, password reset, signed-in page guard
+│   ├── database/             # Firestore reads and writes (profile, media logs)
 │   ├── frontend/             # My Shelf page behavior (avatar menu, Log Media modal, Edit profile/Settings modal)
 │   └── media/                # Media search, adding, status changes, deletion
 ├── functions/
@@ -297,7 +298,7 @@ Every page looks like My Shelf (`main-page.html`): the cream background, white r
 
 - Each page loads one entry script as a module (for example, `js/auth/login.js`). That script imports `auth`, `db`, or `functions` from `firebase-config.js`.
 - Never load `firebase-config.js` with its own `<script>` tag, and never call `initializeApp` anywhere else.
-- Pages without Firebase (such as `index.html`) don't load it, so they don't use up reCAPTCHA quota.
+- Pages without Firebase (such as `index.html`) don't load it, so they don't use up reCAPTCHA quota. This means the landing page shows Log in / Sign up even to signed-in visitors; that's on purpose, since the log-in and sign-up pages send them straight to My Shelf.
 - All Firebase import URLs use the same SDK version (currently `13.0.0`). Always import `firebase-config.js` with the same path and no query string, or Firebase fails with a "duplicate app" error.
 
 ## How we work

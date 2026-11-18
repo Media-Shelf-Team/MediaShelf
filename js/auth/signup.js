@@ -17,15 +17,12 @@ import {
   showError,
 } from './auth.js';
 import {createUserProfile, getFunctionErrorReason} from '../functions.js';
+import {checkAvatarId, checkUsername} from '../media/validate.js';
 
 import {
   MIN_PASSWORD_LENGTH,
   MAX_PASSWORD_LENGTH,
   MAX_EMAIL_LENGTH,
-  MIN_USERNAME_LENGTH,
-  MAX_USERNAME_LENGTH,
-  USERNAME_PATTERN,
-  AVATAR_IDS,
   HOME_PAGE,
 } from '../constants.js';
 
@@ -53,11 +50,9 @@ function setBusy(busy) {
  * @return {?string}
  */
 function checkForm({username, avatarId, email, password, confirmPassword}) {
-  if (!USERNAME_PATTERN.test(username)) {
-    return `Username must be ${MIN_USERNAME_LENGTH}–${MAX_USERNAME_LENGTH} characters: letters, numbers, and underscores.`;
-  }
-  if (!AVATAR_IDS.includes(avatarId)) {
-    return 'Please choose an avatar.';
+  const profileError = checkUsername(username) || checkAvatarId(avatarId);
+  if (profileError) {
+    return profileError;
   }
   if (email.trim().length > MAX_EMAIL_LENGTH) {
     return `Email must be ${MAX_EMAIL_LENGTH} characters or fewer.`;

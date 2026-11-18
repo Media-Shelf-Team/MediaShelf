@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en" data-auth="pending">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="The Media Shelf Team" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@800&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/auth.css" />
+    <title>MediaShelf | Finish Signing Up</title>
+  </head>
+
+  <body>
+    <header class="site-header">
+      <div class="site-header__inner container">
+        <a class="logo" href="index.html">Media Shelf</a>
+        <div class="site-header__actions">
+          <button class="btn btn--outline logout-button" type="button">
+            Log out
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="auth-page container">
+      <div class="auth-card card">
+        <div class="auth-card__form">
+          <h1 class="display-title">Finish setting up</h1>
+          <p class="auth-card__subtitle">
+            Your account was created, but your profile wasn't. Pick an avatar
+            and a username to finish, or log out.
+          </p>
+
+          <form id="finish-signup-form" class="auth-form" method="post">
+            <p
+              class="form-error"
+              id="finish-signup-error"
+              role="alert"
+              hidden
+            ></p>
+
+            <fieldset class="avatar-picker">
+              <legend class="field-label">Pick an avatar</legend>
+              <!-- Same picker as signup.html. Values match AVATAR_IDS in
+                   js/constants.js. -->
+              <div class="avatar-options">
+                <label class="avatar-option">
+                  <input type="radio" name="avatar" value="avatar1" checked />
+                  <img src="assets/avatar/avatar1.png" alt="Avatar 1" />
+                </label>
+                <label class="avatar-option">
+                  <input type="radio" name="avatar" value="avatar2" />
+                  <img src="assets/avatar/avatar2.png" alt="Avatar 2" />
+                </label>
+                <label class="avatar-option">
+                  <input type="radio" name="avatar" value="avatar3" />
+                  <img src="assets/avatar/avatar3.png" alt="Avatar 3" />
+                </label>
+                <label class="avatar-option">
+                  <input type="radio" name="avatar" value="avatar4" />
+                  <img src="assets/avatar/avatar4.png" alt="Avatar 4" />
+                </label>
+              </div>
+            </fieldset>
+
+            <div class="auth-field">
+              <label class="field-label" for="finish-username">Username</label>
+              <input
+                id="finish-username"
+                class="field-input"
+                type="text"
+                name="username"
+                placeholder="Enter a username"
+                autocomplete="off"
+                spellcheck="false"
+                minlength="3"
+                maxlength="30"
+                pattern="[a-zA-Z0-9_]+"
+                title="3-30 characters: letters, numbers, and underscores (saved in lowercase)"
+                aria-describedby="finish-username-hint"
+                required
+              />
+              <p class="field-hint" id="finish-username-hint">
+                3–30 characters: letters, numbers, and underscores. Saved in
+                lowercase.
+              </p>
+            </div>
+
+            <button class="btn btn--primary auth-form__submit" type="submit">
+              Create My Shelf
+            </button>
+          </form>
+        </div>
+
+        <div class="auth-card__art">
+          <img
+            class="auth-card__art-img"
+            src="assets/img/mediashelfbgidea1.png"
+            alt=""
+          />
+          <div class="auth-card__art-note">
+            <h2 class="auth-card__art-title">
+              Your whole shelf, in one place.
+            </h2>
+            <p>Log the films, books, games, music and shows you love.</p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer__inner container">
+        <p><strong>Media Shelf</strong> &copy; 2026</p>
+        <ul class="site-footer__links">
+          <li><a href="about.html">About</a></li>
+        </ul>
+      </div>
+    </footer>
+
+    <script type="module" src="js/auth/finishSignup.js"></script>
+  </body>
+</html>

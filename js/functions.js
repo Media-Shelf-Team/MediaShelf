@@ -82,7 +82,7 @@ export function getFunctionErrorReason(error) {
 const MEDIA_ERROR_BY_REASON = {
   'already-in-collection': 'This is already on your shelf.',
   'search-again': 'That result has expired. Please search again.',
-  'no-profile': 'Your profile is missing. Please sign out and back in.',
+  'no-profile': 'Please finish setting up your profile first.',
 };
 const MEDIA_ERROR_BY_CODE = {
   'functions/resource-exhausted': 'Too many requests. Try again shortly.',

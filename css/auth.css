@@ -140,6 +140,17 @@ textarea.field-input {
   font-weight: 600;
 }
 
+/* Same box as .form-error, in calm colors, for "it worked" messages. */
+.form-success {
+  padding: 10px 14px;
+  border: 1px solid #5b8f88;
+  border-radius: var(--radius-control);
+  background: #e9f3f1;
+  color: #2e5f58;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
 /* ---------- Avatar picker (sign up) ---------- */
 .avatar-picker {
   margin: 0;

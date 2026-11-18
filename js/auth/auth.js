@@ -155,13 +155,23 @@ export async function redirectIfSignedIn() {
 }
 
 /**
- * Shows error messages to the user inside the form's error container.
- * @param {HTMLElement} element - The error container element.
- * @param {string} message - The error message to display.
+ * Shows a message in a form's message box (error or success), or hides the
+ * box when the message is ''.
+ * @param {HTMLElement} element - The message box.
+ * @param {string} message - The message to show, or '' to hide the box.
  */
-export function showError(element, message) {
+export function showMessage(element, message) {
   if (element) {
     element.textContent = message;
     element.hidden = !message;
   }
+}
+
+/**
+ * Shows an error message inside the form's error box ('' hides it).
+ * @param {HTMLElement} element - The error box.
+ * @param {string} message - The error message to display.
+ */
+export function showError(element, message) {
+  showMessage(element, message);
 }

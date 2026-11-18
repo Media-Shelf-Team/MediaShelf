@@ -16,6 +16,9 @@ import {
   MAX_RATING,
   MIN_DISPLAY_NAME_LENGTH,
   MIN_RATING,
+  MIN_USERNAME_LENGTH,
+  MAX_USERNAME_LENGTH,
+  USERNAME_PATTERN,
 } from '../constants.js';
 
 const STATUS_VALUES = Object.values(LOG_STATUS);
@@ -49,6 +52,18 @@ export function todayLocal() {
 // ---------------------------------------------------------------------------
 // Profile
 // ---------------------------------------------------------------------------
+
+/**
+ * Username: 3-30 lowercase letters, numbers and underscores.
+ * @param {*} username The username, already trimmed and lowercased.
+ * @return {?string}
+ */
+export function checkUsername(username) {
+  if (typeof username === 'string' && USERNAME_PATTERN.test(username)) {
+    return null;
+  }
+  return `Username must be ${MIN_USERNAME_LENGTH}–${MAX_USERNAME_LENGTH} characters: letters, numbers, and underscores.`;
+}
 
 /**
  * Display name: 2-30 characters with no spaces at either end.
