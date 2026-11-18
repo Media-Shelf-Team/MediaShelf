@@ -43,7 +43,9 @@
 }
 
 .tags .chip {
-  background: var(--secondary-color);
+  background: var(--primary-color);
+  color: var(--secondary-color);
+  border-style: none;
 }
 
 /* ---------- Sections ---------- */
@@ -99,10 +101,11 @@
   height: 64px;
   margin: 0 auto 14px;
   border-radius: 50%;
-  background: var(--secondary-color);
+  background: var(--tertiary-color);
   font-family: var(--font-display);
   font-size: 1.2rem;
   font-weight: 800;
+  color: var(--secondary-color);
 }
 
 .team-card h3,
