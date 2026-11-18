@@ -83,6 +83,54 @@
     if (e.target.closest('[data-log-close]')) modal.close();
   });
 
+  // ---- Rating: click the picked star again (or press Space) to clear it ----
+  // Radio buttons can't normally be unchecked, but "not rated" (rating:
+  // null) must stay possible. We remember the picked star; clicking it again
+  // unchecks it.
+  let pickedRating = null;
+
+  /**
+   * Unchecks a star so the log has no rating.
+   * @param {HTMLInputElement} star The checked star.
+   */
+  function clearRating(star) {
+    star.checked = false;
+    pickedRating = null;
+  }
+
+  // A radio's click event fires after it's checked but before its change
+  // event, so pickedRating still holds the star picked before this click.
+  form.addEventListener('click', (e) => {
+    const star = e.target.closest('input[name="rating"]');
+    if (!star) return;
+    if (star.value === pickedRating) {
+      clearRating(star);
+    } else {
+      pickedRating = star.value;
+    }
+  });
+
+  // Arrow keys move to another star without a click, so keep track here.
+  form.addEventListener('change', (e) => {
+    if (e.target.name === 'rating') pickedRating = e.target.value;
+  });
+
+  // Space on the picked star clears it. (Browsers don't treat Space on an
+  // already-checked radio as a click.)
+  form.addEventListener('keydown', (e) => {
+    const star = e.target.closest('input[name="rating"]');
+    if (e.key === ' ' && star && star.checked) {
+      e.preventDefault();
+      clearRating(star);
+    }
+  });
+
+  // openModal() calls form.reset(), which clears the stars, so forget the
+  // remembered value too.
+  form.addEventListener('reset', () => {
+    pickedRating = null;
+  });
+
   manualButton.addEventListener('click', () => {
     setManual(!modal.classList.contains('is-manual'));
     titleInput.focus();

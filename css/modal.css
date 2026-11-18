@@ -362,8 +362,6 @@ li:nth-child(3) > .log-result .log-result__thumb {
 .log-stars {
   position: relative;
   display: inline-flex;
-  flex-direction: row-reverse;
-  justify-content: flex-end;
 }
 
 .log-stars input {
@@ -375,16 +373,35 @@ li:nth-child(3) > .log-result .log-result__thumb {
 
 .log-stars label {
   padding: 0 4px;
-  color: var(--lm-empty);
   font-size: 2rem;
   line-height: 1;
   cursor: pointer;
 }
 
-.log-stars input:checked ~ label,
-.log-stars label:hover,
-.log-stars label:hover ~ label {
+/* Picked rating: fill every star up to and including the checked one.
+   :where() keeps these weak so the hover preview below can override them. */
+:where(.log-stars) label {
+  color: var(--lm-empty);
+}
+
+:where(.log-stars:has(input:checked)) label {
   color: var(--lm-accent);
+}
+
+:where(.log-stars input:checked + label) ~ label {
+  color: var(--lm-empty);
+}
+
+/* Hover preview (mouse only, so a tap doesn't leave stars lit on phones):
+   fill every star up to the one under the pointer. */
+@media (hover: hover) {
+  .log-stars:hover label {
+    color: var(--lm-accent);
+  }
+
+  .log-stars label:hover ~ label {
+    color: var(--lm-empty);
+  }
 }
 
 .log-stars input:focus-visible + label {
