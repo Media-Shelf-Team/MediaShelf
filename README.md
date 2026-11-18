@@ -6,26 +6,17 @@ Media Shelf is a web app for logging movies, TV shows, books, video games, and m
 
 ### Done
 
-- [x] Firebase project setup (`.firebaserc`, `firebase.json`) and one shared browser setup in `js/firebase-config.js`, which uses the local emulators on localhost.
-- [x] App Check with reCAPTCHA Enterprise (see [App Check](#app-check)).
-- [x] Pages: `index`, `login`, `signup`, `forgot-password`, `main-page`, and `about`, with styles in `css/`. Every page shares one look from `css/theme.css` (see [Styles](#styles)). Edit profile and Settings are modals on `main-page` (the old `settings-and-customization` page was removed).
-- [x] Email and password sign-up, log-in, log-out, and password reset (see [Authentication](#authentication)).
-- [x] MS-11: sign-up calls `createUserProfile` with the username and picked avatar (see [Authentication](#authentication)).
-- [x] MS-10: Firestore Security Rules (see [Security Rules](#security-rules)).
-- [x] MS-03: Security Rules tests with `npm test` (see [Testing](#testing)).
-- [x] Cloud Functions: `createUserProfile`, `searchMedia`, `addMediaEntry`, and `onUserDeleted` (see [Cloud Functions](#cloud-functions)), with tests run by `npm run test:functions`.
-- [x] CI: Prettier, ESLint, the rules tests, and the Cloud Functions tests on every pull request into `main`.
-- [x] Secret scan on every push and pull request (see [Secret scanning](#secret-scanning)).
+- [x] Firebase setup (`.firebaserc`, `firebase.json`, `js/firebase-config.js`), using the local emulators on localhost, and App Check (see [App Check](#app-check)).
+- [x] Pages: `index`, `login`, `signup`, `finish-signup`, `forgot-password`, `main-page` (My Shelf) and `about`, all sharing `css/theme.css` (see [Styles](#styles)).
+- [x] Accounts: sign-up, log-in, log-out, password reset, change password and delete account (see [Authentication](#authentication)).
+- [x] My Shelf: the profile and stats, the shelf (category chips, search, sort, rating filter, grid or list, Load more), the Log Media modal, the log details modal (view, edit, delete) and the Settings modal (Profile, Privacy, Security). See [My Shelf](#my-shelf).
+- [x] Cloud Functions: `createUserProfile`, `searchMedia`, `addMediaEntry` and `onUserDeleted`, with tests (see [Cloud Functions](#cloud-functions)).
+- [x] Security Rules, the composite index, and the rules tests (see [Security Rules](#security-rules) and [Testing](#testing)).
+- [x] CI (Prettier, ESLint, rules tests, functions tests) on every pull request into `main`, and a secret scan on every push (see [Secret scanning](#secret-scanning)).
 
-### In progress
+### Not done yet
 
-- [ ] Avatars are `avatar1`–`avatar4` everywhere (rules, functions, `js/constants.js`, sign-up, Edit profile), with pictures in `assets/avatar/avatar1.png`–`avatar4.png`. `avatar1`, `avatar2` and `avatar4` are plain grey placeholders until the real pictures are added, and the Edit profile modal still shows blank circles instead of the pictures.
-- [x] My Shelf shows the profile and the shelf from Firestore, and the Log Media modal searches (`searchMedia`) and saves (`addMediaEntry`).
-- [x] Clicking a card on the shelf opens the log's details, where it can be edited (status, rating, date, notes) or deleted.
-- [x] The Settings modal saves the avatar, display name, bio and privacy, changes the password, and deletes the account (Profile, Privacy and Security tabs).
-- [ ] "Can't find it? Add manually" in the Log Media modal is hidden for the MVP: `addMediaEntry` only accepts titles from a search, so it needs a new Cloud Function, rules and tests.
-- [ ] The Social and Contact pages were removed for the MVP. The Social link in the `main-page.html` nav is kept but `hidden`. Log Out is in the avatar menu on My Shelf.
-- [ ] Placeholders: `assets/credits/` doesn't exist yet.
+- [ ] Avatar pictures: `avatar1`, `avatar2` and `avatar4` are plain grey placeholders; only `avatar3` has a real picture in `assets/avatar/`.
 
 ### Next up
 
@@ -73,7 +64,9 @@ On `localhost` or `127.0.0.1`, the app uses the local emulators, so nothing reac
 | Firestore      | 8080 |
 | Emulator UI    | 4000 |
 
-In the Emulator UI, use **Authentication** for test users, **Firestore** for data, **Firestore > Requests** to see which rule allowed or denied a request, and **Logs** for function output. Profiles and media entries are created only by Cloud Functions. Until the pages call them, add test documents by hand in the Emulator UI. For `searchMedia` to reach the real APIs locally, add the API keys to `functions/.secret.local` (see [Cloud Functions](#cloud-functions)).
+To try it, sign up in the app (this creates the profile), then log media from My Shelf. For search to reach the real APIs locally, add the API keys to `functions/.secret.local` (see [Cloud Functions](#cloud-functions)).
+
+In the Emulator UI, use **Authentication** for test users, **Firestore** for data, **Firestore > Requests** to see which rule allowed or denied a request, and **Logs** for function output.
 
 ## App Check
 
@@ -143,9 +136,9 @@ The browser can't be trusted with API keys or with creating profiles and media e
 | Function            | Called by                       | What it does                                                                                                                        |
 | ------------------- | ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
 | `createUserProfile` | Sign-up, after the Auth account | Reserves the username and creates the profile documents.                                                                            |
-| `searchMedia`       | Search                          | Searches one category. Each result has a title, creator, year and cover. Uses the 30-day cache, else calls the API (45 per minute). |
-| `addMediaEntry`     | "Add" on a search result        | Adds a title using the cached title and cover. Rejects duplicates.                                                                  |
-| `onUserDeleted`     | Firebase, automatically         | Deletes the user's data and frees their username when the account is deleted.                                                       |
+| `searchMedia`       | Log Media, while typing         | Searches one category. Each result has a title, creator, year and cover. Uses the 30-day cache, else calls the API (45 per minute). |
+| `addMediaEntry`     | Log Media, "Save to shelf"      | Adds a title using the cached title and cover. Rejects duplicates.                                                                  |
+| `onUserDeleted`     | Firebase, after Delete account  | Deletes the user's data and frees their username when the account is deleted.                                                       |
 
 **API keys** are Firebase secrets, never in the code:
 
@@ -199,11 +192,7 @@ Deploy with `firebase deploy --only functions`.
 | `notes`         | User (editable) | 0–500 characters; `''` when empty                                              |
 | `createdAt`     | Server          | Server time when the log was added; never changes                              |
 
-**Always query media entries with `limit()` of 100 or less** (paginate with `startAfter()`), or the query fails with `Missing or insufficient permissions`:
-
-```js
-query(collection(db, 'users', uid, 'mediaEntries'), limit(50));
-```
+**Always query media entries with `limit()` of 100 or less**, or the query fails with `Missing or insufficient permissions`. This includes count queries. Use the functions in `js/database/entries.js`, which already do this: `listEntries` pages with `startAfter()`, and `countEntries` counts up to 100 (shown as "100+").
 
 **Keep these values in sync.** Change every copy (and the tests) in the same pull request:
 
@@ -212,6 +201,18 @@ query(collection(db, 'users', uid, 'mediaEntries'), limit(50));
 - In `js/constants.js` and `functions/lib/validate.js`: the username pattern and categories.
 
 Deploy rule changes with `firebase deploy --only firestore:rules`.
+
+### Indexes
+
+A query that filters on one field and sorts by another needs a composite index in `firestore.indexes.json`. There is one:
+
+| Collection     | Fields                                  | Used by                                                        |
+| -------------- | --------------------------------------- | -------------------------------------------------------------- |
+| `mediaEntries` | `category` ascending, `date` descending | The category chips on My Shelf (`listEntries` with a category) |
+
+Single-field queries (sort by date, count by category, count since a date) use Firestore's automatic indexes. The emulator doesn't check indexes, so a missing one only shows up on the live project: the query fails with a link that creates the index. Copy what it creates into `firestore.indexes.json` so it isn't lost.
+
+Deploy index changes with `firebase deploy --only firestore:indexes`. A new index takes a few minutes to build; queries that need it fail until it's ready.
 
 ## Testing
 
@@ -223,12 +224,12 @@ npm test
 
 It starts a Firestore emulator under the fake project `demo-mediashelf` (so it can never touch the real project), runs every `tests/rules/*.test.js` file, then stops. Stop any running `firebase emulators:start` first, because both use port 8080.
 
-| File                   | Tests                                                            |
-| ---------------------- | ---------------------------------------------------------------- |
-| `users.test.js`        | `users/{uid}`, `profile/details`, `private/account`              |
-| `mediaEntries.test.js` | `users/{uid}/mediaEntries`                                       |
-| `serverOnly.test.js`   | Server-only collections and paths with no rule                   |
-| `helpers.js`           | Loads the rules, seeds test data, and connects as each test user |
+| File                   | Tests                                                                             |
+| ---------------------- | --------------------------------------------------------------------------------- |
+| `users.test.js`        | `users/{uid}`, `profile/details`, `private/account`                               |
+| `mediaEntries.test.js` | `users/{uid}/mediaEntries`, including the exact queries and counts My Shelf sends |
+| `serverOnly.test.js`   | Server-only collections and paths with no rule                                    |
+| `helpers.js`           | Loads the rules, seeds test data, and connects as each test user                  |
 
 The test users are Alice (public profile), Carol (private profile), Bob (no profile), and a signed-out user.
 
@@ -239,6 +240,8 @@ The test users are Alice (public profile), Carol (private profile), Bob (no prof
 ## Authentication
 
 - **Sign-up:** usernames are 3–30 letters, numbers, or underscores (saved in lowercase); passwords are at least 8 characters and must match. After the Auth account is created, `signup.js` calls `createUserProfile` with the username and picked avatar. If that fails (for example, the username is taken), the new Auth account is deleted so the user can fix the form and reuse the same email.
+- **Finish sign-up:** if sign-up couldn't clean up after a failed `createUserProfile`, the user has an account but no profile. My Shelf sends them to `finish-signup.html` to pick a username and avatar, or log out.
+- **Change password and delete account** (Settings > Security) ask for the current password first (Firebase requires a recent sign-in). Deleting the account triggers `onUserDeleted`, which removes everything else.
 - **Login errors don't reveal accounts.** Wrong passwords and unknown emails show the same message, and so does the reset page.
 - **Redirects use `location.replace()`,** so Back doesn't return to a page you just left.
 
@@ -278,10 +281,10 @@ Every page looks like My Shelf (`main-page.html`): the cream background, white r
 │   ├── firebase-config.js    # The one shared Firebase and App Check setup
 │   ├── constants.js          # Shared constants (limits, categories, statuses, avatar IDs)
 │   ├── functions.js          # Wrappers for the callable Cloud Functions
-│   ├── auth/                 # Sign-up, finish sign-up, log-in, log-out, password reset, signed-in page guard
+│   ├── auth/                 # Account pages and the signed-in page guard
 │   ├── database/             # Firestore reads and writes (profile, media logs)
-│   ├── frontend/             # My Shelf page behavior (profile data, avatar menu, Log Media modal, Edit profile/Settings modal)
-│   └── media/                # Log Media search and save, client-side validation
+│   ├── frontend/             # My Shelf (see "My Shelf" below)
+│   └── media/                # Log Media search and save, and the checks that mirror the rules
 ├── functions/
 │   ├── index.js              # The four Cloud Functions
 │   ├── adapters/             # One module per external API (TMDB, IGDB, Open Library, MusicBrainz)
@@ -289,11 +292,32 @@ Every page looks like My Shelf (`main-page.html`): the cream background, white r
 │   └── test/                 # Cloud Functions tests
 ├── tests/rules/              # Security Rules tests
 ├── firestore.rules           # Security Rules
+├── firestore.indexes.json    # Composite indexes
 ├── .github/workflows/        # CI and the secret scan
 ├── .gitleaks.toml            # Secret scan config
 ├── .gitleaksignore           # Confirmed secret-scan false positives
 └── .agents/skills/           # Firebase skills for AI coding assistants
 ```
+
+## My Shelf
+
+`main-page.html` loads these scripts. Each one imports `signedInUser` from the page guard, so it only runs once the user and profile are confirmed.
+
+| File                                  | What it does                                                                              |
+| ------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `js/auth/signedInPage.js`             | The guard: sends signed-out users to log in, and users with no profile to finish sign-up. |
+| `js/frontend/shelfData.js`            | The profile card, header avatar and menu, and the Logged / This month stats.              |
+| `js/frontend/shelf.js`                | The shelf: loading, chips, search, sort, rating filter, grid/list, Load more.             |
+| `js/frontend/shelfCards.js`           | Builds the cards and month sections.                                                      |
+| `js/frontend/logModal.js`             | The Log Media modal (search in `js/media/search.js`, save in `js/media/entries.js`).      |
+| `js/frontend/editModal.js`            | The log details modal: view, edit, delete.                                                |
+| `js/frontend/custAndSettingsModal.js` | The Settings modal: Profile, Privacy, Security.                                           |
+| `js/frontend/mainPage.js`             | The avatar menu.                                                                          |
+
+**Keeping things in sync without reloading:** after a change, scripts fire an event on `document` and the others update themselves.
+
+- `SHELF_CHANGED_EVENT` after a log is added, edited or deleted: the shelf, chip counts and stats update.
+- `PROFILE_CHANGED_EVENT` after Settings saves: the header, menu and profile card update.
 
 **Loading Firebase on a page:**
 
@@ -316,7 +340,7 @@ Every page looks like My Shelf (`main-page.html`): the cream background, white r
    ```
 
 5. Open a PR into `main` with `Closes #<issue number>`. All checks must pass, and a teammate must review it.
-6. If you change the data model, update `firestore.rules`, its tests, and `js/constants.js` in the same PR.
+6. If you change the data model, update `firestore.rules`, its tests, and `js/constants.js` in the same PR. If you add a query that filters on one field and sorts by another, add its index too (see [Indexes](#indexes)).
 7. Delete the branch after it's merged.
 
 ## Naming conventions
@@ -347,6 +371,7 @@ Every page looks like My Shelf (`main-page.html`): the cream background, white r
 | Prettier or ESLint passes locally but fails in CI       | Run `npm ci`, and check `git status` for changes you haven't pushed.                                                                                     |
 | Secret scan fails                                       | See [Secret scanning](#secret-scanning). Revoke a real key first.                                                                                        |
 | `Missing or insufficient permissions`                   | Check **Firestore > Requests** in the Emulator UI. Common causes: a query without `limit()`, editing a field the rules don't allow, or a browser create. |
+| `The query requires an index` (live site only)          | Open the link in the error to create it, then add it to `firestore.indexes.json` (see [Indexes](#indexes)).                                              |
 | Page can't find `firebase-config.js`                    | Check the relative path (`./` or `../`) and that the script tag has `type="module"`.                                                                     |
 | No App Check debug token in the console                 | Use `localhost` or `127.0.0.1`, open a page that loads Firebase, and show all console levels.                                                            |
 | App Check errors (such as 403) on localhost             | Register this browser's debug token (see [App Check](#app-check)).                                                                                       |

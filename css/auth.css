@@ -179,8 +179,7 @@ textarea.field-input {
   opacity: 0;
 }
 
-.avatar-option img,
-.avatar-option__placeholder {
+.avatar-option img {
   display: block;
   width: 64px;
   height: 64px;
@@ -190,13 +189,11 @@ textarea.field-input {
   transition: box-shadow 0.15s ease;
 }
 
-.avatar-option input:checked + img,
-.avatar-option input:checked + .avatar-option__placeholder {
+.avatar-option input:checked + img {
   box-shadow: 0 0 0 4px var(--primary-color);
 }
 
-.avatar-option input:focus-visible + img,
-.avatar-option input:focus-visible + .avatar-option__placeholder {
+.avatar-option input:focus-visible + img {
   outline: 3px solid var(--header-text-color);
   outline-offset: 4px;
 }

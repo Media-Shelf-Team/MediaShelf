@@ -91,7 +91,8 @@ export const MAX_NOTES_LENGTH = 500;
 
 // avatar IDs (update firestore.rules and functions/lib/validate.js when
 // adding IDs here). Do not remove existing IDs, only add new ones.
-// Pictures for each avatar will be added later.
+// Each ID's picture is assets/avatar/{id}.png (see avatarSrc in
+// js/frontend/display.js).
 export const AVATAR_IDS = Object.freeze([
   'avatar1',
   'avatar2',
