@@ -107,7 +107,8 @@ export function setCover(coverEl, url, alt = '') {
  * @param {?HTMLElement} el The status element. If null, every method does
  *     nothing, so a page missing the element doesn't crash.
  * @return {{loading: function(string=), error: function(string),
- *     success: function(string), clear: function()}}
+ *     success: function(string), message: function(string),
+ *     clear: function()}} message() shows plain text, such as "No results".
  */
 export function createStatusLine(el) {
   /**
@@ -131,6 +132,7 @@ export function createStatusLine(el) {
     loading: (message = 'Loading…') => show('loading', message),
     error: (message) => show('error', message),
     success: (message) => show('success', message),
+    message: (message) => show('', message),
     clear: () => show('', ''),
   };
 }

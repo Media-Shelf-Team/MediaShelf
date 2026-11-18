@@ -225,6 +225,11 @@ body:has(.log-modal[open]) {
   list-style: none;
 }
 
+/* No border box until there are results. */
+.log-results:empty {
+  display: none;
+}
+
 .log-modal.is-manual .log-results {
   display: none;
 }
@@ -438,6 +443,13 @@ li:nth-child(3) > .log-result .log-result__thumb {
 }
 
 /* ---------- Footer ---------- */
+/* Save errors, just above the footer buttons. */
+.log-modal__save-status {
+  flex: none;
+  margin: 0;
+  padding: 10px 30px;
+}
+
 .log-modal__footer {
   display: flex;
   flex: none;
@@ -529,6 +541,10 @@ li:nth-child(3) > .log-result .log-result__thumb {
 
   .log-row--end > .log-check {
     margin-top: -6px;
+  }
+
+  .log-modal__save-status {
+    padding: 8px 18px;
   }
 
   .log-modal__footer {

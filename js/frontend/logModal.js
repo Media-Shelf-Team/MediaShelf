@@ -1,149 +1,263 @@
 // js/frontend/logModal.js
-// Opens the Log Media modal. Placeholder only: nothing is saved.
+// The Log Media modal: search for a title, pick a result, and save it to
+// the shelf.
 //
-// Saving is a placeholder too: the form closes itself on a valid submit
-// (method="dialog"). When the backend exists, read new FormData(form) in a
-// 'submit' listener and send addMediaEntry:
-//   type    -> category ('movie', 'show', 'book', 'game', 'music')
-//   status  -> status ('completed', 'in_progress', 'planned')
-//   rating  -> rating (Number 1-5, or null when no star is picked)
-//   date    -> date ('YYYY-MM-DD')
-//   notes   -> notes (up to 500 characters, '' when empty)
+//   Searching   js/media/search.js  (searchMedia Cloud Function)
+//   Saving      js/media/entries.js (addMediaEntry Cloud Function)
 //
-// "Can't find it? Add manually" is hidden for the MVP (see main-page.html);
-// the code for it below is kept for later.
+// "Can't find it? Add manually" is hidden for the MVP (see main-page.html):
+// addMediaEntry only accepts titles from a search, so manual entry needs a
+// new Cloud Function first. The code for it below is kept for later.
+import {SHELF_CHANGED_EVENT} from '../constants.js';
+import {todayLocal} from '../media/validate.js';
+import {createSearch} from '../media/search.js';
+import {
+  checkNewLog,
+  isExpiredResult,
+  readLogForm,
+  saveErrorMessage,
+  saveLog,
+} from '../media/entries.js';
+import {createStatusLine} from './display.js';
 
-(function () {
-  const modal = document.getElementById('log-modal');
-  if (!modal) return;
+const modal = document.getElementById('log-modal');
+const form = modal.querySelector('.log-modal__form');
+const titleInput = modal.querySelector('#log-title');
+const dateInput = modal.querySelector('#log-date');
+const manualButton = modal.querySelector('.log-modal__manual');
+const saveButton = modal.querySelector('.log-modal__btn--save');
+const saveLabel = saveButton.textContent;
+const saveStatus = createStatusLine(document.getElementById('log-save-status'));
 
-  const form = modal.querySelector('.log-modal__form');
-  const titleInput = modal.querySelector('#log-title');
-  const dateInput = modal.querySelector('#log-date');
-  const manualButton = modal.querySelector('.log-modal__manual');
+const search = createSearch({
+  resultsList: modal.querySelector('.log-results'),
+  status: createStatusLine(document.getElementById('log-search-status')),
+});
 
-  /**
-   * Formats a date as YYYY-MM-DD in local time, the format date inputs use.
-   * @param {Date} date The date to format.
-   * @return {string} The formatted date.
-   */
-  function toInputDate(date) {
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${date.getFullYear()}-${month}-${day}`;
+// ---------------------------------------------------------------------------
+// Type and search
+// ---------------------------------------------------------------------------
+
+/**
+ * The checked Type radio (its value is the category, e.g. 'movie').
+ * @return {HTMLInputElement}
+ */
+function checkedType() {
+  return form.querySelector('input[name="type"]:checked');
+}
+
+/** Updates the search box and result labels to match the chosen type. */
+function updateType() {
+  const type = checkedType();
+  const manual = modal.classList.contains('is-manual');
+  titleInput.placeholder = manual
+    ? 'Enter the title...'
+    : `Search ${type.dataset.plural}...`;
+  modal.querySelectorAll('[data-creator-label]').forEach((label) => {
+    label.textContent = type.dataset.creatorRole;
+  });
+}
+
+/**
+ * Searches for what's in the title box, in the chosen type.
+ * @param {boolean} now Search right away instead of waiting for typing to
+ *     stop.
+ * @return {Promise<void>|undefined} Resolves when an immediate search is
+ *     done.
+ */
+function searchTitle(now) {
+  const type = checkedType();
+  const args = [type.value, titleInput.value, type.dataset.creatorRole];
+  return now ? search.runNow(...args) : search.schedule(...args);
+}
+
+/**
+ * Switches between searching for a title and typing one in by hand.
+ * @param {boolean} manual Whether manual entry should be on.
+ */
+function setManual(manual) {
+  modal.classList.toggle('is-manual', manual);
+  manualButton.textContent = manual
+    ? 'Back to search'
+    : "Can't find it? Add manually";
+  form.querySelectorAll('input[name="result"]').forEach((result) => {
+    result.checked = false;
+  });
+  updateType();
+}
+
+// ---------------------------------------------------------------------------
+// Opening and closing
+// ---------------------------------------------------------------------------
+
+/**
+ * Puts the form back to its starting state: no search, no results, today's
+ * date (and no future days).
+ */
+function resetForm() {
+  const today = todayLocal();
+  form.reset();
+  search.clear();
+  saveStatus.clear();
+  setManual(false);
+  dateInput.value = today;
+  dateInput.max = today;
+}
+
+/** Resets the form and opens the modal. */
+function openModal() {
+  resetForm();
+  modal.showModal();
+}
+
+// Any element with data-open-log opens the modal.
+document.addEventListener('click', (e) => {
+  if (e.target.closest('[data-open-log]')) openModal();
+});
+
+// The X and Cancel buttons close it.
+modal.addEventListener('click', (e) => {
+  if (e.target.closest('[data-log-close]')) modal.close();
+});
+
+// ---------------------------------------------------------------------------
+// Saving
+// ---------------------------------------------------------------------------
+
+/**
+ * Turns the Save button off and shows "Saving…" while a save runs.
+ * @param {boolean} saving Whether a save is in progress.
+ */
+function setSaving(saving) {
+  saveButton.disabled = saving;
+  saveButton.textContent = saving ? 'Saving…' : saveLabel;
+}
+
+/**
+ * Searches again after a save failed because the result expired, then
+ * re-picks the same title if it's still in the results.
+ * @param {string} externalId The title that was picked.
+ */
+async function searchAgain(externalId) {
+  await searchTitle(true);
+  const same = [...form.querySelectorAll('input[name="result"]')].find(
+    (radio) => radio.value === externalId,
+  );
+  if (same) same.checked = true;
+}
+
+// The form uses method="dialog", which closes the modal on submit. Stop
+// that, and only close once the log is saved.
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  saveStatus.clear();
+
+  const fields = readLogForm(form);
+  const problem = checkNewLog(fields);
+  if (problem) {
+    saveStatus.error(problem);
+    return;
   }
 
-  /** Updates the search box and result labels to match the chosen type. */
-  function updateType() {
-    const type = form.querySelector('input[name="type"]:checked');
-    const manual = modal.classList.contains('is-manual');
-    titleInput.placeholder = manual
-      ? 'Enter the title...'
-      : `Search ${type.dataset.plural}...`;
-    modal.querySelectorAll('[data-creator-label]').forEach((label) => {
-      label.textContent = type.dataset.creatorRole;
-    });
+  setSaving(true);
+  try {
+    await saveLog(fields);
+  } catch (error) {
+    console.error('addMediaEntry failed', error);
+    saveStatus.error(saveErrorMessage(error));
+    if (isExpiredResult(error)) await searchAgain(fields.externalId);
+    return;
+  } finally {
+    setSaving(false);
   }
 
-  /**
-   * Switches between searching for a title and typing one in by hand.
-   * @param {boolean} manual Whether manual entry should be on.
-   */
-  function setManual(manual) {
-    modal.classList.toggle('is-manual', manual);
-    manualButton.textContent = manual
-      ? 'Back to search'
-      : "Can't find it? Add manually";
-    form.querySelectorAll('input[name="result"]').forEach((result) => {
-      result.checked = false;
-    });
+  modal.close();
+  resetForm();
+  document.dispatchEvent(new Event(SHELF_CHANGED_EVENT));
+});
+
+// ---------------------------------------------------------------------------
+// Form events
+// ---------------------------------------------------------------------------
+
+// Typing searches once the user pauses.
+titleInput.addEventListener('input', () => searchTitle(false));
+
+// Enter in the title box searches instead of submitting (and closing) the
+// form.
+titleInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    searchTitle(true);
+  }
+});
+
+form.addEventListener('change', (e) => {
+  if (e.target.name === 'type') {
     updateType();
+    searchTitle(true); // the old results were for the other type
   }
-
-  /**
-   * Puts the form back to its starting state, then opens the modal. The
-   * date starts as today, and max stops the user picking a future day.
-   */
-  function openModal() {
-    const today = toInputDate(new Date());
-    form.reset();
-    setManual(false);
-    dateInput.value = today;
-    dateInput.max = today;
-    modal.showModal();
+  if (e.target.name === 'result') {
+    // Picking a result copies its title into the title box.
+    const name = e.target
+      .closest('.log-result')
+      .querySelector('.log-result__name');
+    titleInput.value = name.textContent;
+    saveStatus.clear();
   }
+});
 
-  // Any element with data-open-log opens the modal.
-  document.addEventListener('click', (e) => {
-    if (e.target.closest('[data-open-log]')) openModal();
-  });
+manualButton.addEventListener('click', () => {
+  setManual(!modal.classList.contains('is-manual'));
+  titleInput.focus();
+});
 
-  // The X and Cancel buttons close it.
-  modal.addEventListener('click', (e) => {
-    if (e.target.closest('[data-log-close]')) modal.close();
-  });
+// ---------------------------------------------------------------------------
+// Rating: click the picked star again (or press Space) to clear it
+// ---------------------------------------------------------------------------
+// Radio buttons can't normally be unchecked, but "not rated" (rating: null)
+// must stay possible. We remember the picked star; clicking it again
+// unchecks it.
+let pickedRating = null;
 
-  // ---- Rating: click the picked star again (or press Space) to clear it ----
-  // Radio buttons can't normally be unchecked, but "not rated" (rating:
-  // null) must stay possible. We remember the picked star; clicking it again
-  // unchecks it.
-  let pickedRating = null;
+/**
+ * Unchecks a star so the log has no rating.
+ * @param {HTMLInputElement} star The checked star.
+ */
+function clearRating(star) {
+  star.checked = false;
+  pickedRating = null;
+}
 
-  /**
-   * Unchecks a star so the log has no rating.
-   * @param {HTMLInputElement} star The checked star.
-   */
-  function clearRating(star) {
-    star.checked = false;
-    pickedRating = null;
+// A radio's click event fires after it's checked but before its change
+// event, so pickedRating still holds the star picked before this click.
+form.addEventListener('click', (e) => {
+  const star = e.target.closest('input[name="rating"]');
+  if (!star) return;
+  if (star.value === pickedRating) {
+    clearRating(star);
+  } else {
+    pickedRating = star.value;
   }
+});
 
-  // A radio's click event fires after it's checked but before its change
-  // event, so pickedRating still holds the star picked before this click.
-  form.addEventListener('click', (e) => {
-    const star = e.target.closest('input[name="rating"]');
-    if (!star) return;
-    if (star.value === pickedRating) {
-      clearRating(star);
-    } else {
-      pickedRating = star.value;
-    }
-  });
+// Arrow keys move to another star without a click, so keep track here.
+form.addEventListener('change', (e) => {
+  if (e.target.name === 'rating') pickedRating = e.target.value;
+});
 
-  // Arrow keys move to another star without a click, so keep track here.
-  form.addEventListener('change', (e) => {
-    if (e.target.name === 'rating') pickedRating = e.target.value;
-  });
+// Space on the picked star clears it. (Browsers don't treat Space on an
+// already-checked radio as a click.)
+form.addEventListener('keydown', (e) => {
+  const star = e.target.closest('input[name="rating"]');
+  if (e.key === ' ' && star && star.checked) {
+    e.preventDefault();
+    clearRating(star);
+  }
+});
 
-  // Space on the picked star clears it. (Browsers don't treat Space on an
-  // already-checked radio as a click.)
-  form.addEventListener('keydown', (e) => {
-    const star = e.target.closest('input[name="rating"]');
-    if (e.key === ' ' && star && star.checked) {
-      e.preventDefault();
-      clearRating(star);
-    }
-  });
-
-  // openModal() calls form.reset(), which clears the stars, so forget the
-  // remembered value too.
-  form.addEventListener('reset', () => {
-    pickedRating = null;
-  });
-
-  manualButton.addEventListener('click', () => {
-    setManual(!modal.classList.contains('is-manual'));
-    titleInput.focus();
-  });
-
-  form.addEventListener('change', (e) => {
-    if (e.target.name === 'type') updateType();
-    if (e.target.name === 'result') {
-      // Picking a result copies its title into the title box.
-      const name = e.target
-        .closest('.log-result')
-        .querySelector('.log-result__name');
-      titleInput.value = name.textContent;
-    }
-  });
-})();
+// resetForm() calls form.reset(), which clears the stars, so forget the
+// remembered value too.
+form.addEventListener('reset', () => {
+  pickedRating = null;
+});

@@ -80,7 +80,7 @@ export function getFunctionErrorReason(error) {
 // Messages for searchMedia / addMediaEntry errors, by details.reason first,
 // then by code. Anything not listed gets GENERIC_MEDIA_ERROR.
 const MEDIA_ERROR_BY_REASON = {
-  'already-in-collection': 'This is already on your shelf.',
+  'already-in-collection': 'Already in your collection.',
   'search-again': 'That result has expired. Please search again.',
   'no-profile': 'Please finish setting up your profile first.',
 };

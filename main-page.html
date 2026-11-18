@@ -361,63 +361,21 @@
               type="text"
               placeholder="Search films..."
               autocomplete="off"
-              required
+              maxlength="100"
             />
-            <!-- Placeholder results: the backend will fill this list. -->
+            <p
+              id="log-search-status"
+              class="status-line"
+              role="status"
+              hidden
+            ></p>
+            <!-- Filled in by js/media/search.js: one radio per result, whose
+                 value is the result's externalId. -->
             <ul
               class="log-results"
               role="radiogroup"
               aria-label="Search results"
-            >
-              <li role="none">
-                <label class="log-result">
-                  <input type="radio" name="result" value="1" />
-                  <span class="log-result__row">
-                    <span class="log-result__thumb" aria-hidden="true"></span>
-                    <span class="log-result__text">
-                      <span class="log-result__name">Title</span>
-                      <span class="log-result__meta"
-                        >Year &middot;
-                        <span data-creator-label>Director</span></span
-                      >
-                    </span>
-                    <span class="log-result__check" aria-hidden="true"></span>
-                  </span>
-                </label>
-              </li>
-              <li role="none">
-                <label class="log-result">
-                  <input type="radio" name="result" value="2" />
-                  <span class="log-result__row">
-                    <span class="log-result__thumb" aria-hidden="true"></span>
-                    <span class="log-result__text">
-                      <span class="log-result__name">Title</span>
-                      <span class="log-result__meta"
-                        >Year &middot;
-                        <span data-creator-label>Director</span></span
-                      >
-                    </span>
-                    <span class="log-result__check" aria-hidden="true"></span>
-                  </span>
-                </label>
-              </li>
-              <li role="none">
-                <label class="log-result">
-                  <input type="radio" name="result" value="3" />
-                  <span class="log-result__row">
-                    <span class="log-result__thumb" aria-hidden="true"></span>
-                    <span class="log-result__text">
-                      <span class="log-result__name">Title</span>
-                      <span class="log-result__meta"
-                        >Year &middot;
-                        <span data-creator-label>Director</span></span
-                      >
-                    </span>
-                    <span class="log-result__check" aria-hidden="true"></span>
-                  </span>
-                </label>
-              </li>
-            </ul>
+            ></ul>
           </div>
 
           <div class="log-row">
@@ -500,6 +458,13 @@
             ></textarea>
           </div>
         </div>
+
+        <p
+          id="log-save-status"
+          class="status-line log-modal__save-status"
+          role="status"
+          hidden
+        ></p>
 
         <footer class="log-modal__footer">
           <!-- Hidden for the MVP: every log comes from a search result. -->
@@ -716,7 +681,7 @@
     </dialog>
 
     <script src="js/frontend/mainPage.js"></script>
-    <script src="js/frontend/logModal.js"></script>
+    <script type="module" src="js/frontend/logModal.js"></script>
     <script src="js/frontend/custAndSettingsModal.js"></script>
     <script type="module" src="js/auth/signedInPage.js"></script>
     <script type="module" src="js/frontend/shelfData.js"></script>

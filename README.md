@@ -20,11 +20,11 @@ Media Shelf is a web app for logging movies, TV shows, books, video games, and m
 ### In progress
 
 - [ ] Avatars are `avatar1`–`avatar4` everywhere (rules, functions, `js/constants.js`, sign-up, Edit profile), with pictures in `assets/avatar/avatar1.png`–`avatar4.png`. `avatar1`, `avatar2` and `avatar4` are plain grey placeholders until the real pictures are added, and the Edit profile modal still shows blank circles instead of the pictures.
-- [ ] The browser doesn't call `searchMedia` or `addMediaEntry` yet (`js/media/`), and account deletion in Settings isn't wired up.
+- [x] My Shelf shows the profile and the shelf from Firestore, and the Log Media modal searches (`searchMedia`) and saves (`addMediaEntry`).
 - [ ] The Delete account section in the Settings modal is UI only: the button doesn't do anything yet.
-- [ ] "Can't find it? Add manually" in the Log Media modal is hidden for the MVP.
+- [ ] "Can't find it? Add manually" in the Log Media modal is hidden for the MVP: `addMediaEntry` only accepts titles from a search, so it needs a new Cloud Function, rules and tests.
 - [ ] The Social and Contact pages were removed for the MVP. The Social link in the `main-page.html` nav is kept but `hidden`. Log Out is in the avatar menu on My Shelf.
-- [ ] Placeholders: `js/database/`, `js/media/` and `firestore.indexes.json` are empty, and `assets/credits/` doesn't exist yet.
+- [ ] Placeholders: `assets/credits/` doesn't exist yet.
 
 ### Next up
 
@@ -280,7 +280,7 @@ Every page looks like My Shelf (`main-page.html`): the cream background, white r
 │   ├── auth/                 # Sign-up, finish sign-up, log-in, log-out, password reset, signed-in page guard
 │   ├── database/             # Firestore reads and writes (profile, media logs)
 │   ├── frontend/             # My Shelf page behavior (profile data, avatar menu, Log Media modal, Edit profile/Settings modal)
-│   └── media/                # Media search, adding, status changes, deletion
+│   └── media/                # Log Media search and save, client-side validation
 ├── functions/
 │   ├── index.js              # The four Cloud Functions
 │   ├── adapters/             # One module per external API (TMDB, IGDB, Open Library, MusicBrainz)
