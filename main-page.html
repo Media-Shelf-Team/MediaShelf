@@ -30,7 +30,6 @@
 
         <nav class="site-nav" aria-label="Main">
           <a class="site-nav__link" href="#" aria-current="page">My Shelf</a>
-          <a class="site-nav__link" href="socialPage.html">Social</a>
         </nav>
 
         <div class="user-menu">
@@ -70,7 +69,10 @@
               Settings
             </button>
             <hr class="user-menu__rule" />
-            <a class="user-menu__item user-menu__item--danger" href="index.html"
+            <a
+              id="logout-button"
+              class="user-menu__item user-menu__item--danger"
+              href="index.html"
               >Log out</a
             >
           </div>
@@ -107,7 +109,7 @@
                 <span class="stats__num">00</span>
                 <span class="stats__label">Logged</span>
               </li>
-              <li>
+              <li hidden>
                 <span class="stats__num">00</span>
                 <span class="stats__label">Friends</span>
               </li>
@@ -562,7 +564,7 @@
       </section>
 
       <!-- SIDEBAR -->
-      <aside class="sidebar" aria-label="Friends">
+      <!-- <aside class="sidebar" aria-label="Friends" hidden>
         <section class="side-card" aria-labelledby="requests-title">
           <h2 class="side-card__title" id="requests-title">
             Friend requests <span class="count-badge">2</span>
@@ -679,7 +681,7 @@
           </ul>
           <a class="see-all" href="#">See all friends &rarr;</a>
         </section>
-      </aside>
+      </aside> -->
     </main>
 
     <footer class="site-footer">
@@ -1130,7 +1132,7 @@
       </div>
     </dialog>
 
-    <script src="js/frontend/mainpage.js"></script>
+    <script src="js/frontend/mainPage.js"></script>
     <script src="js/frontend/logModal.js"></script>
     <script src="js/frontend/custAndSettingsModal.js"></script>
     <script type="module" src="js/auth/signedInPage.js"></script>
