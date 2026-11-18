@@ -7,8 +7,7 @@ import {
   sendPasswordResetEmail,
   deleteUser,
 } from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js';
-import {httpsCallable} from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-functions.js';
-import {auth, functions} from '../firebase-config.js';
+import {auth} from '../firebase-config.js';
 
 import {MIN_PASSWORD_LENGTH, LOGIN_PAGE, HOME_PAGE} from '../constants.js';
 
@@ -48,41 +47,16 @@ export function signup(email, password) {
   return createUserWithEmailAndPassword(auth, email.trim(), password);
 }
 
-// The createUserProfile Cloud Function (functions/index.js).
-const createUserProfileCallable = httpsCallable(functions, 'createUserProfile');
-
 // Shown when createUserProfile fails for a reason the user can't fix by
 // changing the form (network, App Check, server error).
 const PROFILE_ERROR_MESSAGE =
   "We couldn't finish creating your account. Please try again.";
 
 /**
- * Creates the signed-in user's profile with the createUserProfile Cloud
- * Function: reserves the username and creates users/{uid}, its
- * profile/details and private/account documents.
- * @param {string} username Lowercase username, 3-30 characters.
- * @param {string} avatarId One of AVATAR_IDS in constants.js.
- * @return {Promise<{username: string}>} The username that was reserved.
- */
-export async function createUserProfile(username, avatarId) {
-  const result = await createUserProfileCallable({username, avatarId});
-  return result.data;
-}
-
-/**
- * The machine-readable reason a Cloud Function sent with its error, such as
- * 'username-taken' or 'profile-exists', or null if there isn't one.
- * @param {Object} error The error thrown by a callable function.
- * @return {?string}
- */
-export function getFunctionErrorReason(error) {
-  return (error && error.details && error.details.reason) || null;
-}
-
-/**
- * Returns a user-friendly message for a createUserProfile error. The
- * server's own message is shown for errors the user can fix (bad username,
- * username taken); everything else gets a generic message.
+ * Returns a user-friendly message for a createUserProfile error (see
+ * js/functions.js). The server's own message is shown for errors the user
+ * can fix (bad username, username taken); everything else gets a generic
+ * message.
  * @param {Object} error The error thrown by createUserProfile.
  * @return {string}
  */

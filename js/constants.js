@@ -8,7 +8,10 @@ export const MAX_DISPLAY_NAME_LENGTH = 30;
 // username constraints
 export const MIN_USERNAME_LENGTH = 3;
 export const MAX_USERNAME_LENGTH = 30;
-export const USERNAME_PATTERN = /^[a-z0-9_]{3,30}$/;
+// Lowercase letters, digits and underscores (match functions/lib/validate.js).
+export const USERNAME_PATTERN = new RegExp(
+  `^[a-z0-9_]{${MIN_USERNAME_LENGTH},${MAX_USERNAME_LENGTH}}$`,
+);
 
 // Password and email length constraints (these are to match the html forms)
 export const MIN_PASSWORD_LENGTH = 8;
@@ -31,6 +34,21 @@ export const CATEGORIES = Object.freeze({
   BOOKS: 'book',
   GAME: 'game',
 });
+
+// What the user sees for each category (badges, filter chips, headings).
+// Music search returns tracks, so it's "Music", not "Album".
+export const CATEGORY_LABELS = Object.freeze({
+  [CATEGORIES.MOVIE]: 'Film',
+  [CATEGORIES.SHOW]: 'Show',
+  [CATEGORIES.BOOKS]: 'Book',
+  [CATEGORIES.GAME]: 'Game',
+  [CATEGORIES.MUSIC]: 'Music',
+});
+
+// The most documents one mediaEntries query may ask for. Queries without
+// limit() of this or less are denied. (Make sure this matches
+// firestore.rules)
+export const MAX_QUERY_LIMIT = 100;
 
 // log statuses: the value stored in Firestore
 // (Make sure these match firestore.rules and functions/lib/validate.js)

@@ -113,6 +113,9 @@ service cloud.firestore {
         // The Log Page and category views are queries, which need `list`.
         // The limit caps how many documents one query can pull; the client
         // must call limit() (and paginate) or the query is denied.
+        // Count queries are included, so js/database/entries.js counts with
+        // limit(100) too. Keep 100 in sync with MAX_QUERY_LIMIT in
+        // constants.js.
         allow list: if canReadGated(userId) && request.query.limit <= 100;
         allow create: if false;                // cloud functions addMediaEntry only
         allow delete: if isOwner(userId);

@@ -10,17 +10,20 @@
 import {
   getAuthErrorMessage,
   getProfileErrorMessage,
-  getFunctionErrorReason,
   redirectIfSignedIn,
   signup,
-  createUserProfile,
   deleteCurrentUser,
   signOutQuietly,
   showError,
 } from './auth.js';
+import {createUserProfile, getFunctionErrorReason} from '../functions.js';
 
 import {
   MIN_PASSWORD_LENGTH,
+  MAX_PASSWORD_LENGTH,
+  MAX_EMAIL_LENGTH,
+  MIN_USERNAME_LENGTH,
+  MAX_USERNAME_LENGTH,
   USERNAME_PATTERN,
   AVATAR_IDS,
   HOME_PAGE,
@@ -45,22 +48,28 @@ function setBusy(busy) {
 
 /**
  * Checks the form values. Returns an error message, or null if they're fine.
- * @param {{username: string, avatarId: ?string, password: string,
- *     confirmPassword: string}} values The form values.
+ * @param {{username: string, avatarId: ?string, email: string,
+ *     password: string, confirmPassword: string}} values The form values.
  * @return {?string}
  */
-function checkForm({username, avatarId, password, confirmPassword}) {
+function checkForm({username, avatarId, email, password, confirmPassword}) {
   if (!USERNAME_PATTERN.test(username)) {
-    return 'Username must be 3–30 characters: letters, numbers, and underscores.';
+    return `Username must be ${MIN_USERNAME_LENGTH}–${MAX_USERNAME_LENGTH} characters: letters, numbers, and underscores.`;
   }
   if (!AVATAR_IDS.includes(avatarId)) {
     return 'Please choose an avatar.';
+  }
+  if (email.trim().length > MAX_EMAIL_LENGTH) {
+    return `Email must be ${MAX_EMAIL_LENGTH} characters or fewer.`;
   }
   if (password !== confirmPassword) {
     return 'Passwords do not match.';
   }
   if (password.length < MIN_PASSWORD_LENGTH) {
     return `Password must be at least ${MIN_PASSWORD_LENGTH} characters.`;
+  }
+  if (password.length > MAX_PASSWORD_LENGTH) {
+    return `Password must be ${MAX_PASSWORD_LENGTH} characters or fewer.`;
   }
   return null;
 }
