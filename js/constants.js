@@ -47,6 +47,11 @@ export const CATEGORY_LABELS = Object.freeze({
   [CATEGORIES.MUSIC]: 'Music',
 });
 
+// Fired on document after a log is added, edited or deleted, so My Shelf
+// can refresh its logs, counts and stats:
+//   document.dispatchEvent(new Event(SHELF_CHANGED_EVENT));
+export const SHELF_CHANGED_EVENT = 'shelf-changed';
+
 // The most documents one mediaEntries query may ask for. Queries without
 // limit() of this or less are denied. (Make sure this matches
 // firestore.rules)

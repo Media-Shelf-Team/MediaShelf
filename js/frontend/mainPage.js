@@ -1,5 +1,6 @@
 // js/frontend/mainPage.js
-// Small interactions for the My Shelf page. Placeholder only: no backend yet.
+// Small interactions for the My Shelf page: the profile menu. The shelf's
+// toolbar (chips, view toggle) is handled by shelf.js.
 
 (function () {
   // ---- Profile menu (the pop-up under the avatar) ----
@@ -51,17 +52,4 @@
       menuButton.focus();
     });
   }
-
-  // ---- Filter chips and grid/list toggle ----
-  // Placeholder: only the highlighted button changes until the backend
-  // filters and sorts the shelf.
-  document.querySelectorAll('[data-toggle-group]').forEach((group) => {
-    group.addEventListener('click', (e) => {
-      const pressed = e.target.closest('button');
-      if (!pressed) return;
-      group.querySelectorAll('button').forEach((button) => {
-        button.setAttribute('aria-pressed', String(button === pressed));
-      });
-    });
-  });
 })();

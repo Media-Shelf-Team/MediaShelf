@@ -404,6 +404,32 @@
   font-size: 0.78rem;
 }
 
+.media-item__creator {
+  overflow: hidden;
+  color: var(--placeholder-color);
+  font-size: 0.82rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Log status: Completed / In progress / Planned. */
+.media-item__status {
+  margin-top: 4px;
+  color: var(--header-text-color);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.media-item__status[data-status='in_progress'] {
+  color: var(--primary-color);
+}
+
+.media-item__status[data-status='planned'] {
+  color: var(--placeholder-color);
+}
+
 /* Filled stars are set with data-rating (1 to 5) on the .stars element. */
 .stars {
   --rating: 0;
@@ -445,6 +471,62 @@
   display: flex;
   justify-content: center;
   margin-top: 32px;
+}
+
+/* Shown when the shelf (or the current filter) has no logs. */
+.shelf__empty {
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+  margin-top: 26px;
+  padding: 48px 24px;
+  border: 2px dashed var(--empty);
+  border-radius: var(--radius-card);
+  text-align: center;
+}
+
+.shelf__empty-text {
+  color: var(--placeholder-color);
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+/* ---------- List view (data-view="list" on .shelf) ---------- */
+.shelf[data-view='list'] .media-grid {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+}
+
+.shelf[data-view='list'] .media-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px;
+  border-radius: 14px;
+  background: var(--surface-color);
+}
+
+.shelf[data-view='list'] .cover {
+  flex: none;
+  width: 64px;
+  border-radius: 8px;
+}
+
+.shelf[data-view='list'] .badge {
+  top: 4px;
+  left: 4px;
+  padding: 2px 5px;
+  font-size: 0.5rem;
+}
+
+.shelf[data-view='list'] .media-item__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.shelf[data-view='list'] .media-item__title {
+  margin-top: 0;
+  font-size: 1rem;
 }
 
 /* ---------- Tablet ---------- */

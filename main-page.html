@@ -141,49 +141,97 @@
       </section>
 
       <!-- SHELF -->
-      <section class="shelf" aria-label="Your shelf">
+      <!-- Filled in by js/frontend/shelf.js. data-view is 'grid' or 'list'. -->
+      <section class="shelf" aria-label="Your shelf" data-view="grid">
         <div class="toolbar">
-          <div class="toolbar__chips" data-toggle-group>
-            <button type="button" class="chip" aria-pressed="true">
-              All <span class="chip__count">00</span>
+          <!-- data-category values match CATEGORIES in js/constants.js
+               ('' = All). -->
+          <div class="toolbar__chips">
+            <button
+              type="button"
+              class="chip"
+              data-category=""
+              aria-pressed="true"
+            >
+              All <span class="chip__count">&ndash;</span>
             </button>
-            <button type="button" class="chip" aria-pressed="false">
-              Films <span class="chip__count">00</span>
+            <button
+              type="button"
+              class="chip"
+              data-category="movie"
+              aria-pressed="false"
+            >
+              Films <span class="chip__count">&ndash;</span>
             </button>
-            <button type="button" class="chip" aria-pressed="false">
-              Books <span class="chip__count">00</span>
+            <button
+              type="button"
+              class="chip"
+              data-category="book"
+              aria-pressed="false"
+            >
+              Books <span class="chip__count">&ndash;</span>
             </button>
-            <button type="button" class="chip" aria-pressed="false">
-              Games <span class="chip__count">00</span>
+            <button
+              type="button"
+              class="chip"
+              data-category="game"
+              aria-pressed="false"
+            >
+              Games <span class="chip__count">&ndash;</span>
             </button>
-            <button type="button" class="chip" aria-pressed="false">
-              Music <span class="chip__count">00</span>
+            <button
+              type="button"
+              class="chip"
+              data-category="music"
+              aria-pressed="false"
+            >
+              Music <span class="chip__count">&ndash;</span>
             </button>
-            <button type="button" class="chip" aria-pressed="false">
-              Shows <span class="chip__count">00</span>
+            <button
+              type="button"
+              class="chip"
+              data-category="show"
+              aria-pressed="false"
+            >
+              Shows <span class="chip__count">&ndash;</span>
             </button>
           </div>
 
           <input
+            id="shelf-search"
             class="control control--search"
             type="search"
             placeholder="Search my shelf..."
             aria-label="Search my shelf"
           />
-          <select class="control control--select" aria-label="Sort by">
-            <option>Sort: Date logged</option>
-            <option>Sort: Title</option>
-            <option>Sort: Rating</option>
+          <select
+            id="shelf-sort"
+            class="control control--select"
+            aria-label="Sort by"
+          >
+            <option value="date">Sort: Date logged</option>
+            <option value="title">Sort: Title</option>
+            <option value="rating">Sort: Rating</option>
           </select>
-          <select class="control control--select" aria-label="Filter by rating">
-            <option>Rating</option>
-            <option>5 stars</option>
-            <option>4+ stars</option>
-            <option>3+ stars</option>
+          <!-- Values are the lowest rating to show (0 = any). -->
+          <select
+            id="shelf-rating"
+            class="control control--select"
+            aria-label="Filter by rating"
+          >
+            <option value="0">Rating: Any</option>
+            <option value="5">5 stars</option>
+            <option value="4">4+ stars</option>
+            <option value="3">3+ stars</option>
           </select>
 
-          <div class="view-toggle" data-toggle-group>
-            <button type="button" aria-pressed="true" aria-label="Grid view">
+          <div class="view-toggle">
+            <button
+              type="button"
+              data-view="grid"
+              aria-pressed="true"
+              aria-label="Grid view"
+            >
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <rect x="4" y="4" width="6" height="6" />
                 <rect x="14" y="4" width="6" height="6" />
@@ -191,7 +239,12 @@
                 <rect x="14" y="14" width="6" height="6" />
               </svg>
             </button>
-            <button type="button" aria-pressed="false" aria-label="List view">
+            <button
+              type="button"
+              data-view="list"
+              aria-pressed="false"
+              aria-label="List view"
+            >
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <line x1="4" y1="6" x2="20" y2="6" />
                 <line x1="4" y1="12" x2="20" y2="12" />
@@ -201,360 +254,15 @@
           </div>
         </div>
 
-        <section class="month" aria-labelledby="month-october">
-          <h2 class="month__title" id="month-october">
-            October 2026 <span class="month__count">8 logged</span>
-          </h2>
-          <ul class="media-grid">
-            <li
-              class="media-item"
-              data-title="Title"
-              data-category="Film"
-              data-creator="Creator"
-              data-date="Oct 21"
-            >
-              <div class="cover"><span class="badge">Film</span></div>
-              <p class="media-item__title">Title</p>
-              <p class="media-item__meta">
-                <span
-                  class="stars"
-                  data-rating="5"
-                  role="img"
-                  aria-label="5 out of 5 stars"
-                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
-                >
-                <span aria-hidden="true">&middot;</span>
-                <span>Oct 21</span>
-              </p>
-            </li>
-            <li
-              class="media-item"
-              data-title="Title"
-              data-category="Book"
-              data-creator="Creator"
-              data-date="Oct 20"
-            >
-              <div class="cover"><span class="badge">Book</span></div>
-              <p class="media-item__title">Title</p>
-              <p class="media-item__meta">
-                <span
-                  class="stars"
-                  data-rating="4"
-                  role="img"
-                  aria-label="4 out of 5 stars"
-                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
-                >
-                <span aria-hidden="true">&middot;</span>
-                <span>Oct 20</span>
-              </p>
-            </li>
-            <li
-              class="media-item"
-              data-title="Title"
-              data-category="Game"
-              data-creator="Creator"
-              data-date="Oct 19"
-            >
-              <div class="cover"><span class="badge">Game</span></div>
-              <p class="media-item__title">Title</p>
-              <p class="media-item__meta">
-                <span
-                  class="stars"
-                  data-rating="3"
-                  role="img"
-                  aria-label="3 out of 5 stars"
-                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
-                >
-                <span aria-hidden="true">&middot;</span>
-                <span>Oct 19</span>
-              </p>
-            </li>
-            <li
-              class="media-item"
-              data-title="Title"
-              data-category="Music"
-              data-creator="Creator"
-              data-date="Oct 18"
-            >
-              <div class="cover"><span class="badge">Music</span></div>
-              <p class="media-item__title">Title</p>
-              <p class="media-item__meta">
-                <span
-                  class="stars"
-                  data-rating="5"
-                  role="img"
-                  aria-label="5 out of 5 stars"
-                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
-                >
-                <span aria-hidden="true">&middot;</span>
-                <span>Oct 18</span>
-              </p>
-            </li>
-            <li
-              class="media-item"
-              data-title="Title"
-              data-category="Show"
-              data-creator="Creator"
-              data-date="Oct 17"
-            >
-              <div class="cover"><span class="badge">Show</span></div>
-              <p class="media-item__title">Title</p>
-              <p class="media-item__meta">
-                <span
-                  class="stars"
-                  data-rating="4"
-                  role="img"
-                  aria-label="4 out of 5 stars"
-                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
-                >
-                <span aria-hidden="true">&middot;</span>
-                <span>Oct 17</span>
-              </p>
-            </li>
-            <li
-              class="media-item"
-              data-title="Title"
-              data-category="Film"
-              data-creator="Creator"
-              data-date="Oct 16"
-            >
-              <div class="cover"><span class="badge">Film</span></div>
-              <p class="media-item__title">Title</p>
-              <p class="media-item__meta">
-                <span
-                  class="stars"
-                  data-rating="3"
-                  role="img"
-                  aria-label="3 out of 5 stars"
-                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
-                >
-                <span aria-hidden="true">&middot;</span>
-                <span>Oct 16</span>
-              </p>
-            </li>
-            <li
-              class="media-item"
-              data-title="Title"
-              data-category="Book"
-              data-creator="Creator"
-              data-date="Oct 15"
-            >
-              <div class="cover"><span class="badge">Book</span></div>
-              <p class="media-item__title">Title</p>
-              <p class="media-item__meta">
-                <span
-                  class="stars"
-                  data-rating="5"
-                  role="img"
-                  aria-label="5 out of 5 stars"
-                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
-                >
-                <span aria-hidden="true">&middot;</span>
-                <span>Oct 15</span>
-              </p>
-            </li>
-            <li
-              class="media-item"
-              data-title="Title"
-              data-category="Game"
-              data-creator="Creator"
-              data-date="Oct 14"
-            >
-              <div class="cover"><span class="badge">Game</span></div>
-              <p class="media-item__title">Title</p>
-              <p class="media-item__meta">
-                <span
-                  class="stars"
-                  data-rating="4"
-                  role="img"
-                  aria-label="4 out of 5 stars"
-                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
-                >
-                <span aria-hidden="true">&middot;</span>
-                <span>Oct 14</span>
-              </p>
-            </li>
-          </ul>
-        </section>
+        <p id="shelf-status" class="status-line" role="status" hidden></p>
 
-        <section class="month" aria-labelledby="month-september">
-          <h2 class="month__title" id="month-september">
-            September 2026 <span class="month__count">8 logged</span>
-          </h2>
-          <ul class="media-grid">
-            <li
-              class="media-item"
-              data-title="Title"
-              data-category="Music"
-              data-creator="Creator"
-              data-date="Sep 30"
-            >
-              <div class="cover"><span class="badge">Music</span></div>
-              <p class="media-item__title">Title</p>
-              <p class="media-item__meta">
-                <span
-                  class="stars"
-                  data-rating="5"
-                  role="img"
-                  aria-label="5 out of 5 stars"
-                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
-                >
-                <span aria-hidden="true">&middot;</span>
-                <span>Sep 30</span>
-              </p>
-            </li>
-            <li
-              class="media-item"
-              data-title="Title"
-              data-category="Show"
-              data-creator="Creator"
-              data-date="Sep 29"
-            >
-              <div class="cover"><span class="badge">Show</span></div>
-              <p class="media-item__title">Title</p>
-              <p class="media-item__meta">
-                <span
-                  class="stars"
-                  data-rating="4"
-                  role="img"
-                  aria-label="4 out of 5 stars"
-                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
-                >
-                <span aria-hidden="true">&middot;</span>
-                <span>Sep 29</span>
-              </p>
-            </li>
-            <li
-              class="media-item"
-              data-title="Title"
-              data-category="Film"
-              data-creator="Creator"
-              data-date="Sep 28"
-            >
-              <div class="cover"><span class="badge">Film</span></div>
-              <p class="media-item__title">Title</p>
-              <p class="media-item__meta">
-                <span
-                  class="stars"
-                  data-rating="3"
-                  role="img"
-                  aria-label="3 out of 5 stars"
-                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
-                >
-                <span aria-hidden="true">&middot;</span>
-                <span>Sep 28</span>
-              </p>
-            </li>
-            <li
-              class="media-item"
-              data-title="Title"
-              data-category="Book"
-              data-creator="Creator"
-              data-date="Sep 27"
-            >
-              <div class="cover"><span class="badge">Book</span></div>
-              <p class="media-item__title">Title</p>
-              <p class="media-item__meta">
-                <span
-                  class="stars"
-                  data-rating="5"
-                  role="img"
-                  aria-label="5 out of 5 stars"
-                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
-                >
-                <span aria-hidden="true">&middot;</span>
-                <span>Sep 27</span>
-              </p>
-            </li>
-            <li
-              class="media-item"
-              data-title="Title"
-              data-category="Game"
-              data-creator="Creator"
-              data-date="Sep 26"
-            >
-              <div class="cover"><span class="badge">Game</span></div>
-              <p class="media-item__title">Title</p>
-              <p class="media-item__meta">
-                <span
-                  class="stars"
-                  data-rating="4"
-                  role="img"
-                  aria-label="4 out of 5 stars"
-                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
-                >
-                <span aria-hidden="true">&middot;</span>
-                <span>Sep 26</span>
-              </p>
-            </li>
-            <li
-              class="media-item"
-              data-title="Title"
-              data-category="Film"
-              data-creator="Creator"
-              data-date="Sep 25"
-            >
-              <div class="cover"><span class="badge">Film</span></div>
-              <p class="media-item__title">Title</p>
-              <p class="media-item__meta">
-                <span
-                  class="stars"
-                  data-rating="3"
-                  role="img"
-                  aria-label="3 out of 5 stars"
-                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
-                >
-                <span aria-hidden="true">&middot;</span>
-                <span>Sep 25</span>
-              </p>
-            </li>
-            <li
-              class="media-item"
-              data-title="Title"
-              data-category="Book"
-              data-creator="Creator"
-              data-date="Sep 24"
-            >
-              <div class="cover"><span class="badge">Book</span></div>
-              <p class="media-item__title">Title</p>
-              <p class="media-item__meta">
-                <span
-                  class="stars"
-                  data-rating="5"
-                  role="img"
-                  aria-label="5 out of 5 stars"
-                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
-                >
-                <span aria-hidden="true">&middot;</span>
-                <span>Sep 24</span>
-              </p>
-            </li>
-            <li
-              class="media-item"
-              data-title="Title"
-              data-category="Game"
-              data-creator="Creator"
-              data-date="Sep 23"
-            >
-              <div class="cover"><span class="badge">Game</span></div>
-              <p class="media-item__title">Title</p>
-              <p class="media-item__meta">
-                <span
-                  class="stars"
-                  data-rating="4"
-                  role="img"
-                  aria-label="4 out of 5 stars"
-                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
-                >
-                <span aria-hidden="true">&middot;</span>
-                <span>Sep 23</span>
-              </p>
-            </li>
-          </ul>
-        </section>
+        <!-- Month sections (or the empty message) go here. -->
+        <div id="shelf-months"></div>
 
         <div class="load-more">
-          <button type="button" class="btn btn--outline">Load more</button>
+          <button id="load-more" type="button" class="btn btn--outline" hidden>
+            Load more
+          </button>
         </div>
       </section>
     </main>
@@ -1012,5 +720,6 @@
     <script src="js/frontend/custAndSettingsModal.js"></script>
     <script type="module" src="js/auth/signedInPage.js"></script>
     <script type="module" src="js/frontend/shelfData.js"></script>
+    <script type="module" src="js/frontend/shelf.js"></script>
   </body>
 </html>

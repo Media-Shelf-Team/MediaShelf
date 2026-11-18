@@ -8,6 +8,7 @@ import {getBio, getUserCard, getUsername} from '../database/profile.js';
 import {countEntries} from '../database/entries.js';
 import {avatarSrc} from './display.js';
 import {todayLocal} from '../media/validate.js';
+import {SHELF_CHANGED_EVENT} from '../constants.js';
 
 /**
  * Sets the text of every element matching a selector.
@@ -123,4 +124,11 @@ if (signedInUser) {
       console.error(`My Shelf: ${load.name} failed`, error);
     });
   }
+
+  // Keep the stats current after a log is added, edited or deleted.
+  document.addEventListener(SHELF_CHANGED_EVENT, () => {
+    loadStats(uid).catch((error) => {
+      console.error('My Shelf: loadStats failed', error);
+    });
+  });
 }
