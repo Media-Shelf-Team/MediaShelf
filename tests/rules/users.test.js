@@ -39,11 +39,7 @@ after(async () => {
 // document
 //
 //  Requests the rules should DENY use assertFails.
-//  Requests the rules should ALLOW use assertSucceeds and are marked
-//   {todo: true}. They still run, but node:test reports their failures as
-//   "todo" instead of "fail". Remove the todo marks once
-//   the real rules are in.
-//  The bundled avatars are avatar1-avatar4 (pictures come later).
+//  Requests the rules should ALLOW use assertSucceeds
 
 // ===========================================================================
 // users/{uid}: Public Card. Requests that should be DENIED

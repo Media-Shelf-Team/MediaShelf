@@ -6,8 +6,6 @@
 //   searchMedia         search a category (cached, rate limited)
 //   addMediaEntry       add a search result to the user's collection
 //   onUserDeleted       delete a user's data when their account is deleted
-//
-// See CLOUD_FUNCTIONS.md for a full description of every file.
 
 const {setGlobalOptions} = require('firebase-functions');
 const {onCall, HttpsError} = require('firebase-functions/https');
