@@ -277,7 +277,7 @@ html[data-auth='pending'] {
   text-transform: uppercase;
 }
 
-/* White rounded panel, like the profile and sidebar cards. */
+/* White rounded panel, like the profile card on My Shelf. */
 .card {
   border: 1px solid var(--secondary-color);
   border-radius: var(--radius-card);

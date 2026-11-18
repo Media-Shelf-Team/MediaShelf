@@ -1,5 +1,5 @@
 /* css/main-page.css
- * Layout for the My Shelf page: profile card, shelf grid, sidebar and the
+ * Layout for the My Shelf page: profile card, shelf grid and the
  * avatar menu. Colors, fonts, buttons, the header and the footer come from
  * css/theme.css, which must be loaded first.
  */
@@ -107,7 +107,7 @@
 .page {
   flex: 1 0 auto;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 420px;
+  grid-template-columns: minmax(0, 1fr);
   gap: 34px 32px;
   align-items: start;
   padding-block: 34px 56px;
@@ -422,170 +422,7 @@
   margin-top: 32px;
 }
 
-/* ---------- Sidebar ---------- */
-.sidebar {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.side-card {
-  padding: 26px;
-  border: 1px solid var(--secondary-color);
-  border-radius: 20px;
-  background: var(--surface-color);
-}
-
-.side-card__title {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 18px;
-  font-family: var(--font-display);
-  font-size: 1.5rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1;
-  text-transform: uppercase;
-}
-
-.side-card__count {
-  color: var(--placeholder-color);
-  font-size: 1.05rem;
-}
-
-.count-badge {
-  display: grid;
-  place-items: center;
-  min-width: 24px;
-  height: 24px;
-  padding: 0 7px;
-  border-radius: 999px;
-  background: var(--primary-color);
-  color: #fff;
-  font-family: var(--font-body);
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0;
-}
-
-.request {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 0;
-  border-top: 1px solid var(--secondary-color);
-}
-
-.request:first-child {
-  padding-top: 0;
-  border-top: 0;
-}
-
-.request:last-child {
-  padding-bottom: 0;
-}
-
-.request__avatar {
-  flex: none;
-  width: 54px;
-  height: 54px;
-  border-radius: 50%;
-  background: var(--placeholder-color);
-}
-
-.request__text {
-  flex: 1;
-  min-width: 0;
-}
-
-.request__name {
-  display: block;
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.request__name:hover {
-  text-decoration: underline;
-}
-
-.request__mutual {
-  color: var(--placeholder-color);
-  font-size: 0.85rem;
-}
-
-.icon-btn {
-  display: grid;
-  flex: none;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  border: 1.5px solid var(--secondary-color);
-  border-radius: 10px;
-  background: var(--surface-color);
-}
-
-.icon-btn--accept {
-  border-color: var(--primary-color);
-  background: var(--primary-color);
-  color: #fff;
-}
-
-.icon-btn svg {
-  width: 18px;
-  height: 18px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.friend-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px 8px;
-}
-
-.friend {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.friend__avatar {
-  width: 100%;
-  max-width: 72px;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: var(--placeholder-color);
-}
-
-.see-all {
-  display: inline-block;
-  margin-top: 18px;
-  color: var(--primary-color);
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.see-all:hover {
-  text-decoration: underline;
-}
-
-/* ---------- Footer ---------- */
 /* ---------- Tablet ---------- */
-@media (max-width: 1100px) {
-  .page {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
 @media (max-width: 900px) {
   .profile__body {
     grid-template-columns: auto minmax(0, 1fr);
@@ -647,9 +484,5 @@
   .control--search {
     flex: 1 1 100%;
     width: auto;
-  }
-
-  .side-card {
-    padding: 20px;
   }
 }

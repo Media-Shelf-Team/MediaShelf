@@ -79,7 +79,7 @@
   gap: 16px;
 }
 
-/* Team and credit cards, like the sidebar cards on My Shelf. */
+/* Team and credit cards. */
 .team-card,
 .credit {
   min-width: 0;

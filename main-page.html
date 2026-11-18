@@ -30,6 +30,7 @@
 
         <nav class="site-nav" aria-label="Main">
           <a class="site-nav__link" href="#" aria-current="page">My Shelf</a>
+          <a class="site-nav__link" href="social-page.html">Social</a>
         </nav>
 
         <div class="user-menu">
@@ -69,12 +70,14 @@
               Settings
             </button>
             <hr class="user-menu__rule" />
-            <a
+            <!-- js/auth/signedInPage.js signs out on any .logout-button -->
+            <button
+              type="button"
               id="logout-button"
               class="user-menu__item user-menu__item--danger"
-              href="index.html"
-              >Log out</a
             >
+              Log out
+            </button>
           </div>
         </div>
       </div>
@@ -562,7 +565,6 @@
           <button type="button" class="btn btn--outline">Load more</button>
         </div>
       </section>
-
       <!-- SIDEBAR -->
       <!-- <aside class="sidebar" aria-label="Friends" hidden>
         <section class="side-card" aria-labelledby="requests-title">
