@@ -140,6 +140,17 @@ textarea.field-input {
   font-weight: 600;
 }
 
+/* Same box as .form-error, in calm colors, for "it worked" messages. */
+.form-success {
+  padding: 10px 14px;
+  border: 1px solid #5b8f88;
+  border-radius: var(--radius-control);
+  background: #e9f3f1;
+  color: #2e5f58;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
 /* ---------- Avatar picker (sign up) ---------- */
 .avatar-picker {
   margin: 0;
@@ -168,8 +179,7 @@ textarea.field-input {
   opacity: 0;
 }
 
-.avatar-option img,
-.avatar-option__placeholder {
+.avatar-option img {
   display: block;
   width: 64px;
   height: 64px;
@@ -179,13 +189,11 @@ textarea.field-input {
   transition: box-shadow 0.15s ease;
 }
 
-.avatar-option input:checked + img,
-.avatar-option input:checked + .avatar-option__placeholder {
+.avatar-option input:checked + img {
   box-shadow: 0 0 0 4px var(--primary-color);
 }
 
-.avatar-option input:focus-visible + img,
-.avatar-option input:focus-visible + .avatar-option__placeholder {
+.avatar-option input:focus-visible + img {
   outline: 3px solid var(--header-text-color);
   outline-offset: 4px;
 }

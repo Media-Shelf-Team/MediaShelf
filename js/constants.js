@@ -8,7 +8,10 @@ export const MAX_DISPLAY_NAME_LENGTH = 30;
 // username constraints
 export const MIN_USERNAME_LENGTH = 3;
 export const MAX_USERNAME_LENGTH = 30;
-export const USERNAME_PATTERN = /^[a-z0-9_]{3,30}$/;
+// Lowercase letters, digits and underscores (match functions/lib/validate.js).
+export const USERNAME_PATTERN = new RegExp(
+  `^[a-z0-9_]{${MIN_USERNAME_LENGTH},${MAX_USERNAME_LENGTH}}$`,
+);
 
 // Password and email length constraints (these are to match the html forms)
 export const MIN_PASSWORD_LENGTH = 8;
@@ -21,6 +24,8 @@ export const LANDING_PAGE = 'index.html';
 export const HOME_PAGE = 'main-page.html';
 export const SIGNUP_PAGE = 'signup.html';
 export const FORGOT_PASSWORD_PAGE = 'forgot-password.html';
+// For signed-in users whose profile was never created (see finishSignup.js).
+export const FINISH_SIGNUP_PAGE = 'finish-signup.html';
 
 // media categories (Make sure these match functions/lib/validate.js)
 // The first part of a log's ID, e.g. movie_603 or show_1396.
@@ -31,6 +36,30 @@ export const CATEGORIES = Object.freeze({
   BOOKS: 'book',
   GAME: 'game',
 });
+
+// What the user sees for each category (badges, filter chips, headings).
+// Music search returns tracks, so it's "Music", not "Album".
+export const CATEGORY_LABELS = Object.freeze({
+  [CATEGORIES.MOVIE]: 'Film',
+  [CATEGORIES.SHOW]: 'Show',
+  [CATEGORIES.BOOKS]: 'Book',
+  [CATEGORIES.GAME]: 'Game',
+  [CATEGORIES.MUSIC]: 'Music',
+});
+
+// Fired on document after a log is added, edited or deleted, so My Shelf
+// can refresh its logs, counts and stats:
+//   document.dispatchEvent(new Event(SHELF_CHANGED_EVENT));
+export const SHELF_CHANGED_EVENT = 'shelf-changed';
+
+// Fired on document after the profile (name, avatar, privacy or bio) is
+// saved, so the header, menu and profile card can update.
+export const PROFILE_CHANGED_EVENT = 'profile-changed';
+
+// The most documents one mediaEntries query may ask for. Queries without
+// limit() of this or less are denied. (Make sure this matches
+// firestore.rules)
+export const MAX_QUERY_LIMIT = 100;
 
 // log statuses: the value stored in Firestore
 // (Make sure these match firestore.rules and functions/lib/validate.js)
@@ -62,7 +91,8 @@ export const MAX_NOTES_LENGTH = 500;
 
 // avatar IDs (update firestore.rules and functions/lib/validate.js when
 // adding IDs here). Do not remove existing IDs, only add new ones.
-// Pictures for each avatar will be added later.
+// Each ID's picture is assets/avatar/{id}.png (see avatarSrc in
+// js/frontend/display.js).
 export const AVATAR_IDS = Object.freeze([
   'avatar1',
   'avatar2',

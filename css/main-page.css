@@ -19,11 +19,13 @@
 }
 
 .avatar-btn__img {
+  display: block;
   width: 44px;
   height: 44px;
   border: 1.5px solid var(--header-text-color);
   border-radius: 50%;
   background: var(--placeholder-color);
+  object-fit: cover;
 }
 
 .avatar-btn__caret {
@@ -64,6 +66,7 @@
   height: 40px;
   border-radius: 50%;
   background: var(--placeholder-color);
+  object-fit: cover;
 }
 
 .user-menu__name {
@@ -152,6 +155,7 @@
   border-radius: 50%;
   background: var(--placeholder-color);
   box-shadow: 0 0 0 6px var(--surface-color);
+  object-fit: cover;
 }
 
 .profile__name {
@@ -173,6 +177,27 @@
   max-width: 620px;
   margin-top: 10px;
   font-size: 1.05rem;
+}
+
+/* "@username · Joined Nov 2026": the dot only shows once the date is in. */
+.profile__joined:not(:empty)::before {
+  content: '· ';
+}
+
+/* Shown in place of an empty bio; opens Edit profile. */
+.profile__bio-prompt {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--primary-color);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.profile__bio-prompt:hover {
+  color: var(--tertiary-color);
+  text-decoration: underline;
 }
 
 .profile__side {
@@ -319,7 +344,44 @@
 }
 
 .media-item {
+  position: relative;
   min-width: 0;
+}
+
+/* The title is a button whose ::after covers the whole card, so clicking
+   anywhere on the card opens the Edit log dialog. */
+.media-item__open {
+  max-width: 100%;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.media-item__open::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+}
+
+.media-item__open:focus-visible {
+  outline: none;
+}
+
+.media-item__open:focus-visible::after {
+  outline: 3px solid var(--primary-color);
+  outline-offset: 4px;
+}
+
+.media-item:hover .cover {
+  filter: brightness(0.92);
 }
 
 .cover {
@@ -379,6 +441,32 @@
   font-size: 0.78rem;
 }
 
+.media-item__creator {
+  overflow: hidden;
+  color: var(--placeholder-color);
+  font-size: 0.82rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Log status: Completed / In progress / Planned. */
+.media-item__status {
+  margin-top: 4px;
+  color: var(--header-text-color);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.media-item__status[data-status='in_progress'] {
+  color: var(--primary-color);
+}
+
+.media-item__status[data-status='planned'] {
+  color: var(--placeholder-color);
+}
+
 /* Filled stars are set with data-rating (1 to 5) on the .stars element. */
 .stars {
   --rating: 0;
@@ -420,6 +508,62 @@
   display: flex;
   justify-content: center;
   margin-top: 32px;
+}
+
+/* Shown when the shelf (or the current filter) has no logs. */
+.shelf__empty {
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+  margin-top: 26px;
+  padding: 48px 24px;
+  border: 2px dashed var(--empty);
+  border-radius: var(--radius-card);
+  text-align: center;
+}
+
+.shelf__empty-text {
+  color: var(--placeholder-color);
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+/* ---------- List view (data-view="list" on .shelf) ---------- */
+.shelf[data-view='list'] .media-grid {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+}
+
+.shelf[data-view='list'] .media-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px;
+  border-radius: 14px;
+  background: var(--surface-color);
+}
+
+.shelf[data-view='list'] .cover {
+  flex: none;
+  width: 64px;
+  border-radius: 8px;
+}
+
+.shelf[data-view='list'] .badge {
+  top: 4px;
+  left: 4px;
+  padding: 2px 5px;
+  font-size: 0.5rem;
+}
+
+.shelf[data-view='list'] .media-item__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.shelf[data-view='list'] .media-item__title {
+  margin-top: 0;
+  font-size: 1rem;
 }
 
 /* ---------- Tablet ---------- */

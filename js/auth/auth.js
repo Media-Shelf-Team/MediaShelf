@@ -6,9 +6,11 @@ import {
   onAuthStateChanged,
   sendPasswordResetEmail,
   deleteUser,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  updatePassword,
 } from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js';
-import {httpsCallable} from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-functions.js';
-import {auth, functions} from '../firebase-config.js';
+import {auth} from '../firebase-config.js';
 
 import {MIN_PASSWORD_LENGTH, LOGIN_PAGE, HOME_PAGE} from '../constants.js';
 
@@ -48,41 +50,16 @@ export function signup(email, password) {
   return createUserWithEmailAndPassword(auth, email.trim(), password);
 }
 
-// The createUserProfile Cloud Function (functions/index.js).
-const createUserProfileCallable = httpsCallable(functions, 'createUserProfile');
-
 // Shown when createUserProfile fails for a reason the user can't fix by
 // changing the form (network, App Check, server error).
 const PROFILE_ERROR_MESSAGE =
   "We couldn't finish creating your account. Please try again.";
 
 /**
- * Creates the signed-in user's profile with the createUserProfile Cloud
- * Function: reserves the username and creates users/{uid}, its
- * profile/details and private/account documents.
- * @param {string} username Lowercase username, 3-30 characters.
- * @param {string} avatarId One of AVATAR_IDS in constants.js.
- * @return {Promise<{username: string}>} The username that was reserved.
- */
-export async function createUserProfile(username, avatarId) {
-  const result = await createUserProfileCallable({username, avatarId});
-  return result.data;
-}
-
-/**
- * The machine-readable reason a Cloud Function sent with its error, such as
- * 'username-taken' or 'profile-exists', or null if there isn't one.
- * @param {Object} error The error thrown by a callable function.
- * @return {?string}
- */
-export function getFunctionErrorReason(error) {
-  return (error && error.details && error.details.reason) || null;
-}
-
-/**
- * Returns a user-friendly message for a createUserProfile error. The
- * server's own message is shown for errors the user can fix (bad username,
- * username taken); everything else gets a generic message.
+ * Returns a user-friendly message for a createUserProfile error (see
+ * js/functions.js). The server's own message is shown for errors the user
+ * can fix (bad username, username taken); everything else gets a generic
+ * message.
  * @param {Object} error The error thrown by createUserProfile.
  * @return {string}
  */
@@ -105,6 +82,59 @@ export function getProfileErrorMessage(error) {
  */
 export function deleteCurrentUser() {
   return deleteUser(auth.currentUser);
+}
+
+/**
+ * Checks the signed-in user's password again. Firebase requires this before
+ * changing the password or deleting the account.
+ * @param {string} password The user's current password.
+ * @return {Promise<void>} Rejects with auth/invalid-credential if it's wrong.
+ */
+async function reauthenticate(password) {
+  const user = auth.currentUser;
+  const credential = EmailAuthProvider.credential(user.email, password);
+  await reauthenticateWithCredential(user, credential);
+}
+
+/**
+ * Changes the signed-in user's password.
+ * @param {string} currentPassword Their current password.
+ * @param {string} newPassword The new password.
+ * @return {Promise<void>}
+ */
+export async function changePassword(currentPassword, newPassword) {
+  await reauthenticate(currentPassword);
+  await updatePassword(auth.currentUser, newPassword);
+}
+
+/**
+ * Deletes the signed-in user's account after checking their password. The
+ * onUserDeleted Cloud Function then deletes their username and everything
+ * under users/{uid}.
+ * @param {string} password Their current password.
+ * @return {Promise<void>}
+ */
+export async function deleteAccount(password) {
+  await reauthenticate(password);
+  await deleteUser(auth.currentUser);
+}
+
+/**
+ * Like getAuthErrorMessage, but for forms that only ask for a password
+ * (change password, delete account), where "email or password" would be
+ * confusing.
+ * @param {Object} error The Firebase auth error.
+ * @return {string}
+ */
+export function getPasswordErrorMessage(error) {
+  const wrongPassword = ['auth/invalid-credential', 'auth/wrong-password'];
+  if (error && wrongPassword.includes(error.code)) {
+    return 'Incorrect password.';
+  }
+  if (error && error.code === 'auth/too-many-requests') {
+    return 'Too many tries. Please wait a few minutes and try again.';
+  }
+  return getAuthErrorMessage(error);
 }
 
 /**
@@ -181,13 +211,23 @@ export async function redirectIfSignedIn() {
 }
 
 /**
- * Shows error messages to the user inside the form's error container.
- * @param {HTMLElement} element - The error container element.
- * @param {string} message - The error message to display.
+ * Shows a message in a form's message box (error or success), or hides the
+ * box when the message is ''.
+ * @param {HTMLElement} element - The message box.
+ * @param {string} message - The message to show, or '' to hide the box.
  */
-export function showError(element, message) {
+export function showMessage(element, message) {
   if (element) {
     element.textContent = message;
     element.hidden = !message;
   }
+}
+
+/**
+ * Shows an error message inside the form's error box ('' hides it).
+ * @param {HTMLElement} element - The error box.
+ * @param {string} message - The error message to display.
+ */
+export function showError(element, message) {
+  showMessage(element, message);
 }

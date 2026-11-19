@@ -42,16 +42,17 @@
             aria-expanded="false"
             aria-controls="user-menu-panel"
           >
-            <span class="avatar-btn__img" aria-hidden="true"></span>
+            <img class="avatar-btn__img" alt="" />
             <span class="avatar-btn__caret" aria-hidden="true"></span>
           </button>
 
           <div class="user-menu__panel" id="user-menu-panel" hidden>
             <div class="user-menu__header">
-              <span class="user-menu__avatar" aria-hidden="true"></span>
+              <img class="user-menu__avatar" alt="" />
               <div>
-                <p class="user-menu__name">Username</p>
-                <p class="user-menu__handle">@username</p>
+                <!-- Filled in by js/frontend/shelfData.js -->
+                <p class="user-menu__name"></p>
+                <p class="user-menu__handle"></p>
               </div>
             </div>
             <hr class="user-menu__rule" />
@@ -85,38 +86,30 @@
     <main class="page container">
       <!-- PROFILE -->
       <section class="profile" aria-label="Profile">
-        <div class="profile__banner">
-          <span aria-hidden="true">Banner / cover image</span>
-        </div>
+        <!-- Decorative only: there's no banner field in the profile. -->
+        <div class="profile__banner" aria-hidden="true"></div>
 
         <div class="profile__body">
-          <div
-            class="profile__avatar"
-            role="img"
-            aria-label="Profile picture"
-          ></div>
+          <img class="profile__avatar" alt="Profile picture" />
 
+          <!-- Filled in by js/frontend/shelfData.js -->
           <div class="profile__info">
-            <h1 class="profile__name">Username</h1>
-            <p class="profile__handle">@username &middot; Joined 2026</p>
-            <p class="profile__bio">
-              Short bio goes here &mdash; what you're into, what you're
-              watching, reading or playing.
+            <h1 class="profile__name"></h1>
+            <p class="profile__handle">
+              <span class="profile__username"></span>
+              <span class="profile__joined"></span>
             </p>
+            <p class="profile__bio"></p>
           </div>
 
           <div class="profile__side">
             <ul class="stats" aria-label="Shelf stats">
               <li>
-                <span class="stats__num">00</span>
+                <span class="stats__num" id="stat-logged">&ndash;</span>
                 <span class="stats__label">Logged</span>
               </li>
-              <li hidden>
-                <span class="stats__num">00</span>
-                <span class="stats__label">Friends</span>
-              </li>
               <li>
-                <span class="stats__num">00</span>
+                <span class="stats__num" id="stat-this-month">&ndash;</span>
                 <span class="stats__label">This month</span>
               </li>
             </ul>
@@ -148,49 +141,97 @@
       </section>
 
       <!-- SHELF -->
-      <section class="shelf" aria-label="Your shelf">
+      <!-- Filled in by js/frontend/shelf.js. data-view is 'grid' or 'list'. -->
+      <section class="shelf" aria-label="Your shelf" data-view="grid">
         <div class="toolbar">
-          <div class="toolbar__chips" data-toggle-group>
-            <button type="button" class="chip" aria-pressed="true">
-              All <span class="chip__count">00</span>
+          <!-- data-category values match CATEGORIES in js/constants.js
+               ('' = All). -->
+          <div class="toolbar__chips">
+            <button
+              type="button"
+              class="chip"
+              data-category=""
+              aria-pressed="true"
+            >
+              All <span class="chip__count">&ndash;</span>
             </button>
-            <button type="button" class="chip" aria-pressed="false">
-              Films <span class="chip__count">00</span>
+            <button
+              type="button"
+              class="chip"
+              data-category="movie"
+              aria-pressed="false"
+            >
+              Films <span class="chip__count">&ndash;</span>
             </button>
-            <button type="button" class="chip" aria-pressed="false">
-              Books <span class="chip__count">00</span>
+            <button
+              type="button"
+              class="chip"
+              data-category="book"
+              aria-pressed="false"
+            >
+              Books <span class="chip__count">&ndash;</span>
             </button>
-            <button type="button" class="chip" aria-pressed="false">
-              Games <span class="chip__count">00</span>
+            <button
+              type="button"
+              class="chip"
+              data-category="game"
+              aria-pressed="false"
+            >
+              Games <span class="chip__count">&ndash;</span>
             </button>
-            <button type="button" class="chip" aria-pressed="false">
-              Music <span class="chip__count">00</span>
+            <button
+              type="button"
+              class="chip"
+              data-category="music"
+              aria-pressed="false"
+            >
+              Music <span class="chip__count">&ndash;</span>
             </button>
-            <button type="button" class="chip" aria-pressed="false">
-              Shows <span class="chip__count">00</span>
+            <button
+              type="button"
+              class="chip"
+              data-category="show"
+              aria-pressed="false"
+            >
+              Shows <span class="chip__count">&ndash;</span>
             </button>
           </div>
 
           <input
+            id="shelf-search"
             class="control control--search"
             type="search"
             placeholder="Search my shelf..."
             aria-label="Search my shelf"
           />
-          <select class="control control--select" aria-label="Sort by">
-            <option>Sort: Date logged</option>
-            <option>Sort: Title</option>
-            <option>Sort: Rating</option>
+          <select
+            id="shelf-sort"
+            class="control control--select"
+            aria-label="Sort by"
+          >
+            <option value="date">Sort: Date logged</option>
+            <option value="title">Sort: Title</option>
+            <option value="rating">Sort: Rating</option>
           </select>
-          <select class="control control--select" aria-label="Filter by rating">
-            <option>Rating</option>
-            <option>5 stars</option>
-            <option>4+ stars</option>
-            <option>3+ stars</option>
+          <!-- Values are the lowest rating to show (0 = any). -->
+          <select
+            id="shelf-rating"
+            class="control control--select"
+            aria-label="Filter by rating"
+          >
+            <option value="0">Rating: Any</option>
+            <option value="5">5 stars</option>
+            <option value="4">4+ stars</option>
+            <option value="3">3+ stars</option>
           </select>
 
-          <div class="view-toggle" data-toggle-group>
-            <button type="button" aria-pressed="true" aria-label="Grid view">
+          <div class="view-toggle">
+            <button
+              type="button"
+              data-view="grid"
+              aria-pressed="true"
+              aria-label="Grid view"
+            >
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <rect x="4" y="4" width="6" height="6" />
                 <rect x="14" y="4" width="6" height="6" />
@@ -198,7 +239,12 @@
                 <rect x="14" y="14" width="6" height="6" />
               </svg>
             </button>
-            <button type="button" aria-pressed="false" aria-label="List view">
+            <button
+              type="button"
+              data-view="list"
+              aria-pressed="false"
+              aria-label="List view"
+            >
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <line x1="4" y1="6" x2="20" y2="6" />
                 <line x1="4" y1="12" x2="20" y2="12" />
@@ -208,481 +254,17 @@
           </div>
         </div>
 
-        <section class="month" aria-labelledby="month-october">
-          <h2 class="month__title" id="month-october">
-            October 2026 <span class="month__count">8 logged</span>
-          </h2>
-          <ul class="media-grid">
-            <li
-              class="media-item"
-              data-title="Title"
-              data-category="Film"
-              data-creator="Creator"
-              data-date="Oct 21"
-            >
-              <div class="cover"><span class="badge">Film</span></div>
-              <p class="media-item__title">Title</p>
-              <p class="media-item__meta">
-                <span
-                  class="stars"
-                  data-rating="5"
-                  role="img"
-                  aria-label="5 out of 5 stars"
-                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
-                >
-                <span aria-hidden="true">&middot;</span>
-                <span>Oct 21</span>
-              </p>
-            </li>
-            <li
-              class="media-item"
-              data-title="Title"
-              data-category="Book"
-              data-creator="Creator"
-              data-date="Oct 20"
-            >
-              <div class="cover"><span class="badge">Book</span></div>
-              <p class="media-item__title">Title</p>
-              <p class="media-item__meta">
-                <span
-                  class="stars"
-                  data-rating="4"
-                  role="img"
-                  aria-label="4 out of 5 stars"
-                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
-                >
-                <span aria-hidden="true">&middot;</span>
-                <span>Oct 20</span>
-              </p>
-            </li>
-            <li
-              class="media-item"
-              data-title="Title"
-              data-category="Game"
-              data-creator="Creator"
-              data-date="Oct 19"
-            >
-              <div class="cover"><span class="badge">Game</span></div>
-              <p class="media-item__title">Title</p>
-              <p class="media-item__meta">
-                <span
-                  class="stars"
-                  data-rating="3"
-                  role="img"
-                  aria-label="3 out of 5 stars"
-                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
-                >
-                <span aria-hidden="true">&middot;</span>
-                <span>Oct 19</span>
-              </p>
-            </li>
-            <li
-              class="media-item"
-              data-title="Title"
-              data-category="Album"
-              data-creator="Creator"
-              data-date="Oct 18"
-            >
-              <div class="cover"><span class="badge">Album</span></div>
-              <p class="media-item__title">Title</p>
-              <p class="media-item__meta">
-                <span
-                  class="stars"
-                  data-rating="5"
-                  role="img"
-                  aria-label="5 out of 5 stars"
-                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
-                >
-                <span aria-hidden="true">&middot;</span>
-                <span>Oct 18</span>
-              </p>
-            </li>
-            <li
-              class="media-item"
-              data-title="Title"
-              data-category="Show"
-              data-creator="Creator"
-              data-date="Oct 17"
-            >
-              <div class="cover"><span class="badge">Show</span></div>
-              <p class="media-item__title">Title</p>
-              <p class="media-item__meta">
-                <span
-                  class="stars"
-                  data-rating="4"
-                  role="img"
-                  aria-label="4 out of 5 stars"
-                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
-                >
-                <span aria-hidden="true">&middot;</span>
-                <span>Oct 17</span>
-              </p>
-            </li>
-            <li
-              class="media-item"
-              data-title="Title"
-              data-category="Film"
-              data-creator="Creator"
-              data-date="Oct 16"
-            >
-              <div class="cover"><span class="badge">Film</span></div>
-              <p class="media-item__title">Title</p>
-              <p class="media-item__meta">
-                <span
-                  class="stars"
-                  data-rating="3"
-                  role="img"
-                  aria-label="3 out of 5 stars"
-                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
-                >
-                <span aria-hidden="true">&middot;</span>
-                <span>Oct 16</span>
-              </p>
-            </li>
-            <li
-              class="media-item"
-              data-title="Title"
-              data-category="Book"
-              data-creator="Creator"
-              data-date="Oct 15"
-            >
-              <div class="cover"><span class="badge">Book</span></div>
-              <p class="media-item__title">Title</p>
-              <p class="media-item__meta">
-                <span
-                  class="stars"
-                  data-rating="5"
-                  role="img"
-                  aria-label="5 out of 5 stars"
-                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
-                >
-                <span aria-hidden="true">&middot;</span>
-                <span>Oct 15</span>
-              </p>
-            </li>
-            <li
-              class="media-item"
-              data-title="Title"
-              data-category="Game"
-              data-creator="Creator"
-              data-date="Oct 14"
-            >
-              <div class="cover"><span class="badge">Game</span></div>
-              <p class="media-item__title">Title</p>
-              <p class="media-item__meta">
-                <span
-                  class="stars"
-                  data-rating="4"
-                  role="img"
-                  aria-label="4 out of 5 stars"
-                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
-                >
-                <span aria-hidden="true">&middot;</span>
-                <span>Oct 14</span>
-              </p>
-            </li>
-          </ul>
-        </section>
+        <p id="shelf-status" class="status-line" role="status" hidden></p>
 
-        <section class="month" aria-labelledby="month-september">
-          <h2 class="month__title" id="month-september">
-            September 2026 <span class="month__count">8 logged</span>
-          </h2>
-          <ul class="media-grid">
-            <li
-              class="media-item"
-              data-title="Title"
-              data-category="Album"
-              data-creator="Creator"
-              data-date="Sep 30"
-            >
-              <div class="cover"><span class="badge">Album</span></div>
-              <p class="media-item__title">Title</p>
-              <p class="media-item__meta">
-                <span
-                  class="stars"
-                  data-rating="5"
-                  role="img"
-                  aria-label="5 out of 5 stars"
-                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
-                >
-                <span aria-hidden="true">&middot;</span>
-                <span>Sep 30</span>
-              </p>
-            </li>
-            <li
-              class="media-item"
-              data-title="Title"
-              data-category="Show"
-              data-creator="Creator"
-              data-date="Sep 29"
-            >
-              <div class="cover"><span class="badge">Show</span></div>
-              <p class="media-item__title">Title</p>
-              <p class="media-item__meta">
-                <span
-                  class="stars"
-                  data-rating="4"
-                  role="img"
-                  aria-label="4 out of 5 stars"
-                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
-                >
-                <span aria-hidden="true">&middot;</span>
-                <span>Sep 29</span>
-              </p>
-            </li>
-            <li
-              class="media-item"
-              data-title="Title"
-              data-category="Film"
-              data-creator="Creator"
-              data-date="Sep 28"
-            >
-              <div class="cover"><span class="badge">Film</span></div>
-              <p class="media-item__title">Title</p>
-              <p class="media-item__meta">
-                <span
-                  class="stars"
-                  data-rating="3"
-                  role="img"
-                  aria-label="3 out of 5 stars"
-                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
-                >
-                <span aria-hidden="true">&middot;</span>
-                <span>Sep 28</span>
-              </p>
-            </li>
-            <li
-              class="media-item"
-              data-title="Title"
-              data-category="Book"
-              data-creator="Creator"
-              data-date="Sep 27"
-            >
-              <div class="cover"><span class="badge">Book</span></div>
-              <p class="media-item__title">Title</p>
-              <p class="media-item__meta">
-                <span
-                  class="stars"
-                  data-rating="5"
-                  role="img"
-                  aria-label="5 out of 5 stars"
-                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
-                >
-                <span aria-hidden="true">&middot;</span>
-                <span>Sep 27</span>
-              </p>
-            </li>
-            <li
-              class="media-item"
-              data-title="Title"
-              data-category="Game"
-              data-creator="Creator"
-              data-date="Sep 26"
-            >
-              <div class="cover"><span class="badge">Game</span></div>
-              <p class="media-item__title">Title</p>
-              <p class="media-item__meta">
-                <span
-                  class="stars"
-                  data-rating="4"
-                  role="img"
-                  aria-label="4 out of 5 stars"
-                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
-                >
-                <span aria-hidden="true">&middot;</span>
-                <span>Sep 26</span>
-              </p>
-            </li>
-            <li
-              class="media-item"
-              data-title="Title"
-              data-category="Film"
-              data-creator="Creator"
-              data-date="Sep 25"
-            >
-              <div class="cover"><span class="badge">Film</span></div>
-              <p class="media-item__title">Title</p>
-              <p class="media-item__meta">
-                <span
-                  class="stars"
-                  data-rating="3"
-                  role="img"
-                  aria-label="3 out of 5 stars"
-                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
-                >
-                <span aria-hidden="true">&middot;</span>
-                <span>Sep 25</span>
-              </p>
-            </li>
-            <li
-              class="media-item"
-              data-title="Title"
-              data-category="Book"
-              data-creator="Creator"
-              data-date="Sep 24"
-            >
-              <div class="cover"><span class="badge">Book</span></div>
-              <p class="media-item__title">Title</p>
-              <p class="media-item__meta">
-                <span
-                  class="stars"
-                  data-rating="5"
-                  role="img"
-                  aria-label="5 out of 5 stars"
-                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
-                >
-                <span aria-hidden="true">&middot;</span>
-                <span>Sep 24</span>
-              </p>
-            </li>
-            <li
-              class="media-item"
-              data-title="Title"
-              data-category="Game"
-              data-creator="Creator"
-              data-date="Sep 23"
-            >
-              <div class="cover"><span class="badge">Game</span></div>
-              <p class="media-item__title">Title</p>
-              <p class="media-item__meta">
-                <span
-                  class="stars"
-                  data-rating="4"
-                  role="img"
-                  aria-label="4 out of 5 stars"
-                  >&#9733;&#9733;&#9733;&#9733;&#9733;</span
-                >
-                <span aria-hidden="true">&middot;</span>
-                <span>Sep 23</span>
-              </p>
-            </li>
-          </ul>
-        </section>
+        <!-- Month sections (or the empty message) go here. -->
+        <div id="shelf-months"></div>
 
         <div class="load-more">
-          <button type="button" class="btn btn--outline">Load more</button>
+          <button id="load-more" type="button" class="btn btn--outline" hidden>
+            Load more
+          </button>
         </div>
       </section>
-      <!-- SIDEBAR -->
-      <!-- <aside class="sidebar" aria-label="Friends" hidden>
-        <section class="side-card" aria-labelledby="requests-title">
-          <h2 class="side-card__title" id="requests-title">
-            Friend requests <span class="count-badge">2</span>
-          </h2>
-          <ul class="request-list">
-            <li class="request">
-              <span class="request__avatar" aria-hidden="true"></span>
-              <div class="request__text">
-                <a class="request__name" href="#">Username</a>
-                <p class="request__mutual">00 mutual friends</p>
-              </div>
-              <button
-                type="button"
-                class="icon-btn icon-btn--accept"
-                aria-label="Accept request from Username"
-              >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M4 12.5l5 5L20 6.5" />
-                </svg>
-              </button>
-              <button
-                type="button"
-                class="icon-btn"
-                aria-label="Decline request from Username"
-              >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                </svg>
-              </button>
-            </li>
-            <li class="request">
-              <span class="request__avatar" aria-hidden="true"></span>
-              <div class="request__text">
-                <a class="request__name" href="#">Username</a>
-                <p class="request__mutual">00 mutual friends</p>
-              </div>
-              <button
-                type="button"
-                class="icon-btn icon-btn--accept"
-                aria-label="Accept request from Username"
-              >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M4 12.5l5 5L20 6.5" />
-                </svg>
-              </button>
-              <button
-                type="button"
-                class="icon-btn"
-                aria-label="Decline request from Username"
-              >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                </svg>
-              </button>
-            </li>
-          </ul>
-        </section>
-
-        <section class="side-card" aria-labelledby="friends-title">
-          <h2 class="side-card__title" id="friends-title">
-            Friends <span class="side-card__count">00</span>
-          </h2>
-          <ul class="friend-grid">
-            <li>
-              <a class="friend" href="#"
-                ><span class="friend__avatar" aria-hidden="true"></span
-                ><span>User</span></a
-              >
-            </li>
-            <li>
-              <a class="friend" href="#"
-                ><span class="friend__avatar" aria-hidden="true"></span
-                ><span>User</span></a
-              >
-            </li>
-            <li>
-              <a class="friend" href="#"
-                ><span class="friend__avatar" aria-hidden="true"></span
-                ><span>User</span></a
-              >
-            </li>
-            <li>
-              <a class="friend" href="#"
-                ><span class="friend__avatar" aria-hidden="true"></span
-                ><span>User</span></a
-              >
-            </li>
-            <li>
-              <a class="friend" href="#"
-                ><span class="friend__avatar" aria-hidden="true"></span
-                ><span>User</span></a
-              >
-            </li>
-            <li>
-              <a class="friend" href="#"
-                ><span class="friend__avatar" aria-hidden="true"></span
-                ><span>User</span></a
-              >
-            </li>
-            <li>
-              <a class="friend" href="#"
-                ><span class="friend__avatar" aria-hidden="true"></span
-                ><span>User</span></a
-              >
-            </li>
-            <li>
-              <a class="friend" href="#"
-                ><span class="friend__avatar" aria-hidden="true"></span
-                ><span>User</span></a
-              >
-            </li>
-          </ul>
-          <a class="see-all" href="#">See all friends &rarr;</a>
-        </section>
-      </aside> -->
     </main>
 
     <footer class="site-footer">
@@ -779,63 +361,21 @@
               type="text"
               placeholder="Search films..."
               autocomplete="off"
-              required
+              maxlength="100"
             />
-            <!-- Placeholder results: the backend will fill this list. -->
+            <p
+              id="log-search-status"
+              class="status-line"
+              role="status"
+              hidden
+            ></p>
+            <!-- Filled in by js/media/search.js: one radio per result, whose
+                 value is the result's externalId. -->
             <ul
               class="log-results"
               role="radiogroup"
               aria-label="Search results"
-            >
-              <li role="none">
-                <label class="log-result">
-                  <input type="radio" name="result" value="1" />
-                  <span class="log-result__row">
-                    <span class="log-result__thumb" aria-hidden="true"></span>
-                    <span class="log-result__text">
-                      <span class="log-result__name">Title</span>
-                      <span class="log-result__meta"
-                        >Year &middot;
-                        <span data-creator-label>Director</span></span
-                      >
-                    </span>
-                    <span class="log-result__check" aria-hidden="true"></span>
-                  </span>
-                </label>
-              </li>
-              <li role="none">
-                <label class="log-result">
-                  <input type="radio" name="result" value="2" />
-                  <span class="log-result__row">
-                    <span class="log-result__thumb" aria-hidden="true"></span>
-                    <span class="log-result__text">
-                      <span class="log-result__name">Title</span>
-                      <span class="log-result__meta"
-                        >Year &middot;
-                        <span data-creator-label>Director</span></span
-                      >
-                    </span>
-                    <span class="log-result__check" aria-hidden="true"></span>
-                  </span>
-                </label>
-              </li>
-              <li role="none">
-                <label class="log-result">
-                  <input type="radio" name="result" value="3" />
-                  <span class="log-result__row">
-                    <span class="log-result__thumb" aria-hidden="true"></span>
-                    <span class="log-result__text">
-                      <span class="log-result__name">Title</span>
-                      <span class="log-result__meta"
-                        >Year &middot;
-                        <span data-creator-label>Director</span></span
-                      >
-                    </span>
-                    <span class="log-result__check" aria-hidden="true"></span>
-                  </span>
-                </label>
-              </li>
-            </ul>
+            ></ul>
           </div>
 
           <div class="log-row">
@@ -919,6 +459,13 @@
           </div>
         </div>
 
+        <p
+          id="log-save-status"
+          class="status-line log-modal__save-status"
+          role="status"
+          hidden
+        ></p>
+
         <footer class="log-modal__footer">
           <!-- Hidden for the MVP: every log comes from a search result. -->
           <button type="button" class="log-modal__manual" hidden>
@@ -940,23 +487,276 @@
       </form>
     </dialog>
 
-    <!-- SETTINGS MODAL (Edit profile / Settings) -->
+    <!-- LOG DETAILS MODAL: opened by clicking a card on the shelf
+         (js/frontend/editModal.js). Uses the Log Media modal's styles.
+         It opens in view mode (fields disabled); Edit turns them on. -->
     <dialog
-      class="settings-modal"
+      class="log-modal edit-modal"
+      id="edit-modal"
+      aria-labelledby="edit-modal-title"
+    >
+      <form class="log-modal__form" method="dialog">
+        <header class="log-modal__header">
+          <div class="edit-modal__heading">
+            <h2 class="log-modal__title" id="edit-modal-title"></h2>
+            <p class="edit-modal__subtitle"></p>
+          </div>
+          <button
+            type="button"
+            class="log-modal__close"
+            aria-label="Close"
+            data-edit-close
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <line x1="5" y1="5" x2="19" y2="19" />
+              <line x1="19" y1="5" x2="5" y2="19" />
+            </svg>
+          </button>
+        </header>
+
+        <div class="log-modal__body edit-modal__layout">
+          <!-- Large cover on the left; the colored box shows when there's
+               none. -->
+          <span class="cover edit-modal__cover" aria-hidden="true"></span>
+
+          <!-- Disabled in view mode, so the values show but can't change. -->
+          <fieldset class="edit-modal__fields" disabled>
+            <div class="log-row">
+              <!-- Values match LOG_STATUS in js/constants.js. -->
+              <fieldset class="log-field">
+                <legend class="log-label">Status</legend>
+                <div class="log-segmented">
+                  <label>
+                    <input
+                      type="radio"
+                      name="status"
+                      value="completed"
+                      checked
+                    />
+                    <span>Completed</span>
+                  </label>
+                  <label>
+                    <input type="radio" name="status" value="in_progress" />
+                    <span>In progress</span>
+                  </label>
+                  <label>
+                    <input type="radio" name="status" value="planned" />
+                    <span>Planned</span>
+                  </label>
+                </div>
+              </fieldset>
+
+              <!-- The day it was watched/read/played. editModal.js stops future days (max). -->
+              <div class="log-field">
+                <label class="log-label" for="edit-date">Date</label>
+                <input
+                  class="log-input"
+                  id="edit-date"
+                  name="date"
+                  type="date"
+                  required
+                />
+              </div>
+            </div>
+
+            <!-- Optional: no star picked means "not rated" (rating: null). -->
+            <div class="log-row log-row--end">
+              <fieldset class="log-field">
+                <legend class="log-label">Rating</legend>
+                <div class="log-stars">
+                  <input
+                    type="radio"
+                    name="rating"
+                    id="edit-star-1"
+                    value="1"
+                  />
+                  <label for="edit-star-1"
+                    ><span aria-hidden="true">&#9733;</span
+                    ><span class="log-sr">1 star</span></label
+                  >
+                  <input
+                    type="radio"
+                    name="rating"
+                    id="edit-star-2"
+                    value="2"
+                  />
+                  <label for="edit-star-2"
+                    ><span aria-hidden="true">&#9733;</span
+                    ><span class="log-sr">2 stars</span></label
+                  >
+                  <input
+                    type="radio"
+                    name="rating"
+                    id="edit-star-3"
+                    value="3"
+                  />
+                  <label for="edit-star-3"
+                    ><span aria-hidden="true">&#9733;</span
+                    ><span class="log-sr">3 stars</span></label
+                  >
+                  <input
+                    type="radio"
+                    name="rating"
+                    id="edit-star-4"
+                    value="4"
+                  />
+                  <label for="edit-star-4"
+                    ><span aria-hidden="true">&#9733;</span
+                    ><span class="log-sr">4 stars</span></label
+                  >
+                  <input
+                    type="radio"
+                    name="rating"
+                    id="edit-star-5"
+                    value="5"
+                  />
+                  <label for="edit-star-5"
+                    ><span aria-hidden="true">&#9733;</span
+                    ><span class="log-sr">5 stars</span></label
+                  >
+                </div>
+              </fieldset>
+            </div>
+
+            <div class="log-field">
+              <label class="log-label" for="edit-notes">Notes (optional)</label>
+              <textarea
+                class="log-input log-input--area"
+                id="edit-notes"
+                name="notes"
+                rows="3"
+                maxlength="500"
+                placeholder="What did you think?"
+              ></textarea>
+            </div>
+          </fieldset>
+        </div>
+
+        <p
+          id="edit-status"
+          class="status-line log-modal__save-status"
+          role="status"
+          hidden
+        ></p>
+
+        <footer class="log-modal__footer">
+          <!-- View mode -->
+          <div class="edit-modal__actions" data-edit-step="view">
+            <button
+              type="button"
+              class="log-modal__btn log-modal__btn--danger"
+              data-edit-delete
+            >
+              Delete
+            </button>
+            <div class="log-modal__actions">
+              <button
+                type="button"
+                class="log-modal__btn log-modal__btn--cancel"
+                data-edit-close
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                class="log-modal__btn log-modal__btn--save"
+                data-edit-start
+              >
+                Edit
+              </button>
+            </div>
+          </div>
+
+          <!-- Edit mode -->
+          <div class="edit-modal__actions" data-edit-step="edit" hidden>
+            <div class="log-modal__actions">
+              <button
+                type="button"
+                class="log-modal__btn log-modal__btn--cancel"
+                data-edit-cancel
+              >
+                Cancel
+              </button>
+              <button type="submit" class="log-modal__btn log-modal__btn--save">
+                Save changes
+              </button>
+            </div>
+          </div>
+
+          <!-- Shown after Delete is clicked -->
+          <div class="edit-modal__actions" data-edit-step="confirm" hidden>
+            <p class="edit-modal__confirm-text">
+              Delete this log? This can't be undone.
+            </p>
+            <div class="log-modal__actions">
+              <button
+                type="button"
+                class="log-modal__btn log-modal__btn--cancel"
+                data-edit-keep
+              >
+                Keep it
+              </button>
+              <button
+                type="button"
+                class="log-modal__btn log-modal__btn--danger-solid"
+                data-edit-confirm-delete
+              >
+                Yes, delete
+              </button>
+            </div>
+          </div>
+        </footer>
+      </form>
+    </dialog>
+
+    <!-- SETTINGS MODAL: Profile / Privacy / Security tabs
+         (js/frontend/custAndSettingsModal.js). Uses the Log Media modal's
+         frame, fields and buttons, so it matches the other dialogs. Each tab
+         is its own form with its own Save button. -->
+    <dialog
+      class="log-modal settings-modal"
       id="settings-modal"
       aria-labelledby="sm-title"
     >
-      <button type="button" class="settings-modal__close" aria-label="Close">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <line x1="3" y1="3" x2="21" y2="21"></line>
-          <line x1="21" y1="3" x2="3" y2="21"></line>
-        </svg>
-      </button>
+      <header class="log-modal__header">
+        <h2 class="log-modal__title" id="sm-title">Settings</h2>
+        <button
+          type="button"
+          class="log-modal__close"
+          aria-label="Close"
+          data-settings-close
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <line x1="5" y1="5" x2="19" y2="19" />
+            <line x1="19" y1="5" x2="5" y2="19" />
+          </svg>
+        </button>
+      </header>
 
-      <h2 class="settings-modal__sr" id="sm-title">Profile settings</h2>
+      <!-- Shown when closing with unsaved changes. -->
+      <div class="settings-modal__discard" role="alert" hidden>
+        <p>You have unsaved changes. Discard them?</p>
+        <div class="log-modal__actions">
+          <button
+            type="button"
+            class="log-modal__btn log-modal__btn--cancel"
+            data-settings-keep
+          >
+            Keep editing
+          </button>
+          <button
+            type="button"
+            class="log-modal__btn log-modal__btn--danger-solid"
+            data-settings-discard
+          >
+            Discard
+          </button>
+        </div>
+      </div>
 
       <div class="settings-modal__layout">
-        <!-- Left side: section tabs -->
+        <!-- Left side: section tabs. data-tab values are what
+             data-open-settings="..." buttons open. -->
         <div
           class="settings-modal__tabs"
           role="tablist"
@@ -971,7 +771,7 @@
             aria-selected="true"
             data-tab="customization"
           >
-            Customization
+            Profile
           </button>
           <button
             type="button"
@@ -982,63 +782,64 @@
             aria-selected="false"
             data-tab="settings"
           >
-            Settings
+            Privacy
+          </button>
+          <button
+            type="button"
+            class="settings-modal__tab"
+            role="tab"
+            id="sm-tab-security"
+            aria-controls="sm-panel-security"
+            aria-selected="false"
+            data-tab="security"
+          >
+            Security
           </button>
         </div>
 
-        <!-- Right side: section content -->
-        <div class="settings-modal__panels">
-          <!-- CUSTOMIZATION -->
-          <section
-            class="settings-modal__panel"
-            role="tabpanel"
-            id="sm-panel-customization"
-            aria-labelledby="sm-tab-customization"
-            data-panel="customization"
-          >
-            <fieldset class="settings-modal__group">
-              <legend class="settings-modal__heading">
-                Change your avatar
-              </legend>
+        <!-- PROFILE: avatar, display name, bio -->
+        <form
+          class="settings-modal__panel"
+          role="tabpanel"
+          id="sm-panel-customization"
+          aria-labelledby="sm-tab-customization"
+          data-panel="customization"
+          novalidate
+        >
+          <div class="log-modal__body">
+            <fieldset class="log-field">
+              <legend class="log-label">Avatar</legend>
+              <!-- Values match AVATAR_IDS in js/constants.js. -->
               <div class="settings-modal__avatars">
-                <!-- Values match AVATAR_IDS in js/constants.js.
-                     Swap each placeholder span's contents for <img src="..." alt=""> later -->
                 <label class="settings-modal__avatar">
-                  <input
-                    type="radio"
-                    name="sm-avatar"
-                    value="avatar1"
-                    checked
-                  />
-                  <span class="settings-modal__avatar-img"></span>
-                  <span class="settings-modal__sr">Avatar 1</span>
+                  <input type="radio" name="sm-avatar" value="avatar1" />
+                  <img src="assets/avatar/avatar1.png" alt="Avatar 1" />
                 </label>
                 <label class="settings-modal__avatar">
                   <input type="radio" name="sm-avatar" value="avatar2" />
-                  <span class="settings-modal__avatar-img"></span>
-                  <span class="settings-modal__sr">Avatar 2</span>
+                  <img src="assets/avatar/avatar2.png" alt="Avatar 2" />
                 </label>
                 <label class="settings-modal__avatar">
                   <input type="radio" name="sm-avatar" value="avatar3" />
-                  <span class="settings-modal__avatar-img"></span>
-                  <span class="settings-modal__sr">Avatar 3</span>
+                  <img src="assets/avatar/avatar3.png" alt="Avatar 3" />
                 </label>
                 <label class="settings-modal__avatar">
                   <input type="radio" name="sm-avatar" value="avatar4" />
-                  <span class="settings-modal__avatar-img"></span>
-                  <span class="settings-modal__sr">Avatar 4</span>
+                  <img src="assets/avatar/avatar4.png" alt="Avatar 4" />
                 </label>
               </div>
             </fieldset>
 
-            <div class="settings-modal__group">
-              <label class="settings-modal__heading" for="sm-display-name">
-                Change your display name
-              </label>
+            <div class="log-field">
+              <label class="log-label" for="sm-display-name"
+                >Display name</label
+              >
               <input
                 type="text"
-                class="settings-modal__field"
+                class="log-input"
                 id="sm-display-name"
+                name="displayName"
+                minlength="2"
                 maxlength="30"
                 placeholder="Display name..."
                 autocomplete="off"
@@ -1046,96 +847,213 @@
               <p
                 class="settings-modal__counter"
                 data-counter-for="sm-display-name"
-              >
-                0 / 30
-              </p>
+              ></p>
             </div>
 
-            <div class="settings-modal__group">
-              <label class="settings-modal__heading" for="sm-bio">
-                Change your bio
-              </label>
+            <div class="log-field">
+              <label class="log-label" for="sm-bio">Bio</label>
               <textarea
-                class="settings-modal__field"
+                class="log-input log-input--area"
                 id="sm-bio"
+                name="bio"
+                rows="3"
                 maxlength="155"
-                placeholder="Bio..."
+                placeholder="What are you into?"
               ></textarea>
-              <p class="settings-modal__counter" data-counter-for="sm-bio">
-                0 / 155
-              </p>
+              <p class="settings-modal__counter" data-counter-for="sm-bio"></p>
             </div>
-          </section>
+          </div>
 
-          <!-- SETTINGS -->
-          <section
-            class="settings-modal__panel"
-            role="tabpanel"
-            id="sm-panel-settings"
-            aria-labelledby="sm-tab-settings"
-            data-panel="settings"
-            hidden
-          >
-            <fieldset class="settings-modal__group">
-              <legend class="settings-modal__heading">
-                Change your privacy settings
-              </legend>
-              <div class="settings-modal__options">
-                <label class="settings-modal__option">
-                  <input
-                    type="radio"
-                    name="sm-privacy"
-                    value="private"
-                    checked
-                  />
-                  Private
+          <footer class="log-modal__footer">
+            <p
+              class="status-line settings-modal__status"
+              id="sm-profile-status"
+              role="status"
+              hidden
+            ></p>
+            <div class="log-modal__actions">
+              <button type="submit" class="log-modal__btn log-modal__btn--save">
+                Save profile
+              </button>
+            </div>
+          </footer>
+        </form>
+
+        <!-- PRIVACY -->
+        <form
+          class="settings-modal__panel"
+          role="tabpanel"
+          id="sm-panel-settings"
+          aria-labelledby="sm-tab-settings"
+          data-panel="settings"
+          novalidate
+          hidden
+        >
+          <div class="log-modal__body">
+            <fieldset class="log-field">
+              <legend class="log-label">Who can see your shelf</legend>
+              <div class="log-segmented">
+                <label>
+                  <input type="radio" name="sm-privacy" value="private" />
+                  <span>Private</span>
                 </label>
-                <label class="settings-modal__option">
+                <label>
                   <input type="radio" name="sm-privacy" value="public" />
-                  Public
+                  <span>Public</span>
                 </label>
               </div>
+              <p class="settings-modal__hint">
+                Private: only you can see your logs and bio. Public: anyone
+                signed in can. Your name and avatar are always visible to
+                signed-in users.
+              </p>
             </fieldset>
+          </div>
 
-            <!-- DELETE ACCOUNT. UI only for now: the button doesn't do
-                 anything yet. When it's wired up it should re-check the
-                 password, then delete the Firebase Auth account
-                 (onUserDeleted cloud function removes the rest). -->
-            <div
-              class="settings-modal__group settings-modal__danger"
-              role="group"
+          <footer class="log-modal__footer">
+            <p
+              class="status-line settings-modal__status"
+              id="sm-privacy-status"
+              role="status"
+              hidden
+            ></p>
+            <div class="log-modal__actions">
+              <button type="submit" class="log-modal__btn log-modal__btn--save">
+                Save privacy
+              </button>
+            </div>
+          </footer>
+        </form>
+
+        <!-- SECURITY: change password, delete account. Two forms in one
+             panel, each with its own button and message. -->
+        <div
+          class="settings-modal__panel"
+          role="tabpanel"
+          id="sm-panel-security"
+          aria-labelledby="sm-tab-security"
+          data-panel="security"
+          hidden
+        >
+          <div class="log-modal__body">
+            <form
+              class="settings-modal__section"
+              id="sm-password-form"
+              novalidate
+            >
+              <h3 class="settings-modal__heading">Change password</h3>
+              <div class="log-field">
+                <label class="log-label" for="sm-current-password"
+                  >Current password</label
+                >
+                <input
+                  type="password"
+                  class="log-input"
+                  id="sm-current-password"
+                  name="currentPassword"
+                  autocomplete="current-password"
+                  maxlength="128"
+                />
+              </div>
+              <div class="log-row">
+                <div class="log-field">
+                  <label class="log-label" for="sm-new-password"
+                    >New password</label
+                  >
+                  <input
+                    type="password"
+                    class="log-input"
+                    id="sm-new-password"
+                    name="newPassword"
+                    autocomplete="new-password"
+                    minlength="8"
+                    maxlength="128"
+                  />
+                </div>
+                <div class="log-field">
+                  <label class="log-label" for="sm-confirm-password"
+                    >Confirm new password</label
+                  >
+                  <input
+                    type="password"
+                    class="log-input"
+                    id="sm-confirm-password"
+                    name="confirmPassword"
+                    autocomplete="new-password"
+                    minlength="8"
+                    maxlength="128"
+                  />
+                </div>
+              </div>
+              <div class="settings-modal__section-actions">
+                <p
+                  class="status-line settings-modal__status"
+                  id="sm-password-status"
+                  role="status"
+                  hidden
+                ></p>
+                <button
+                  type="submit"
+                  class="log-modal__btn log-modal__btn--save"
+                >
+                  Change password
+                </button>
+              </div>
+            </form>
+
+            <form
+              class="settings-modal__section settings-modal__danger"
+              id="sm-delete-form"
               aria-labelledby="sm-delete-heading"
+              novalidate
             >
               <h3 class="settings-modal__heading" id="sm-delete-heading">
                 Delete your account
               </h3>
-              <p class="settings-modal__warning" id="sm-delete-warning">
+              <p class="settings-modal__hint" id="sm-delete-warning">
                 This permanently deletes your profile, all of your media logs,
                 and your username. It can't be undone.
               </p>
-              <label class="settings-modal__label" for="sm-delete-password">
-                Enter your password to confirm
-              </label>
-              <input
-                type="password"
-                class="settings-modal__field"
-                id="sm-delete-password"
-                autocomplete="current-password"
-                aria-describedby="sm-delete-warning"
-                placeholder="Password..."
-              />
-              <button type="button" class="settings-modal__delete-btn">
-                Delete account
-              </button>
-            </div>
-          </section>
+              <div class="log-field">
+                <label class="log-label" for="sm-delete-password"
+                  >Enter your password to confirm</label
+                >
+                <input
+                  type="password"
+                  class="log-input"
+                  id="sm-delete-password"
+                  name="password"
+                  autocomplete="current-password"
+                  aria-describedby="sm-delete-warning"
+                  maxlength="128"
+                />
+              </div>
+              <div class="settings-modal__section-actions">
+                <p
+                  class="status-line settings-modal__status"
+                  id="sm-delete-status"
+                  role="status"
+                  hidden
+                ></p>
+                <button
+                  type="submit"
+                  class="log-modal__btn log-modal__btn--danger-solid"
+                >
+                  Delete account
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </dialog>
 
     <script src="js/frontend/mainPage.js"></script>
-    <script src="js/frontend/logModal.js"></script>
-    <script src="js/frontend/custAndSettingsModal.js"></script>
+    <script type="module" src="js/frontend/logModal.js"></script>
+    <script type="module" src="js/frontend/custAndSettingsModal.js"></script>
     <script type="module" src="js/auth/signedInPage.js"></script>
+    <script type="module" src="js/frontend/shelfData.js"></script>
+    <!-- shelf.js also loads editModal.js -->
+    <script type="module" src="js/frontend/shelf.js"></script>
   </body>
 </html>

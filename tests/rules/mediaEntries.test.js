@@ -5,9 +5,11 @@ import {
   deleteDoc,
   deleteField,
   doc,
+  getCountFromServer,
   getDoc,
   getDocs,
   limit,
+  orderBy,
   query,
   setDoc,
   updateDoc,
@@ -102,6 +104,49 @@ test('carol can list her own logs', async () => {
 test('bob can list alices logs', async () => {
   const ref = collection(bobDb(testEnv), 'users/alice/mediaEntries');
   await assertSucceeds(getDocs(query(ref, limit(20))));
+});
+
+// --- The queries js/database/entries.js sends ---
+
+// alice loading the first page of her shelf, newest first
+test('alice can list her logs newest first', async () => {
+  const ref = collection(aliceDb(testEnv), 'users/alice/mediaEntries');
+  const q = query(ref, orderBy('date', 'desc'), limit(24));
+  await assertSucceeds(getDocs(q));
+});
+
+// alice filtering her shelf by category, newest first
+// (needs the category + date index in firestore.indexes.json in production;
+// the emulator doesn't check indexes)
+test('alice can list her logs by category newest first', async () => {
+  const ref = collection(aliceDb(testEnv), 'users/alice/mediaEntries');
+  const q = query(
+    ref,
+    where('category', '==', 'movie'),
+    orderBy('date', 'desc'),
+    limit(24),
+  );
+  await assertSucceeds(getDocs(q));
+});
+
+// alice counting her logs with a limit of 100 (how countEntries counts)
+test('alice can count her logs with a limit of 100', async () => {
+  const ref = collection(aliceDb(testEnv), 'users/alice/mediaEntries');
+  await assertSucceeds(getCountFromServer(query(ref, limit(100))));
+});
+
+// alice counting this month's logs (how My Shelf's "This month" counts)
+test('alice can count her logs since a date with a limit of 100', async () => {
+  const ref = collection(aliceDb(testEnv), 'users/alice/mediaEntries');
+  const q = query(ref, where('date', '>=', '2026-01-01'), limit(100));
+  await assertSucceeds(getCountFromServer(q));
+});
+
+// bob counting alice's movies (public profile), with a limit
+test('bob can count alices movies with a limit of 100', async () => {
+  const ref = collection(bobDb(testEnv), 'users/alice/mediaEntries');
+  const q = query(ref, where('category', '==', 'movie'), limit(100));
+  await assertSucceeds(getCountFromServer(q));
 });
 
 // --- Updating status (owner only, allowed values) ---
@@ -273,6 +318,19 @@ test('alice cannot list her own logs with a limit of 101', async () => {
 test('bob cannot list alices logs without a limit', async () => {
   const ref = collection(bobDb(testEnv), 'users/alice/mediaEntries');
   await assertFails(getDocs(ref));
+});
+
+// alice counting all her logs with no limit: the list rule's
+// request.query.limit <= 100 check has no limit to compare
+test('alice cannot count her logs without a limit', async () => {
+  const ref = collection(aliceDb(testEnv), 'users/alice/mediaEntries');
+  await assertFails(getCountFromServer(ref));
+});
+
+// bob counting carol's logs (carol's profile is private)
+test('bob cannot count carols logs', async () => {
+  const ref = collection(bobDb(testEnv), 'users/carol/mediaEntries');
+  await assertFails(getCountFromServer(query(ref, limit(100))));
 });
 
 // bob loading carol's shelf (carol's profile is private)
