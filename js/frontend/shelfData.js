@@ -1,9 +1,9 @@
 // Fills in the profile on My Shelf: name, username, join date, bio, avatar
 // pictures and the shelf stats.
 //
-// It imports signedInUser from the page guard, so it only runs once the
-// guard has confirmed the user and their profile.
-import {signedInUser} from '../auth/signedInPage.js';
+// It waits for signedInUserReady from the page guard, so it only starts
+// once the guard has confirmed the user and their profile.
+import {signedInUserReady} from '../auth/signedInPage.js';
 import {getBio, getUserCard, getUsername} from '../database/profile.js';
 import {countEntries} from '../database/entries.js';
 import {avatarSrc} from './display.js';
@@ -113,9 +113,13 @@ async function loadStats(uid) {
   setText('#stat-this-month', statText(thisMonth));
 }
 
-if (signedInUser) {
-  const uid = signedInUser.uid;
-  setText('.profile__joined', joinedText(signedInUser));
+/**
+ * Loads everything on the profile and keeps it current.
+ * @param {Object} user The signed-in Firebase user.
+ */
+function start(user) {
+  const uid = user.uid;
+  setText('.profile__joined', joinedText(user));
 
   // Each part loads on its own, so one failure doesn't blank the others.
   const parts = [loadCard, loadUsername, loadBio, loadStats];
@@ -141,3 +145,7 @@ if (signedInUser) {
     });
   });
 }
+
+signedInUserReady.then((user) => {
+  if (user) start(user);
+});

@@ -17,7 +17,7 @@
 // An edit or delete passes what changed ({updated: entry} or
 // {deleted: entryId}), so only that card changes and the logs loaded with
 // "Load more" stay.
-import {signedInUser} from '../auth/signedInPage.js';
+import {signedInUser, signedInUserReady} from '../auth/signedInPage.js';
 import {countEntries, listEntries} from '../database/entries.js';
 import {CATEGORY_LABELS, SHELF_CHANGED_EVENT} from '../constants.js';
 import {createStatusLine} from './display.js';
@@ -251,7 +251,8 @@ function refresh(event) {
 // Start
 // ---------------------------------------------------------------------------
 
-if (signedInUser) {
+/** Wires up the shelf controls and loads the first page of logs. */
+function start() {
   chips.forEach((chip) => {
     chip.addEventListener('click', () => selectChip(chip));
   });
@@ -275,3 +276,8 @@ if (signedInUser) {
 
   refresh();
 }
+
+// Start once the page guard has confirmed the user (see signedInPage.js).
+signedInUserReady.then((user) => {
+  if (user) start();
+});

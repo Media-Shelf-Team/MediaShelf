@@ -5,8 +5,13 @@
 //    createUserProfile; without a profile, nothing else on the page works.
 // 3. Shows the page and wires up the Log Out buttons.
 //
-// Page scripts that need the user import `signedInUser` from here. Because
-// this module waits for the checks above, they run only after it's done.
+// Page scripts that need the user wait for `signedInUserReady` before they
+// start, then can read `signedInUser` (for example in click handlers).
+//
+// This file doesn't use top-level await on purpose. My Shelf loads several
+// module scripts that all import this file, and Safari (every browser on
+// iPhone) can run those scripts before a shared module's top-level await
+// finishes. They would then see signedInUser as null and load nothing.
 
 import {logout, requireSignedInUser} from './auth.js';
 import {getUserCard} from '../database/profile.js';
@@ -35,17 +40,32 @@ async function hasProfile(uid) {
  */
 export let signedInUser = null;
 
-const user = await requireSignedInUser();
+/**
+ * Runs the checks: signed in, then has a profile.
+ * @return {Promise<?Object>} The user once the page is shown, or null.
+ */
+async function checkUser() {
+  const user = await requireSignedInUser();
+  if (!user) return null;
 
-if (user) {
-  if (await hasProfile(user.uid)) {
-    signedInUser = user;
-    // Remove 'data-auth' to show the page.
-    document.documentElement.removeAttribute('data-auth');
-  } else {
+  if (!(await hasProfile(user.uid))) {
     location.replace(FINISH_SIGNUP_PAGE);
+    return null;
   }
+
+  signedInUser = user;
+  // Remove 'data-auth' to show the page.
+  document.documentElement.removeAttribute('data-auth');
+  return user;
 }
+
+/**
+ * Resolves with the signed-in user once the page is shown, or with null if
+ * the visitor is being sent somewhere else. Page scripts start with:
+ *   signedInUserReady.then((user) => { if (user) start(user); });
+ * @type {Promise<?Object>}
+ */
+export const signedInUserReady = checkUser();
 
 // Reload the page if it was restored from the back/forward cache
 window.addEventListener('pageshow', (event) => {
