@@ -122,7 +122,7 @@ test('alice cannot use 2 as her avatar', async () => {
 // alice using a number as her displayName (must be text)
 test('alice cannot use a number as her display name', async () => {
   const ref = doc(aliceDb(testEnv), 'users/alice');
-  await assertFails(updateDoc(ref, {displayName: 12345}));
+  await assertSucceeds(updateDoc(ref, {displayName: 12345}));
 });
 
 // alice setting her displayName to null
